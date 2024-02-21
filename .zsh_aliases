@@ -1,0 +1,24 @@
+alias cmakelists='cmake CMakeLists.txt'
+alias nv='nvim'
+alias vi='nvim'
+alias uuu='sudo apt-get update && sudo apt-get -y upgrade && sudo apt-get autoremove'
+alias python='python3'
+alias pip='pip3'
+alias install="sudo apt-get install -y"
+alias installed="apt list --installed | grep"
+alias delswp='rm ~/.local/share/nvim/swap/*.swp; rm ~/.local/state/nvim/swap/*.swp;'
+alias python-ctags="ctags -R --fields=+l --languages=python --python-kinds=-i -f ./tags . $(python -c "import os, sys; print(' '.join('{}'.format(d) for d in sys.path if os.path.isdir(d)))")"
+alias nvidia-watch='watch -n 0.1 nvidia-smi'
+alias grpc='python -m grpc_tools.protoc -I. --python_out=. --grpc_python_out=.'
+alias port-check='netstat -tulnp | grep'
+alias ssh-config='vi ~/.ssh/config'
+alias aliases='vi ~/.zsh_aliases'
+alias zshrc='vi ~/.zshrc'
+
+gpp (){
+	g++ "$1" && ./a.out
+}
+mkcd (){
+	mkdir -p -- "$1" && cd -P -- "$1"
+}
+
