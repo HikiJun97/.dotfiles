@@ -23,7 +23,6 @@ vim.opt.tabstop = 4
 vim.opt.softtabstop = 4
 vim.opt.shiftwidth = 1
 vim.opt.autowrite = true
-vim.g.python3_host_prog = os.getenv("CONDA_PREFIX") .. "/bin/python3"
 
 -- tags setting
 vim.opt.tags:append("./tags,tags")
@@ -198,37 +197,35 @@ require("lazy").setup({
 		branch = "release",
 	}, -- Intellisense engine for Vim8 & Neovim
 	{
-		{
-			"nvim-treesitter/nvim-treesitter",
-			build = ":TSUpdate",
-			config = function()
-				local configs = require("nvim-treesitter.configs")
-				configs.setup({
-					ensure_installed = {
-						"c",
-						"cpp",
-						"go",
-						"lua",
-						"vim",
-						"vimdoc",
-						"query",
-						"elixir",
-						"heex",
-						"javascript",
-						"html",
-						"python",
-						"java",
-						"json",
-					},
-					sync_install = false,
-					highlight = {
-						enable = true,
-						additional_vim_regex_highlighting = false,
-					},
-					--indent = { enable = true },
-				})
-			end,
-		},
+		"nvim-treesitter/nvim-treesitter",
+		build = ":TSUpdate",
+		config = function()
+			local configs = require("nvim-treesitter.configs")
+			configs.setup({
+				ensure_installed = {
+					"c",
+					"cpp",
+					"go",
+					"lua",
+					"vim",
+					"vimdoc",
+					"query",
+					"elixir",
+					"heex",
+					"javascript",
+					"html",
+					"python",
+					"java",
+					"json",
+				},
+				sync_install = false,
+				highlight = {
+					enable = true,
+					additional_vim_regex_highlighting = false,
+				},
+				--indent = { enable = true },
+			})
+		end,
 	},
 	{
 		"karb94/neoscroll.nvim",
@@ -294,7 +291,26 @@ require("lazy").setup({
 			vim.g.isort_command = "isort"
 		end,
 	},
-
+	{
+		"nvim-tree/nvim-tree.lua",
+		version = "*",
+		lazy = false,
+		dependencies = {
+			"nvim-tree/nvim-web-devicons",
+		},
+		config = function()
+			require("nvim-tree").setup {}
+		end,
+	},
+	{
+		'stevearc/oil.nvim',
+		opts = {},
+		-- Optional dependencies
+		dependencies = { "nvim-tree/nvim-web-devicons" },
+		config = function()
+			require("oil").setup()
+		end,
+	},
 	-- ################### UI plugins ###################
 	{ "itchyny/lightline.vim" }, -- Provides a lightweight status line
 	{ "vim-airline/vim-airline" }, -- Provides enhanced status lines and themes
@@ -561,7 +577,8 @@ vim.api.nvim_create_autocmd("BufWritePost", {
 	command = "TlistUpdate",
 })
 
-vim.keymap.set("n", "<F2>", ":NERDTreeToggle | wincmd p<CR>", { noremap = true })
+-- vim.keymap.set("n", "<F2>", ":NERDTreeToggle | wincmd p<CR>", { noremap = true })
+vim.keymap.set("n", "<F2>", ":NvimTreeToggle | wincmd p<CR>", { noremap = true })
 vim.keymap.set("n", "<F3>", ":TlistToggle<CR>", { noremap = true })
 vim.keymap.set("n", "<F4>", ":TagbarToggle<CR>", { noremap = true })
 vim.keymap.set("n", "<F6>", ":TagbarTogglePause<CR>", { noremap = true })
