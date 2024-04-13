@@ -1,0 +1,1443 @@
+{
+    "global": {
+        "ask_for_confirmation_before_quitting": true,
+        "check_for_updates_on_startup": true,
+        "show_in_menu_bar": true,
+        "show_profile_name_in_menu_bar": false,
+        "unsafe_ui": false
+    },
+    "profiles": [
+        {
+            "complex_modifications": {
+                "parameters": {
+                    "basic.simultaneous_threshold_milliseconds": 50,
+                    "basic.to_delayed_action_delay_milliseconds": 500,
+                    "basic.to_if_alone_timeout_milliseconds": 1000,
+                    "basic.to_if_held_down_threshold_milliseconds": 500,
+                    "mouse_motion_to_scroll.speed": 100
+                },
+                "rules": [
+                    {
+                        "description": "CAPS_LOCK -> L_CTRL, L_CTRL -> L_CMD from on wezterm",
+                        "manipulators": [
+                            {
+                                "conditions": [
+                                    {
+                                        "bundle_identifiers": [
+                                            "com.github.wez.wezterm"
+                                        ],
+                                        "type": "frontmost_application_if"
+                                    }
+                                ],
+                                "from": {
+                                    "key_code": "caps_lock"
+                                },
+                                "to": [
+                                    {
+                                        "key_code": "left_control",
+                                        "repeat": true
+                                    }
+                                ],
+                                "type": "basic"
+                            },
+                            {
+                                "conditions": [
+                                    {
+                                        "bundle_identifiers": [
+                                            "com.github.wez.wezterm"
+                                        ],
+                                        "type": "frontmost_application_if"
+                                    }
+                                ],
+                                "from": {
+                                    "key_code": "left_control"
+                                },
+                                "to": [
+                                    {
+                                        "key_code": "left_command",
+                                        "repeat": true
+                                    }
+                                ],
+                                "type": "basic"
+                            }
+                        ]
+                    },
+                    {
+                        "description": "L_CMD -> L_OPT, L_OPT -> L_CTRL on terminal unless Apple Intenral Keyboard",
+                        "manipulators": [
+                            {
+                                "conditions": [
+                                    {
+                                        "bundle_identifiers": [
+                                            "com.googlecode.iterm2"
+                                        ],
+                                        "type": "frontmost_application_if"
+                                    },
+                                    {
+                                        "identifiers": [
+                                            {
+                                                "is_keyboard": true,
+                                                "location_id": 165
+                                            }
+                                        ],
+                                        "type": "device_unless"
+                                    }
+                                ],
+                                "from": {
+                                    "key_code": "left_gui"
+                                },
+                                "to": [
+                                    {
+                                        "key_code": "left_alt",
+                                        "repeat": true
+                                    }
+                                ],
+                                "type": "basic"
+                            },
+                            {
+                                "conditions": [
+                                    {
+                                        "bundle_identifiers": [
+                                            "com.googlecode.iterm2"
+                                        ],
+                                        "type": "frontmost_application_if"
+                                    },
+                                    {
+                                        "identifiers": [
+                                            {
+                                                "is_keyboard": true,
+                                                "location_id": 165
+                                            }
+                                        ],
+                                        "type": "device_unless"
+                                    }
+                                ],
+                                "from": {
+                                    "key_code": "left_alt"
+                                },
+                                "to": [
+                                    {
+                                        "key_code": "left_control",
+                                        "repeat": true
+                                    }
+                                ],
+                                "type": "basic"
+                            }
+                        ]
+                    },
+                    {
+                        "description": "LEFT_CMD <-> LEFT_OPT unless Apple Internal Keyboard",
+                        "manipulators": [
+                            {
+                                "conditions": [
+                                    {
+                                        "identifiers": [
+                                            {
+                                                "is_keyboard": true,
+                                                "location_id": 165
+                                            }
+                                        ],
+                                        "type": "device_unless"
+                                    }
+                                ],
+                                "from": {
+                                    "key_code": "left_alt",
+                                    "modifiers": {
+                                        "optional": [
+                                            "any"
+                                        ]
+                                    }
+                                },
+                                "to": [
+                                    {
+                                        "key_code": "left_gui",
+                                        "repeat": true
+                                    }
+                                ],
+                                "type": "basic"
+                            },
+                            {
+                                "conditions": [
+                                    {
+                                        "identifiers": [
+                                            {
+                                                "is_keyboard": true,
+                                                "location_id": 165
+                                            }
+                                        ],
+                                        "type": "device_unless"
+                                    }
+                                ],
+                                "from": {
+                                    "key_code": "left_gui",
+                                    "modifiers": {
+                                        "optional": [
+                                            "any"
+                                        ]
+                                    }
+                                },
+                                "to": [
+                                    {
+                                        "key_code": "left_alt",
+                                        "repeat": true
+                                    }
+                                ],
+                                "type": "basic"
+                            }
+                        ]
+                    },
+                    {
+                        "description": "L_CMD -> L_CTRL on iTerm2 on Apple Intenral Keyboard",
+                        "manipulators": [
+                            {
+                                "conditions": [
+                                    {
+                                        "bundle_identifiers": [
+                                            "com.googlecode.iterm2"
+                                        ],
+                                        "type": "frontmost_application_if"
+                                    }
+                                ],
+                                "from": {
+                                    "key_code": "left_gui"
+                                },
+                                "to": [
+                                    {
+                                        "key_code": "left_control",
+                                        "repeat": true
+                                    }
+                                ],
+                                "type": "basic"
+                            }
+                        ]
+                    },
+                    {
+                        "description": "Map Shift+ESC to TILDE (~)",
+                        "manipulators": [
+                            {
+                                "from": {
+                                    "key_code": "escape",
+                                    "modifiers": {
+                                        "mandatory": [
+                                            "shift"
+                                        ]
+                                    }
+                                },
+                                "to": [
+                                    {
+                                        "key_code": "grave_accent_and_tilde",
+                                        "modifiers": [
+                                            "left_shift"
+                                        ]
+                                    }
+                                ],
+                                "type": "basic"
+                            }
+                        ]
+                    },
+                    {
+                        "description": "from R_OPT to F18 if Korean",
+                        "manipulators": [
+                            {
+                                "conditions": [
+                                    {
+                                        "input_sources": [
+                                            {
+                                                "language": "ko"
+                                            }
+                                        ],
+                                        "type": "input_source_if"
+                                    }
+                                ],
+                                "from": {
+                                    "key_code": "right_alt"
+                                },
+                                "to": [
+                                    {
+                                        "key_code": "f18",
+                                        "repeat": true
+                                    }
+                                ],
+                                "type": "basic"
+                            }
+                        ]
+                    },
+                    {
+                        "description": "from R_OPT to double F18 if English",
+                        "manipulators": [
+                            {
+                                "conditions": [
+                                    {
+                                        "input_sources": [
+                                            {
+                                                "language": "en"
+                                            }
+                                        ],
+                                        "type": "input_source_if"
+                                    }
+                                ],
+                                "from": {
+                                    "key_code": "right_alt"
+                                },
+                                "to": [
+                                    {
+                                        "key_code": "f18",
+                                        "repeat": true
+                                    },
+                                    {
+                                        "key_code": "f18",
+                                        "repeat": true
+                                    }
+                                ],
+                                "type": "basic"
+                            },
+                            {
+                                "from": {},
+                                "type": "basic"
+                            }
+                        ]
+                    },
+                    {
+                        "description": "from L_CTRL + SPACEBAR to single F18 if English",
+                        "manipulators": [
+                            {
+                                "conditions": [
+                                    {
+                                        "input_sources": [
+                                            {
+                                                "language": "en"
+                                            }
+                                        ],
+                                        "type": "input_source_if"
+                                    }
+                                ],
+                                "from": {
+                                    "key_code": "spacebar",
+                                    "modifiers": {
+                                        "mandatory": [
+                                            "left_control"
+                                        ]
+                                    }
+                                },
+                                "to": [
+                                    {
+                                        "key_code": "f18",
+                                        "repeat": true
+                                    }
+                                ],
+                                "type": "basic"
+                            },
+                            {
+                                "from": {},
+                                "type": "basic"
+                            }
+                        ]
+                    },
+                    {
+                        "description": "from R_OPT to single F18 if Japanese",
+                        "manipulators": [
+                            {
+                                "conditions": [
+                                    {
+                                        "input_sources": [
+                                            {
+                                                "language": "ja"
+                                            }
+                                        ],
+                                        "type": "input_source_if"
+                                    }
+                                ],
+                                "from": {
+                                    "key_code": "right_alt"
+                                },
+                                "to": [
+                                    {
+                                        "key_code": "f18",
+                                        "repeat": true
+                                    }
+                                ],
+                                "type": "basic"
+                            },
+                            {
+                                "from": {},
+                                "type": "basic"
+                            }
+                        ]
+                    },
+                    {
+                        "description": "from L_CTRL + SPACEBAR to double F18 if Korean",
+                        "manipulators": [
+                            {
+                                "conditions": [
+                                    {
+                                        "input_sources": [
+                                            {
+                                                "language": "ko"
+                                            }
+                                        ],
+                                        "type": "input_source_if"
+                                    }
+                                ],
+                                "from": {
+                                    "key_code": "spacebar",
+                                    "modifiers": {
+                                        "mandatory": [
+                                            "left_control"
+                                        ]
+                                    }
+                                },
+                                "to": [
+                                    {
+                                        "key_code": "f18",
+                                        "repeat": true
+                                    },
+                                    {
+                                        "key_code": "f18",
+                                        "repeat": true
+                                    }
+                                ],
+                                "type": "basic"
+                            },
+                            {
+                                "from": {},
+                                "type": "basic"
+                            }
+                        ]
+                    },
+                    {
+                        "description": "from_L_CTRL_+_SPACEBAR_to_single_F18_if_Japanese",
+                        "manipulators": [
+                            {
+                                "conditions": [
+                                    {
+                                        "input_sources": [
+                                            {
+                                                "language": "ja"
+                                            }
+                                        ],
+                                        "type": "input_source_if"
+                                    }
+                                ],
+                                "from": {
+                                    "key_code": "spacebar",
+                                    "modifiers": {
+                                        "mandatory": [
+                                            "left_control"
+                                        ]
+                                    }
+                                },
+                                "to": [
+                                    {
+                                        "key_code": "f18",
+                                        "repeat": true
+                                    }
+                                ],
+                                "type": "basic"
+                            }
+                        ]
+                    },
+                    {
+                        "description": "from CAPS_LOCK to L_CMD",
+                        "manipulators": [
+                            {
+                                "from": {
+                                    "key_code": "caps_lock"
+                                },
+                                "to": [
+                                    {
+                                        "key_code": "left_gui",
+                                        "repeat": true
+                                    }
+                                ],
+                                "type": "basic"
+                            }
+                        ]
+                    }
+                ]
+            },
+            "devices": [
+                {
+                    "disable_built_in_keyboard_if_exists": false,
+                    "fn_function_keys": [],
+                    "game_pad_swap_sticks": false,
+                    "identifiers": {
+                        "is_game_pad": false,
+                        "is_keyboard": true,
+                        "is_pointing_device": false,
+                        "product_id": 0,
+                        "vendor_id": 0
+                    },
+                    "ignore": false,
+                    "manipulate_caps_lock_led": true,
+                    "mouse_flip_horizontal_wheel": false,
+                    "mouse_flip_vertical_wheel": false,
+                    "mouse_flip_x": false,
+                    "mouse_flip_y": false,
+                    "mouse_swap_wheels": false,
+                    "mouse_swap_xy": false,
+                    "simple_modifications": [
+                        {
+                            "from": {
+                                "key_code": "right_command"
+                            },
+                            "to": [
+                                {
+                                    "key_code": "right_option"
+                                }
+                            ]
+                        },
+                        {
+                            "from": {
+                                "key_code": "right_option"
+                            },
+                            "to": [
+                                {
+                                    "key_code": "f17"
+                                }
+                            ]
+                        }
+                    ],
+                    "treat_as_built_in_keyboard": false
+                },
+                {
+                    "disable_built_in_keyboard_if_exists": false,
+                    "fn_function_keys": [],
+                    "game_pad_swap_sticks": false,
+                    "identifiers": {
+                        "is_game_pad": false,
+                        "is_keyboard": false,
+                        "is_pointing_device": true,
+                        "product_id": 0,
+                        "vendor_id": 0
+                    },
+                    "ignore": true,
+                    "manipulate_caps_lock_led": false,
+                    "mouse_flip_horizontal_wheel": false,
+                    "mouse_flip_vertical_wheel": false,
+                    "mouse_flip_x": false,
+                    "mouse_flip_y": false,
+                    "mouse_swap_wheels": false,
+                    "mouse_swap_xy": false,
+                    "simple_modifications": [],
+                    "treat_as_built_in_keyboard": false
+                },
+                {
+                    "disable_built_in_keyboard_if_exists": false,
+                    "fn_function_keys": [],
+                    "game_pad_swap_sticks": false,
+                    "identifiers": {
+                        "is_game_pad": false,
+                        "is_keyboard": true,
+                        "is_pointing_device": false,
+                        "product_id": 2663,
+                        "vendor_id": 1035
+                    },
+                    "ignore": false,
+                    "manipulate_caps_lock_led": true,
+                    "mouse_flip_horizontal_wheel": false,
+                    "mouse_flip_vertical_wheel": false,
+                    "mouse_flip_x": false,
+                    "mouse_flip_y": false,
+                    "mouse_swap_wheels": false,
+                    "mouse_swap_xy": false,
+                    "simple_modifications": [
+                        {
+                            "from": {
+                                "key_code": "escape"
+                            },
+                            "to": [
+                                {
+                                    "key_code": "grave_accent_and_tilde"
+                                }
+                            ]
+                        },
+                        {
+                            "from": {
+                                "key_code": "grave_accent_and_tilde"
+                            },
+                            "to": [
+                                {
+                                    "key_code": "escape"
+                                }
+                            ]
+                        },
+                        {
+                            "from": {
+                                "key_code": "left_command"
+                            },
+                            "to": [
+                                {
+                                    "key_code": "left_option"
+                                }
+                            ]
+                        },
+                        {
+                            "from": {
+                                "key_code": "left_option"
+                            },
+                            "to": [
+                                {
+                                    "key_code": "left_command"
+                                }
+                            ]
+                        },
+                        {
+                            "from": {
+                                "key_code": "right_control"
+                            },
+                            "to": [
+                                {
+                                    "key_code": "f17"
+                                }
+                            ]
+                        }
+                    ],
+                    "treat_as_built_in_keyboard": false
+                },
+                {
+                    "disable_built_in_keyboard_if_exists": false,
+                    "fn_function_keys": [],
+                    "game_pad_swap_sticks": false,
+                    "identifiers": {
+                        "is_game_pad": false,
+                        "is_keyboard": true,
+                        "is_pointing_device": false,
+                        "product_id": 20565,
+                        "vendor_id": 12815
+                    },
+                    "ignore": false,
+                    "manipulate_caps_lock_led": true,
+                    "mouse_flip_horizontal_wheel": false,
+                    "mouse_flip_vertical_wheel": false,
+                    "mouse_flip_x": false,
+                    "mouse_flip_y": false,
+                    "mouse_swap_wheels": false,
+                    "mouse_swap_xy": false,
+                    "simple_modifications": [],
+                    "treat_as_built_in_keyboard": false
+                },
+                {
+                    "disable_built_in_keyboard_if_exists": false,
+                    "fn_function_keys": [],
+                    "game_pad_swap_sticks": false,
+                    "identifiers": {
+                        "is_game_pad": false,
+                        "is_keyboard": true,
+                        "is_pointing_device": true,
+                        "product_id": 20786,
+                        "vendor_id": 1155
+                    },
+                    "ignore": true,
+                    "manipulate_caps_lock_led": true,
+                    "mouse_flip_horizontal_wheel": false,
+                    "mouse_flip_vertical_wheel": false,
+                    "mouse_flip_x": false,
+                    "mouse_flip_y": false,
+                    "mouse_swap_wheels": false,
+                    "mouse_swap_xy": false,
+                    "simple_modifications": [],
+                    "treat_as_built_in_keyboard": false
+                },
+                {
+                    "disable_built_in_keyboard_if_exists": false,
+                    "fn_function_keys": [],
+                    "game_pad_swap_sticks": false,
+                    "identifiers": {
+                        "is_game_pad": false,
+                        "is_keyboard": true,
+                        "is_pointing_device": false,
+                        "product_id": 20786,
+                        "vendor_id": 1155
+                    },
+                    "ignore": false,
+                    "manipulate_caps_lock_led": true,
+                    "mouse_flip_horizontal_wheel": false,
+                    "mouse_flip_vertical_wheel": false,
+                    "mouse_flip_x": false,
+                    "mouse_flip_y": false,
+                    "mouse_swap_wheels": false,
+                    "mouse_swap_xy": false,
+                    "simple_modifications": [
+                        {
+                            "from": {
+                                "key_code": "caps_lock"
+                            },
+                            "to": [
+                                {
+                                    "key_code": "left_command"
+                                }
+                            ]
+                        },
+                        {
+                            "from": {
+                                "key_code": "left_command"
+                            },
+                            "to": [
+                                {
+                                    "key_code": "left_option"
+                                }
+                            ]
+                        },
+                        {
+                            "from": {
+                                "key_code": "left_option"
+                            },
+                            "to": [
+                                {
+                                    "key_code": "left_command"
+                                }
+                            ]
+                        },
+                        {
+                            "from": {
+                                "key_code": "right_command"
+                            },
+                            "to": [
+                                {
+                                    "key_code": "f18"
+                                }
+                            ]
+                        },
+                        {
+                            "from": {
+                                "key_code": "right_control"
+                            },
+                            "to": [
+                                {
+                                    "key_code": "caps_lock"
+                                }
+                            ]
+                        },
+                        {
+                            "from": {
+                                "key_code": "right_option"
+                            },
+                            "to": [
+                                {
+                                    "key_code": "f18"
+                                }
+                            ]
+                        }
+                    ],
+                    "treat_as_built_in_keyboard": false
+                },
+                {
+                    "disable_built_in_keyboard_if_exists": false,
+                    "fn_function_keys": [],
+                    "game_pad_swap_sticks": false,
+                    "identifiers": {
+                        "is_game_pad": false,
+                        "is_keyboard": true,
+                        "is_pointing_device": false,
+                        "product_id": 50484,
+                        "vendor_id": 1133
+                    },
+                    "ignore": false,
+                    "manipulate_caps_lock_led": true,
+                    "mouse_flip_horizontal_wheel": false,
+                    "mouse_flip_vertical_wheel": false,
+                    "mouse_flip_x": false,
+                    "mouse_flip_y": false,
+                    "mouse_swap_wheels": false,
+                    "mouse_swap_xy": false,
+                    "simple_modifications": [],
+                    "treat_as_built_in_keyboard": false
+                },
+                {
+                    "disable_built_in_keyboard_if_exists": false,
+                    "fn_function_keys": [],
+                    "game_pad_swap_sticks": false,
+                    "identifiers": {
+                        "is_game_pad": false,
+                        "is_keyboard": false,
+                        "is_pointing_device": true,
+                        "product_id": 50484,
+                        "vendor_id": 1133
+                    },
+                    "ignore": true,
+                    "manipulate_caps_lock_led": false,
+                    "mouse_flip_horizontal_wheel": false,
+                    "mouse_flip_vertical_wheel": false,
+                    "mouse_flip_x": false,
+                    "mouse_flip_y": false,
+                    "mouse_swap_wheels": false,
+                    "mouse_swap_xy": false,
+                    "simple_modifications": [],
+                    "treat_as_built_in_keyboard": false
+                },
+                {
+                    "disable_built_in_keyboard_if_exists": false,
+                    "fn_function_keys": [],
+                    "game_pad_swap_sticks": false,
+                    "identifiers": {
+                        "is_game_pad": false,
+                        "is_keyboard": true,
+                        "is_pointing_device": false,
+                        "product_id": 50489,
+                        "vendor_id": 1133
+                    },
+                    "ignore": false,
+                    "manipulate_caps_lock_led": true,
+                    "mouse_flip_horizontal_wheel": false,
+                    "mouse_flip_vertical_wheel": false,
+                    "mouse_flip_x": false,
+                    "mouse_flip_y": false,
+                    "mouse_swap_wheels": false,
+                    "mouse_swap_xy": false,
+                    "simple_modifications": [],
+                    "treat_as_built_in_keyboard": false
+                },
+                {
+                    "disable_built_in_keyboard_if_exists": false,
+                    "fn_function_keys": [],
+                    "game_pad_swap_sticks": false,
+                    "identifiers": {
+                        "is_game_pad": false,
+                        "is_keyboard": false,
+                        "is_pointing_device": true,
+                        "product_id": 50489,
+                        "vendor_id": 1133
+                    },
+                    "ignore": true,
+                    "manipulate_caps_lock_led": false,
+                    "mouse_flip_horizontal_wheel": false,
+                    "mouse_flip_vertical_wheel": false,
+                    "mouse_flip_x": false,
+                    "mouse_flip_y": false,
+                    "mouse_swap_wheels": false,
+                    "mouse_swap_xy": false,
+                    "simple_modifications": [],
+                    "treat_as_built_in_keyboard": false
+                },
+                {
+                    "disable_built_in_keyboard_if_exists": false,
+                    "fn_function_keys": [],
+                    "game_pad_swap_sticks": false,
+                    "identifiers": {
+                        "is_game_pad": false,
+                        "is_keyboard": true,
+                        "is_pointing_device": true,
+                        "product_id": 20565,
+                        "vendor_id": 12815
+                    },
+                    "ignore": true,
+                    "manipulate_caps_lock_led": true,
+                    "mouse_flip_horizontal_wheel": false,
+                    "mouse_flip_vertical_wheel": false,
+                    "mouse_flip_x": false,
+                    "mouse_flip_y": false,
+                    "mouse_swap_wheels": false,
+                    "mouse_swap_xy": false,
+                    "simple_modifications": [],
+                    "treat_as_built_in_keyboard": false
+                },
+                {
+                    "disable_built_in_keyboard_if_exists": false,
+                    "fn_function_keys": [],
+                    "game_pad_swap_sticks": false,
+                    "identifiers": {
+                        "is_game_pad": false,
+                        "is_keyboard": true,
+                        "is_pointing_device": true,
+                        "product_id": 33398,
+                        "vendor_id": 9306
+                    },
+                    "ignore": false,
+                    "manipulate_caps_lock_led": true,
+                    "mouse_flip_horizontal_wheel": false,
+                    "mouse_flip_vertical_wheel": false,
+                    "mouse_flip_x": false,
+                    "mouse_flip_y": false,
+                    "mouse_swap_wheels": false,
+                    "mouse_swap_xy": false,
+                    "simple_modifications": [
+                        {
+                            "from": {
+                                "key_code": "page_down"
+                            },
+                            "to": [
+                                {
+                                    "apple_vendor_top_case_key_code": "keyboard_fn"
+                                }
+                            ]
+                        }
+                    ],
+                    "treat_as_built_in_keyboard": false
+                },
+                {
+                    "disable_built_in_keyboard_if_exists": false,
+                    "fn_function_keys": [],
+                    "game_pad_swap_sticks": false,
+                    "identifiers": {
+                        "is_game_pad": false,
+                        "is_keyboard": true,
+                        "is_pointing_device": false,
+                        "product_id": 360,
+                        "vendor_id": 9061
+                    },
+                    "ignore": false,
+                    "manipulate_caps_lock_led": true,
+                    "mouse_flip_horizontal_wheel": false,
+                    "mouse_flip_vertical_wheel": false,
+                    "mouse_flip_x": false,
+                    "mouse_flip_y": false,
+                    "mouse_swap_wheels": false,
+                    "mouse_swap_xy": false,
+                    "simple_modifications": [
+                        {
+                            "from": {
+                                "key_code": "right_control"
+                            },
+                            "to": [
+                                {
+                                    "apple_vendor_top_case_key_code": "keyboard_fn"
+                                }
+                            ]
+                        }
+                    ],
+                    "treat_as_built_in_keyboard": false
+                },
+                {
+                    "disable_built_in_keyboard_if_exists": false,
+                    "fn_function_keys": [],
+                    "game_pad_swap_sticks": false,
+                    "identifiers": {
+                        "is_game_pad": false,
+                        "is_keyboard": true,
+                        "is_pointing_device": true,
+                        "product_id": 20616,
+                        "vendor_id": 12815
+                    },
+                    "ignore": true,
+                    "manipulate_caps_lock_led": true,
+                    "mouse_flip_horizontal_wheel": false,
+                    "mouse_flip_vertical_wheel": false,
+                    "mouse_flip_x": false,
+                    "mouse_flip_y": false,
+                    "mouse_swap_wheels": false,
+                    "mouse_swap_xy": false,
+                    "simple_modifications": [],
+                    "treat_as_built_in_keyboard": false
+                },
+                {
+                    "disable_built_in_keyboard_if_exists": false,
+                    "fn_function_keys": [],
+                    "game_pad_swap_sticks": false,
+                    "identifiers": {
+                        "is_game_pad": false,
+                        "is_keyboard": true,
+                        "is_pointing_device": false,
+                        "product_id": 20616,
+                        "vendor_id": 12815
+                    },
+                    "ignore": false,
+                    "manipulate_caps_lock_led": true,
+                    "mouse_flip_horizontal_wheel": false,
+                    "mouse_flip_vertical_wheel": false,
+                    "mouse_flip_x": false,
+                    "mouse_flip_y": false,
+                    "mouse_swap_wheels": false,
+                    "mouse_swap_xy": false,
+                    "simple_modifications": [
+                        {
+                            "from": {
+                                "key_code": "page_down"
+                            },
+                            "to": [
+                                {
+                                    "apple_vendor_top_case_key_code": "keyboard_fn"
+                                }
+                            ]
+                        }
+                    ],
+                    "treat_as_built_in_keyboard": false
+                }
+            ],
+            "fn_function_keys": [
+                {
+                    "from": {
+                        "key_code": "f1"
+                    },
+                    "to": [
+                        {
+                            "consumer_key_code": "display_brightness_decrement"
+                        }
+                    ]
+                },
+                {
+                    "from": {
+                        "key_code": "f2"
+                    },
+                    "to": [
+                        {
+                            "consumer_key_code": "display_brightness_increment"
+                        }
+                    ]
+                },
+                {
+                    "from": {
+                        "key_code": "f3"
+                    },
+                    "to": [
+                        {
+                            "apple_vendor_keyboard_key_code": "mission_control"
+                        }
+                    ]
+                },
+                {
+                    "from": {
+                        "key_code": "f4"
+                    },
+                    "to": [
+                        {
+                            "apple_vendor_keyboard_key_code": "spotlight"
+                        }
+                    ]
+                },
+                {
+                    "from": {
+                        "key_code": "f5"
+                    },
+                    "to": [
+                        {
+                            "consumer_key_code": "dictation"
+                        }
+                    ]
+                },
+                {
+                    "from": {
+                        "key_code": "f6"
+                    },
+                    "to": [
+                        {
+                            "key_code": "f6"
+                        }
+                    ]
+                },
+                {
+                    "from": {
+                        "key_code": "f7"
+                    },
+                    "to": [
+                        {
+                            "consumer_key_code": "rewind"
+                        }
+                    ]
+                },
+                {
+                    "from": {
+                        "key_code": "f8"
+                    },
+                    "to": [
+                        {
+                            "consumer_key_code": "play_or_pause"
+                        }
+                    ]
+                },
+                {
+                    "from": {
+                        "key_code": "f9"
+                    },
+                    "to": [
+                        {
+                            "consumer_key_code": "fast_forward"
+                        }
+                    ]
+                },
+                {
+                    "from": {
+                        "key_code": "f10"
+                    },
+                    "to": [
+                        {
+                            "consumer_key_code": "mute"
+                        }
+                    ]
+                },
+                {
+                    "from": {
+                        "key_code": "f11"
+                    },
+                    "to": [
+                        {
+                            "consumer_key_code": "volume_decrement"
+                        }
+                    ]
+                },
+                {
+                    "from": {
+                        "key_code": "f12"
+                    },
+                    "to": [
+                        {
+                            "consumer_key_code": "volume_increment"
+                        }
+                    ]
+                }
+            ],
+            "name": "Default profile",
+            "parameters": {
+                "delay_milliseconds_before_open_device": 1000
+            },
+            "selected": true,
+            "simple_modifications": [
+                {
+                    "from": {
+                        "key_code": "escape"
+                    },
+                    "to": [
+                        {
+                            "key_code": "grave_accent_and_tilde"
+                        }
+                    ]
+                },
+                {
+                    "from": {
+                        "key_code": "grave_accent_and_tilde"
+                    },
+                    "to": [
+                        {
+                            "key_code": "escape"
+                        }
+                    ]
+                }
+            ],
+            "virtual_hid_keyboard": {
+                "country_code": 0,
+                "indicate_sticky_modifier_keys_state": true,
+                "mouse_key_xy_scale": 100
+            }
+        },
+        {
+            "complex_modifications": {
+                "parameters": {
+                    "basic.simultaneous_threshold_milliseconds": 50,
+                    "basic.to_delayed_action_delay_milliseconds": 500,
+                    "basic.to_if_alone_timeout_milliseconds": 1000,
+                    "basic.to_if_held_down_threshold_milliseconds": 500,
+                    "mouse_motion_to_scroll.speed": 100
+                },
+                "rules": [
+                    {
+                        "description": "switch between LEFT_CMD and LEFT_OPT unless Apple Internal Keyboard",
+                        "manipulators": [
+                            {
+                                "conditions": [
+                                    {
+                                        "identifiers": [
+                                            {
+                                                "is_keyboard": true,
+                                                "location_id": 165
+                                            }
+                                        ],
+                                        "type": "device_unless"
+                                    },
+                                    {
+                                        "bundle_identifiers": [
+                                            "com.googlecode.iterm2"
+                                        ],
+                                        "type": "frontmost_application_unless"
+                                    }
+                                ],
+                                "from": {
+                                    "key_code": "left_gui",
+                                    "modifiers": {
+                                        "optional": [
+                                            "any"
+                                        ]
+                                    }
+                                },
+                                "to": [
+                                    {
+                                        "key_code": "left_alt",
+                                        "repeat": true
+                                    }
+                                ],
+                                "type": "basic"
+                            },
+                            {
+                                "conditions": [
+                                    {
+                                        "identifiers": [
+                                            {
+                                                "is_keyboard": true,
+                                                "location_id": 165
+                                            }
+                                        ],
+                                        "type": "device_unless"
+                                    },
+                                    {
+                                        "bundle_identifiers": [
+                                            "com.googlecode.iterm2"
+                                        ],
+                                        "type": "frontmost_application_unless"
+                                    }
+                                ],
+                                "from": {
+                                    "key_code": "left_alt",
+                                    "modifiers": {
+                                        "optional": [
+                                            "any"
+                                        ]
+                                    }
+                                },
+                                "to": [
+                                    {
+                                        "key_code": "left_gui",
+                                        "repeat": true
+                                    }
+                                ],
+                                "type": "basic"
+                            }
+                        ]
+                    }
+                ]
+            },
+            "devices": [
+                {
+                    "disable_built_in_keyboard_if_exists": false,
+                    "fn_function_keys": [],
+                    "game_pad_swap_sticks": false,
+                    "identifiers": {
+                        "is_game_pad": false,
+                        "is_keyboard": true,
+                        "is_pointing_device": false,
+                        "product_id": 0,
+                        "vendor_id": 0
+                    },
+                    "ignore": false,
+                    "manipulate_caps_lock_led": true,
+                    "mouse_flip_horizontal_wheel": false,
+                    "mouse_flip_vertical_wheel": false,
+                    "mouse_flip_x": false,
+                    "mouse_flip_y": false,
+                    "mouse_swap_wheels": false,
+                    "mouse_swap_xy": false,
+                    "simple_modifications": [],
+                    "treat_as_built_in_keyboard": false
+                },
+                {
+                    "disable_built_in_keyboard_if_exists": false,
+                    "fn_function_keys": [],
+                    "game_pad_swap_sticks": false,
+                    "identifiers": {
+                        "is_game_pad": false,
+                        "is_keyboard": false,
+                        "is_pointing_device": true,
+                        "product_id": 0,
+                        "vendor_id": 0
+                    },
+                    "ignore": true,
+                    "manipulate_caps_lock_led": false,
+                    "mouse_flip_horizontal_wheel": false,
+                    "mouse_flip_vertical_wheel": false,
+                    "mouse_flip_x": false,
+                    "mouse_flip_y": false,
+                    "mouse_swap_wheels": false,
+                    "mouse_swap_xy": false,
+                    "simple_modifications": [],
+                    "treat_as_built_in_keyboard": false
+                },
+                {
+                    "disable_built_in_keyboard_if_exists": false,
+                    "fn_function_keys": [],
+                    "game_pad_swap_sticks": false,
+                    "identifiers": {
+                        "is_game_pad": false,
+                        "is_keyboard": true,
+                        "is_pointing_device": false,
+                        "product_id": 360,
+                        "vendor_id": 9061
+                    },
+                    "ignore": false,
+                    "manipulate_caps_lock_led": true,
+                    "mouse_flip_horizontal_wheel": false,
+                    "mouse_flip_vertical_wheel": false,
+                    "mouse_flip_x": false,
+                    "mouse_flip_y": false,
+                    "mouse_swap_wheels": false,
+                    "mouse_swap_xy": false,
+                    "simple_modifications": [],
+                    "treat_as_built_in_keyboard": false
+                },
+                {
+                    "disable_built_in_keyboard_if_exists": false,
+                    "fn_function_keys": [],
+                    "game_pad_swap_sticks": false,
+                    "identifiers": {
+                        "is_game_pad": false,
+                        "is_keyboard": true,
+                        "is_pointing_device": false,
+                        "product_id": 50484,
+                        "vendor_id": 1133
+                    },
+                    "ignore": false,
+                    "manipulate_caps_lock_led": true,
+                    "mouse_flip_horizontal_wheel": false,
+                    "mouse_flip_vertical_wheel": false,
+                    "mouse_flip_x": false,
+                    "mouse_flip_y": false,
+                    "mouse_swap_wheels": false,
+                    "mouse_swap_xy": false,
+                    "simple_modifications": [],
+                    "treat_as_built_in_keyboard": false
+                },
+                {
+                    "disable_built_in_keyboard_if_exists": false,
+                    "fn_function_keys": [],
+                    "game_pad_swap_sticks": false,
+                    "identifiers": {
+                        "is_game_pad": false,
+                        "is_keyboard": false,
+                        "is_pointing_device": true,
+                        "product_id": 50484,
+                        "vendor_id": 1133
+                    },
+                    "ignore": true,
+                    "manipulate_caps_lock_led": false,
+                    "mouse_flip_horizontal_wheel": false,
+                    "mouse_flip_vertical_wheel": false,
+                    "mouse_flip_x": false,
+                    "mouse_flip_y": false,
+                    "mouse_swap_wheels": false,
+                    "mouse_swap_xy": false,
+                    "simple_modifications": [],
+                    "treat_as_built_in_keyboard": false
+                }
+            ],
+            "fn_function_keys": [
+                {
+                    "from": {
+                        "key_code": "f1"
+                    },
+                    "to": [
+                        {
+                            "consumer_key_code": "display_brightness_decrement"
+                        }
+                    ]
+                },
+                {
+                    "from": {
+                        "key_code": "f2"
+                    },
+                    "to": [
+                        {
+                            "consumer_key_code": "display_brightness_increment"
+                        }
+                    ]
+                },
+                {
+                    "from": {
+                        "key_code": "f3"
+                    },
+                    "to": [
+                        {
+                            "apple_vendor_keyboard_key_code": "mission_control"
+                        }
+                    ]
+                },
+                {
+                    "from": {
+                        "key_code": "f4"
+                    },
+                    "to": [
+                        {
+                            "apple_vendor_keyboard_key_code": "spotlight"
+                        }
+                    ]
+                },
+                {
+                    "from": {
+                        "key_code": "f5"
+                    },
+                    "to": [
+                        {
+                            "consumer_key_code": "dictation"
+                        }
+                    ]
+                },
+                {
+                    "from": {
+                        "key_code": "f6"
+                    },
+                    "to": [
+                        {
+                            "key_code": "f6"
+                        }
+                    ]
+                },
+                {
+                    "from": {
+                        "key_code": "f7"
+                    },
+                    "to": [
+                        {
+                            "consumer_key_code": "rewind"
+                        }
+                    ]
+                },
+                {
+                    "from": {
+                        "key_code": "f8"
+                    },
+                    "to": [
+                        {
+                            "consumer_key_code": "play_or_pause"
+                        }
+                    ]
+                },
+                {
+                    "from": {
+                        "key_code": "f9"
+                    },
+                    "to": [
+                        {
+                            "consumer_key_code": "fast_forward"
+                        }
+                    ]
+                },
+                {
+                    "from": {
+                        "key_code": "f10"
+                    },
+                    "to": [
+                        {
+                            "consumer_key_code": "mute"
+                        }
+                    ]
+                },
+                {
+                    "from": {
+                        "key_code": "f11"
+                    },
+                    "to": [
+                        {
+                            "consumer_key_code": "volume_decrement"
+                        }
+                    ]
+                },
+                {
+                    "from": {
+                        "key_code": "f12"
+                    },
+                    "to": [
+                        {
+                            "consumer_key_code": "volume_increment"
+                        }
+                    ]
+                }
+            ],
+            "name": "New profile",
+            "parameters": {
+                "delay_milliseconds_before_open_device": 1000
+            },
+            "selected": false,
+            "simple_modifications": [],
+            "virtual_hid_keyboard": {
+                "country_code": 0,
+                "indicate_sticky_modifier_keys_state": true,
+                "mouse_key_xy_scale": 100
+            }
+        }
+    ]
+}

@@ -121,34 +121,5 @@ plugins=(
 cd() { builtin cd "$@" && ls; } #execute ls after cd
 export TERM=xterm-256color
 
-source "$ZSH/themes/powerlevel10k/powerlevel10k.zsh-theme"
-# To customize prompt, run `p10k configure` or edit ~/.p10k.zsh.
-
-[ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
-export FZF_BASE=/path/to/fzf/install/dir
-
-# >>> mamba initialize >>>
-# !! Contents within this block are managed by 'mamba init' !!
-export MAMBA_EXE="$HOME/.local/bin/micromamba";
-export MAMBA_ROOT_PREFIX="$HOME/micromamba";
-__mamba_setup="$("$MAMBA_EXE" shell hook --shell zsh --root-prefix "$MAMBA_ROOT_PREFIX" 2> /dev/null)"
-if [ $? -eq 0 ]; then
-    eval "$__mamba_setup"
-else
-    alias micromamba="$MAMBA_EXE"  # Fallback on help from mamba activate
-fi
-unset __mamba_setup
-
-micromamba activate comfyui
-# <<< mamba initialize <<<
-
-# CUDA
-export PATH=$PATH:/usr/local/cuda-11.8/bin
-export CUDADIR=/usr/local/cuda-11.8
-
-# NVM: Node Version Manager
-export NVM_DIR="$HOME/.nvm"
-[ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"  # This loads nvm
-[ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"  # This loads nvm bash_completion
 
 bindkey -v
