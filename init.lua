@@ -2,18 +2,6 @@
 -- Basic settings
 vim.opt.clipboard = "unnamedplus"
 
--- vim.g.clipboard = {
--- 	name = "OSC 52",
--- 	copy = {
--- 		["+"] = require("vim.ui.clipboard.osc52").copy("+"),
--- 		["*"] = require("vim.ui.clipboard.osc52").copy("*"),
--- 	},
--- 	paste = {
--- 		["+"] = require("vim.ui.clipboard.osc52").paste("+"),
--- 		["*"] = require("vim.ui.clipboard.osc52").paste("*"),
--- 	},
--- }
-
 vim.opt.mouse = "a"
 vim.opt.hlsearch = true
 vim.opt.number = true
@@ -23,6 +11,7 @@ vim.opt.tabstop = 4
 vim.opt.softtabstop = 4
 vim.opt.shiftwidth = 1
 vim.opt.autowrite = true
+vim.g.conceallevel = 0
 
 -- tags setting
 vim.opt.tags:append("./tags,tags")
@@ -47,21 +36,33 @@ vim.opt.ruler = true
 vim.opt.incsearch = true
 vim.opt.smartindent = true
 vim.opt.autoindent = true
+vim.g.vim_json_conceal = 0
 vim.cmd([[
   au FileType *.cc,*.cpp,*.cc setlocal cindent
 ]])
 
 -- FileType 이벤트에 대한 자동 명령을 설정합니다.
-vim.api.nvim_create_autocmd("FileType", {
-	pattern = "yaml",
-	callback = function()
-		local bufname = vim.api.nvim_buf_get_name(0)
-		if string.match(bufname, "docker-compose.yml") then
-			vim.bo.filetype = "yaml.docker-compose"
-		elseif string.match(bufname, "compose.yml") then
-			vim.bo.filetype = "yaml.docker-compose"
+vim.api.nvim_create_autocmd("FileType",{
+		pattern = "yaml",
+		callback = function()
+			local bufname = vim.api.nvim_buf_get_name(0)
+			if string.match(bufname, "docker-compose.yml") then
+				vim.bo.filetype = "yaml.docker-compose"
+			elseif string.match(bufname, "compose.yml") then
+				vim.bo.filetype = "yaml.docker-compose"
+			end
+		end,
+})
+
+vim.api.nvim_create_autocmd("FileType",{
+		pattern = "json",
+		callback = function()
+			-- json 파일의 들여쓰기를 2로 설정
+			vim.opt_local.shiftwidth = 4
+			vim.opt_local.tabstop = 4
+			vim.opt_local.softtabstop = 4
+			vim.opt_local.expandtab = true
 		end
-	end,
 })
 
 -- g:coc_filetype_map 설정
@@ -303,6 +304,25 @@ require("lazy").setup({
 		end,
 	},
 	{
+		"nvim-neo-tree/neo-tree.nvim",
+		branch = "v3.x",
+		dependencies = {
+			"nvim-lua/plenary.nvim",
+			"nvim-tree/nvim-web-devicons", -- not strictly required, but recommended
+			"MunifTanjim/nui.nvim",
+			-- "3rd/image.nvim", -- Optional image support in preview window: See `# Preview Mode` for more information
+		},
+-- 		opts = {
+-- 			filesystem = {
+-- 				filtered_items = {
+-- 					-- visible = true, -- This is what you want: If you set this to `true`, all "hide" just mean "dimmed out"
+-- 					hide_dotfiles = false,
+-- 					hide_gitignored = true,
+-- 				},
+-- 			}
+-- 		}
+	},
+	{
 		'stevearc/oil.nvim',
 		opts = {},
 		-- Optional dependencies
@@ -311,6 +331,13 @@ require("lazy").setup({
 			require("oil").setup()
 		end,
 	},
+	{
+		"sbdchd/neoformat",
+		config = function()
+			vim.g.neoformat_try_node_exe = 1
+		end,
+	},
+
 	-- ################### UI plugins ###################
 	{ "itchyny/lightline.vim" }, -- Provides a lightweight status line
 	{ "vim-airline/vim-airline" }, -- Provides enhanced status lines and themes
@@ -494,6 +521,9 @@ keyset("x", "<C-s>", "<Plug>(coc-range-select)", { silent = true })
 
 -- Add `:Format` command to format current buffer
 vim.api.nvim_create_user_command("Format", "call CocAction('format')", {})
+vim.api.nvim_create_user_command('Prettier', function()
+  vim.fn.CocAction('runCommand', 'prettier.formatFile')
+end, {})
 
 -- " Add `:Fold` command to fold current buffer
 vim.api.nvim_create_user_command("Fold", "call CocAction('fold', <f-args>)", { nargs = "?" })
@@ -578,7 +608,8 @@ vim.api.nvim_create_autocmd("BufWritePost", {
 })
 
 -- vim.keymap.set("n", "<F2>", ":NERDTreeToggle | wincmd p<CR>", { noremap = true })
-vim.keymap.set("n", "<F2>", ":NvimTreeToggle | wincmd p<CR>", { noremap = true })
+-- vim.keymap.set("n", "<F2>", ":Neotree | wincmd p<CR>", { noremap = true })
+vim.keymap.set("n", "<F2>", ":Neotree toggle<CR>", { noremap = true })
 vim.keymap.set("n", "<F3>", ":TlistToggle<CR>", { noremap = true })
 vim.keymap.set("n", "<F4>", ":TagbarToggle<CR>", { noremap = true })
 vim.keymap.set("n", "<F6>", ":TagbarTogglePause<CR>", { noremap = true })
@@ -610,6 +641,19 @@ local function RunSplitPython()
 	SplitBelow()
 	vim.cmd("resize 10")
 	vim.cmd("term python %")
+end
+
+local function RunSplitNode()
+	for i = 1, vim.fn.winnr("$") do
+		if vim.fn.getwinvar(i, "&buftype") == "terminal" then
+			vim.cmd(i .. "wincmd c")
+			break
+		end
+	end
+
+	SplitBelow()
+	vim.cmd("resize 10")
+	vim.cmd("term node %")
 end
 
 -- Map <F5> to RunSplitPython
