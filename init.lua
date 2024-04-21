@@ -5,13 +5,22 @@ vim.opt.clipboard = "unnamedplus"
 vim.opt.mouse = "a"
 vim.opt.hlsearch = true
 vim.opt.number = true
-vim.opt.scrolloff = 2
 vim.opt.wildmode = "longest,list"
-vim.opt.tabstop = 4
-vim.opt.softtabstop = 4
-vim.opt.shiftwidth = 1
 vim.opt.autowrite = true
+vim.opt.showmatch = true
+vim.opt.smartcase = true
+vim.opt.ruler = true
+vim.opt.incsearch = true
+
+vim.opt.scrolloff = 2
+vim.opt.history = 256
+vim.opt.laststatus = 2
 vim.g.conceallevel = 0
+vim.g.vim_json_conceal = 0
+
+vim.opt.smarttab = true
+vim.opt.smartindent = false
+vim.opt.autoindent = true
 
 -- tags setting
 vim.opt.tags:append("./tags,tags")
@@ -24,34 +33,29 @@ vim.cmd([[
 ]])
 
 -- More settings
-vim.opt.history = 256
-vim.opt.laststatus = 2
-vim.opt.shiftwidth = 4
-vim.opt.showmatch = true
-vim.opt.smartcase = true
-vim.opt.smarttab = true
-vim.opt.softtabstop = 4
-vim.opt.tabstop = 4
-vim.opt.ruler = true
-vim.opt.incsearch = true
-vim.opt.smartindent = true
-vim.opt.autoindent = true
-vim.g.vim_json_conceal = 0
 vim.cmd([[
   au FileType *.cc,*.cpp,*.cc setlocal cindent
 ]])
 
 -- FileType 이벤트에 대한 자동 명령을 설정합니다.
 vim.api.nvim_create_autocmd("FileType",{
-		pattern = "yaml",
-		callback = function()
-			local bufname = vim.api.nvim_buf_get_name(0)
-			if string.match(bufname, "docker-compose.yml") then
-				vim.bo.filetype = "yaml.docker-compose"
-			elseif string.match(bufname, "compose.yml") then
-				vim.bo.filetype = "yaml.docker-compose"
-			end
-		end,
+	pattern = {"javascript", "html"},
+	callback = function()
+		vim.bo.shiftwidth = 2
+		vim.bo.tabstop = 2
+	end,
+})
+
+vim.api.nvim_create_autocmd("FileType",{
+	pattern = "yaml",
+	callback = function()
+		local bufname = vim.api.nvim_buf_get_name(0)
+		if string.match(bufname, "docker-compose.yml") then
+			vim.bo.filetype = "yaml.docker-compose"
+		elseif string.match(bufname, "compose.yml") then
+			vim.bo.filetype = "yaml.docker-compose"
+		end
+	end,
 })
 
 vim.api.nvim_create_autocmd("FileType",{
@@ -393,17 +397,17 @@ require("lazy").setup({
 
 changeColorscheme("sonokai")
 
-vim.api.nvim_create_user_command("Format", function(args)
-	local range = nil
-	if args.count ~= -1 then
-		local end_line = vim.api.nvim_buf_get_lines(0, args.line2 - 1, args.line2, true)[1]
-		range = {
-			start = { args.line1, 0 },
-			["end"] = { args.line2, end_line:len() },
-		}
-	end
-	require("conform").format({ async = true, lsp_fallback = true, range = range })
-end, { range = true })
+-- vim.api.nvim_create_user_command("Format", function(args)
+-- 	local range = nil
+-- 	if args.count ~= -1 then
+-- 		local end_line = vim.api.nvim_buf_get_lines(0, args.line2 - 1, args.line2, true)[1]
+-- 		range = {
+-- 			start = { args.line1, 0 },
+-- 			["end"] = { args.line2, end_line:len() },
+-- 		}
+-- 	end
+-- 	require("conform").format({ async = true, lsp_fallback = true, range = range })
+-- end, { range = true })
 
 vim.cmd("filetype plugin indent on")
 
@@ -658,3 +662,17 @@ end
 
 -- Map <F5> to RunSplitPython
 vim.keymap.set("n", "<F5>", RunSplitPython, { noremap = true })
+
+-- -- Visual Mode에서 '='를 한 번 눌렀을 때 :Format 실행
+-- vim.api.nvim_set_keymap('x', '=', ':Format<CR>', { noremap = true, silent = true })
+-- 
+-- -- Normal Mode에서 '='를 두 번 눌렀을 때 :Format 실행
+-- vim.api.nvim_set_keymap('n', '==', ':Format<CR>', { noremap = true, silent = true })
+
+vim.api.nvim_create_user_command(
+	"Prettier",
+	function()
+		vim.cmd('CocCommand prettier.forceFormatDocument')
+	end,
+	{nargs = 0}
+)
