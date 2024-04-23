@@ -1,6 +1,6 @@
 -- Ubuntu
 -- Basic settings
-vim.opt.clipboard = "unnamedplus"
+-- vim.opt.clipboard = "unnamedplus"
 
 vim.opt.mouse = "a"
 vim.opt.hlsearch = true
@@ -38,15 +38,15 @@ vim.cmd([[
 ]])
 
 -- FileType 이벤트에 대한 자동 명령을 설정합니다.
-vim.api.nvim_create_autocmd("FileType",{
-	pattern = {"javascript", "html"},
+vim.api.nvim_create_autocmd("FileType", {
+	pattern = { "javascript", "html" },
 	callback = function()
 		vim.bo.shiftwidth = 2
 		vim.bo.tabstop = 2
 	end,
 })
 
-vim.api.nvim_create_autocmd("FileType",{
+vim.api.nvim_create_autocmd("FileType", {
 	pattern = "yaml",
 	callback = function()
 		local bufname = vim.api.nvim_buf_get_name(0)
@@ -58,15 +58,15 @@ vim.api.nvim_create_autocmd("FileType",{
 	end,
 })
 
-vim.api.nvim_create_autocmd("FileType",{
-		pattern = "json",
-		callback = function()
-			-- json 파일의 들여쓰기를 2로 설정
-			vim.opt_local.shiftwidth = 4
-			vim.opt_local.tabstop = 4
-			vim.opt_local.softtabstop = 4
-			vim.opt_local.expandtab = true
-		end
+vim.api.nvim_create_autocmd("FileType", {
+	pattern = "json",
+	callback = function()
+		-- json 파일의 들여쓰기를 2로 설정
+		vim.opt_local.shiftwidth = 4
+		vim.opt_local.tabstop = 4
+		vim.opt_local.softtabstop = 4
+		vim.opt_local.expandtab = true
+	end,
 })
 
 -- g:coc_filetype_map 설정
@@ -304,7 +304,7 @@ require("lazy").setup({
 			"nvim-tree/nvim-web-devicons",
 		},
 		config = function()
-			require("nvim-tree").setup {}
+			require("nvim-tree").setup({})
 		end,
 	},
 	{
@@ -316,18 +316,18 @@ require("lazy").setup({
 			"MunifTanjim/nui.nvim",
 			-- "3rd/image.nvim", -- Optional image support in preview window: See `# Preview Mode` for more information
 		},
--- 		opts = {
--- 			filesystem = {
--- 				filtered_items = {
--- 					-- visible = true, -- This is what you want: If you set this to `true`, all "hide" just mean "dimmed out"
--- 					hide_dotfiles = false,
--- 					hide_gitignored = true,
--- 				},
--- 			}
--- 		}
+		-- 		opts = {
+		-- 			filesystem = {
+		-- 				filtered_items = {
+		-- 					-- visible = true, -- This is what you want: If you set this to `true`, all "hide" just mean "dimmed out"
+		-- 					hide_dotfiles = false,
+		-- 					hide_gitignored = true,
+		-- 				},
+		-- 			}
+		-- 		}
 	},
 	{
-		'stevearc/oil.nvim',
+		"stevearc/oil.nvim",
 		opts = {},
 		-- Optional dependencies
 		dependencies = { "nvim-tree/nvim-web-devicons" },
@@ -525,8 +525,8 @@ keyset("x", "<C-s>", "<Plug>(coc-range-select)", { silent = true })
 
 -- Add `:Format` command to format current buffer
 vim.api.nvim_create_user_command("Format", "call CocAction('format')", {})
-vim.api.nvim_create_user_command('Prettier', function()
-  vim.fn.CocAction('runCommand', 'prettier.formatFile')
+vim.api.nvim_create_user_command("Prettier", function()
+	vim.fn.CocAction("runCommand", "prettier.formatFile")
 end, {})
 
 -- " Add `:Fold` command to fold current buffer
@@ -665,14 +665,10 @@ vim.keymap.set("n", "<F5>", RunSplitPython, { noremap = true })
 
 -- -- Visual Mode에서 '='를 한 번 눌렀을 때 :Format 실행
 -- vim.api.nvim_set_keymap('x', '=', ':Format<CR>', { noremap = true, silent = true })
--- 
+--
 -- -- Normal Mode에서 '='를 두 번 눌렀을 때 :Format 실행
 -- vim.api.nvim_set_keymap('n', '==', ':Format<CR>', { noremap = true, silent = true })
 
-vim.api.nvim_create_user_command(
-	"Prettier",
-	function()
-		vim.cmd('CocCommand prettier.forceFormatDocument')
-	end,
-	{nargs = 0}
-)
+vim.api.nvim_create_user_command("Prettier", function()
+	vim.cmd("CocCommand prettier.forceFormatDocument")
+end, { nargs = 0 })
