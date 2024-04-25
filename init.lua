@@ -741,3 +741,15 @@ vim.api.nvim_create_user_command(
 	end,
 	{ nargs = 0 }
 )
+
+-- Normal mode에서 'y'를 '*y'로 매핑
+vim.api.nvim_set_keymap('n', 'y', '"+y', { noremap = true })
+
+-- Visual mode에서 'y'를 '*y'로 매핑
+vim.api.nvim_set_keymap('v', 'y', '"+y', { noremap = true })
+
+-- Normal mode에서 'p'를 '*p'로 매핑
+vim.api.nvim_set_keymap('n', 'p', '"+p', { noremap = true })
+
+-- Visual mode에서 'p'를 '*p'로 매핑
+vim.api.nvim_set_keymap('v', 'p', '"+p', { noremap = true })
