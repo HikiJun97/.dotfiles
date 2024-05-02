@@ -26,16 +26,14 @@ vim.opt.incsearch = true
 vim.opt.scrolloff = 2
 vim.opt.history = 256
 vim.opt.laststatus = 2
-vim.g.conceallevel = 0
-vim.g.vim_json_conceal = 0
 
 vim.bo.shiftwidth = 4
 vim.bo.tabstop = 4
 vim.bo.softtabstop = 4
 
--- vim.opt.smarttab = true
--- vim.opt.smartindent = true
--- vim.opt.autoindent = true
+vim.opt.smarttab = true
+vim.opt.smartindent = true
+vim.opt.autoindent = true
 
 vim.cmd([[abbr funciton function]])
 
@@ -84,6 +82,8 @@ vim.api.nvim_create_autocmd("FileType", {
 		vim.opt_local.tabstop = 4
 		vim.opt_local.softtabstop = 4
 		vim.opt_local.expandtab = true
+		vim.g.conceallevel = 0
+		vim.g.vim_json_conceal = 0
 	end,
 })
 
@@ -159,19 +159,27 @@ require("lazy").setup({
 			vim.g["jedi#force_py_version"] = 3
 		end,
 	}, -- Auto-completion for Python code
-	{
-		"hynek/vim-python-pep8-indent",
-		config = function()
-			vim.g.python_pep8_indent_multiline_string = -1
-		end,
-	}, -- Applies PEP 8 style indentation to Python code
+	-- {
+	-- 	"hynek/vim-python-pep8-indent",
+	-- 	config = function()
+	-- 		vim.g.python_pep8_indent_multiline_string = -1
+	-- 	end,
+	-- }, -- Applies PEP 8 style indentation to Python code
 	{ "nvie/vim-flake8" }, -- Grammar check for Python code
 	{ "anscoral/winmanager.vim" }, -- Enhances window management capabilities
 	{ "shime/vim-livedown" }, -- Markdown preview functionality
 	{ "tpope/vim-sensible" }, -- Sensible default settings for Vim
 	{ "junegunn/fzf", lazy = { event = "VimEnter" } }, -- Fuzzy file finder
 	{ "junegunn/goyo.vim" }, -- Distraction-free writing mode
-	{ "thaerkh/vim-indentguides" }, -- Visual display of indent levels
+	-- { "thaerkh/vim-indentguides" }, -- Visual display of indent levels
+	{
+		"nathanaelkane/vim-indent-guides",
+		config = function()
+			vim.g.indent_guides_enable_on_vim_startup = 1
+			vim.g.indent_guides_start_level = 2
+			vim.g.indent_guides_guide_size = 1
+		end,
+	},
 	{ "Raimondi/delimitMate" }, -- Auto-completion for quotes, parens, brackets, etc.
 	{ "preservim/nerdtree" }, -- Tree explorer for navigating the filesystem
 	{ "blueyed/vim-diminactive" }, -- Dim inactive windows
@@ -299,39 +307,14 @@ require("lazy").setup({
 			"MunifTanjim/nui.nvim",
 			-- "3rd/image.nvim", -- Optional image support in preview window: See `# Preview Mode` for more information
 		},
-		config = function()
-			require("neo-tree").setup({
-				window = {
-					position = "left",
-					width = 33,
-					mappings = {
-						["P"] = function(state)
-							local node = state.tree:get_node()
-							require("neo-tree.ui.renderer").focus_node(state, node:get_parent_id())
-						end,
-					},
-				},
-			})
-		end,
-		event_handlers = {
-			{
-				event = "neo_tree_popup_input_ready",
-				---@param args { bufnr: integer, winid: integer }
-				handler = function(args)
-					vim.cmd("stopinsert")
-					vim.keymap.set("i", "<esc>", vim.cmd.stopinsert, { noremap = true, buffer = args.bufnr })
-				end,
-			},
-		},
-		-- 		opts = {
-		-- 			filesystem = {
-		-- 				filtered_items = {
-		-- 					-- visible = true, -- This is what you want: If you set this to `true`, all "hide" just mean "dimmed out"
-		-- 					hide_dotfiles = false,
-		-- 					hide_gitignored = true,
-		-- 				},
-		-- 			}
-		-- 		}
+		-- config = function()
+		-- 	require("neo-tree").setup({
+		-- 		window = {
+		-- 			position = "left",
+		-- 			width = 33,
+		-- 		},
+		-- 	})
+		-- end,
 	},
 	{
 		"stevearc/oil.nvim",
@@ -404,6 +387,7 @@ require("lazy").setup({
 			})
 		end,
 	},
+	{ "lukas-reineke/indent-blankline.nvim", main = "ibl", opts = {} },
 
 	-- ################### Color schemes ###################
 	{
@@ -672,8 +656,7 @@ vim.api.nvim_create_autocmd("BufWritePost", {
 })
 
 -- vim.keymap.set("n", "<F2>", ":NERDTreeToggle | wincmd p<CR>", { noremap = true })
--- vim.keymap.set("n", "<F2>", ":Neotree toggle<CR>", { noremap = true })
-vim.keymap.set("n", "<F2>", ":NvimTreeToggle<CR>", { noremap = true })
+vim.keymap.set("n", "<F2>", ":Neotree toggle<CR>", { noremap = true })
 vim.keymap.set("n", "<F3>", ":TlistToggle<CR>", { noremap = true })
 vim.keymap.set("n", "<F4>", ":TagbarToggle<CR>", { noremap = true })
 vim.keymap.set("n", "<F6>", ":TagbarTogglePause<CR>", { noremap = true })
@@ -765,5 +748,6 @@ vim.api.nvim_set_keymap("v", "s", '"+s', { noremap = true })
 
 vim.api.nvim_set_keymap("n", "S", '"+S', { noremap = true })
 vim.api.nvim_set_keymap("v", "S", '"+S', { noremap = true })
+
 -- vim.api.nvim_set_keymap("n", "p", '"+p', { noremap = true })
 -- vim.api.nvim_set_keymap("v", "p", '"+p', { noremap = true })
