@@ -437,9 +437,10 @@ require("lazy").setup({
 		--	    priority = 1000,
 		--	    config = catppuccin_frappe
 	}, -- Smooth and comfy Neovim color scheme
+	{ "rebelot/kanagawa.nvim" }
 })
 
-vim.cmd("colorscheme sonokai")
+vim.cmd("colorscheme kanagawa")
 
 -- vim.api.nvim_create_user_command("Format", function(args)
 -- 	local range = nil
@@ -677,7 +678,7 @@ end
 vim.api.nvim_create_user_command("Sp", SplitBelow, {})
 
 -- Define the RunSplitPython function
-local function RunSplitPython()
+local function RunSplitExecutor(executor)
 	for i = 1, vim.fn.winnr("$") do
 		if vim.fn.getwinvar(i, "&buftype") == "terminal" then
 			vim.cmd(i .. "wincmd c")
@@ -687,29 +688,18 @@ local function RunSplitPython()
 
 	SplitBelow()
 	vim.cmd("resize 10")
-	vim.cmd("term python %")
-end
-
-local function RunSplitBun()
-	for i = 1, vim.fn.winnr("$") do
-		if vim.fn.getwinvar(i, "&buftype") == "terminal" then
-			vim.cmd(i .. "wincmd c")
-			break
-		end
-	end
-
-	SplitBelow()
-	vim.cmd("resize 10")
-	vim.cmd("term bun %")
+	vim.cmd("term " .. executor .. " %")
 end
 
 -- F5 키를 눌렀을 때 실행할 함수를 설정합니다.
 local function RunCode()
 	local bufname = vim.api.nvim_buf_get_name(0)
 	if bufname:match("%.py$") then
-		RunSplitPython()
-	elseif bufname:match("%.js$") or bufname:match("%.ts$") then
-		RunSplitBun()
+		RunSplitExecutor("python")
+	elseif bufname:match("%.js$") then
+		RunSplitExecutor("node")
+	elseif bufname:match("%.ts$") then
+		RunSplitExecutor("npx ts-node")
 	end
 end
 
