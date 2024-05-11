@@ -148,9 +148,9 @@ end
 vim.opt.rtp:prepend(lazypath)
 
 require("lazy").setup({
-	{ "vim-scripts/taglist.vim" }, -- Displays a list of tags (functions, variables, etc.) in the source code
-	{ "SirVer/ultisnips", event = { "InsertEnter" } }, -- Manages and quickly inserts snippets (code fragments)
-	{ "honza/vim-snippets" }, -- Collection of snippets for various programming languages
+	{ "vim-scripts/taglist.vim" },                        -- Displays a list of tags (functions, variables, etc.) in the source code
+	{ "SirVer/ultisnips",       event = { "InsertEnter" } }, -- Manages and quickly inserts snippets (code fragments)
+	{ "honza/vim-snippets" },                             -- Collection of snippets for various programming languages
 	{
 		"davidhalter/jedi-vim",
 		config = function()
@@ -165,12 +165,12 @@ require("lazy").setup({
 	-- 		vim.g.python_pep8_indent_multiline_string = -1
 	-- 	end,
 	-- }, -- Applies PEP 8 style indentation to Python code
-	{ "nvie/vim-flake8" }, -- Grammar check for Python code
-	{ "anscoral/winmanager.vim" }, -- Enhances window management capabilities
-	{ "shime/vim-livedown" }, -- Markdown preview functionality
-	{ "tpope/vim-sensible" }, -- Sensible default settings for Vim
-	{ "junegunn/fzf", lazy = { event = "VimEnter" } }, -- Fuzzy file finder
-	{ "junegunn/goyo.vim" }, -- Distraction-free writing mode
+	{ "nvie/vim-flake8" },                                    -- Grammar check for Python code
+	{ "anscoral/winmanager.vim" },                            -- Enhances window management capabilities
+	{ "shime/vim-livedown" },                                 -- Markdown preview functionality
+	{ "tpope/vim-sensible" },                                 -- Sensible default settings for Vim
+	{ "junegunn/fzf",           lazy = { event = "VimEnter" } }, -- Fuzzy file finder
+	{ "junegunn/goyo.vim" },                                  -- Distraction-free writing mode
 	-- { "thaerkh/vim-indentguides" }, -- Visual display of indent levels
 	{
 		"nathanaelkane/vim-indent-guides",
@@ -180,12 +180,12 @@ require("lazy").setup({
 			vim.g.indent_guides_guide_size = 1
 		end,
 	},
-	{ "Raimondi/delimitMate" }, -- Auto-completion for quotes, parens, brackets, etc.
-	{ "preservim/nerdtree" }, -- Tree explorer for navigating the filesystem
-	{ "blueyed/vim-diminactive" }, -- Dim inactive windows
-	{ "majutsushi/tagbar" }, -- Displays tags in a sidebar
+	{ "Raimondi/delimitMate" },                 -- Auto-completion for quotes, parens, brackets, etc.
+	{ "preservim/nerdtree" },                   -- Tree explorer for navigating the filesystem
+	{ "blueyed/vim-diminactive" },              -- Dim inactive windows
+	{ "majutsushi/tagbar" },                    -- Displays tags in a sidebar
 	{ "PhilRunninger/nerdtree-visual-selection" }, -- Enhanced visual selection for NERDTree
-	{ "ctrlpvim/ctrlp.vim" }, -- Full path fuzzy file, buffer, tag, etc. finder
+	{ "ctrlpvim/ctrlp.vim" },                   -- Full path fuzzy file, buffer, tag, etc. finder
 	{
 		"neoclide/coc.nvim",
 		branch = "release",
@@ -233,7 +233,7 @@ require("lazy").setup({
 				respect_scrolloff = false, -- Stop scrolling when the cursor reaches the scrolloff margin of the file
 				cursor_scrolls_alone = true, -- The cursor will keep on scrolling even if the window cannot scroll further
 				easing_function = nil, -- Default easing function
-				pre_hook = nil, -- Function to run before the scrolling animation starts
+				pre_hook = nil,  -- Function to run before the scrolling animation starts
 				post_hook = nil, -- Function to run after the scrolling animation ends
 				performance_mode = false, -- Disable "Performance Mode" on all buffers.
 			})
@@ -242,8 +242,8 @@ require("lazy").setup({
 	-- 	{ "pangloss/vim-javascript" }, -- JavaScript bundle for Vim
 	-- 	{ "mxw/vim-jsx" },          -- React JSX syntax highlighting and indenting
 	{ "uiiaoo/java-syntax.vim" }, -- Improved Java syntax highlighting
-	{ "tpope/vim-surround" }, -- Quoting/parenthesizing made simple
-	{ "alvan/vim-closetag" }, -- Auto close (X)HTML tags
+	{ "tpope/vim-surround" },  -- Quoting/parenthesizing made simple
+	{ "alvan/vim-closetag" },  -- Auto close (X)HTML tags
 	{ "nvim-lua/plenary.nvim" },
 	{
 		"nvim-telescope/telescope.nvim",
@@ -308,12 +308,6 @@ require("lazy").setup({
 			-- "3rd/image.nvim", -- Optional image support in preview window: See `# Preview Mode` for more information
 		},
 		-- config = function()
-		-- 	require("neo-tree").setup({
-		-- 		window = {
-		-- 			position = "left",
-		-- 			width = 33,
-		-- 		},
-		-- 	})
 		-- end,
 	},
 	{
@@ -395,20 +389,20 @@ require("lazy").setup({
 		--        config = function()
 		--            vim.cmd([[colorscheme gruvbox]])
 		--        end,
-	}, -- Provides the Gruvbox color scheme, loaded immediately
+	},                             -- Provides the Gruvbox color scheme, loaded immediately
 	{ "NLKNguyen/papercolor-theme" }, -- Offers a highly readable color scheme
-	{ "sainnhe/sonokai" }, -- Provides the Sonokai color scheme
+	{ "sainnhe/sonokai" },         -- Provides the Sonokai color scheme
 	{
 		"joshdick/onedark.vim",
-	}, -- Offers the One Dark color scheme
-	{ "rakr/vim-one" }, -- Provides the One color scheme from Atom editor
-	{ "sainnhe/edge" }, -- Offers the Edge color scheme
+	},                           -- Offers the One Dark color scheme
+	{ "rakr/vim-one" },          -- Provides the One color scheme from Atom editor
+	{ "sainnhe/edge" },          -- Offers the Edge color scheme
 	{ "connorholyday/vim-snazzy" }, -- Provides the Snazzy color scheme
 	{ "junegunn/seoul256.vim" }, -- Seoul256 color scheme
 	{
 		"nanotech/jellybeans.vim",
-	}, -- Colorful, dark color scheme
-	{ "sainnhe/everforest" }, -- Green-based warm color scheme
+	},                                 -- Colorful, dark color scheme
+	{ "sainnhe/everforest" },          -- Green-based warm color scheme
 	{ "patstockwell/vim-monokai-tasty" }, -- Monokai color scheme
 	{
 		"sonph/onehalf",
@@ -416,13 +410,13 @@ require("lazy").setup({
 	}, -- Light/Dark color scheme based on Atom's One
 	{
 		"tomasr/molokai",
-	}, -- Molokai color scheme
-	{ "bluz71/vim-moonfly-colors" }, -- Dark color scheme with vibrant colors
-	{ "cocopon/iceberg.vim" }, -- Dark blue color scheme
-	{ "ghifarit53/tokyonight-vim" }, -- Tokyo Night color scheme
+	},                                -- Molokai color scheme
+	{ "bluz71/vim-moonfly-colors" },  -- Dark color scheme with vibrant colors
+	{ "cocopon/iceberg.vim" },        -- Dark blue color scheme
+	{ "ghifarit53/tokyonight-vim" },  -- Tokyo Night color scheme
 	{ "bluz71/vim-nightfly-guicolors" }, -- Dark color scheme with bright accents
-	{ "mangeshrex/everblush.vim" }, -- Soft, dark color scheme with vibrant colors
-	{ "tjdevries/colorbuddy.nvim" }, -- Helper for creating Neovim color schemes
+	{ "mangeshrex/everblush.vim" },   -- Soft, dark color scheme with vibrant colors
+	{ "tjdevries/colorbuddy.nvim" },  -- Helper for creating Neovim color schemes
 	{
 		"bbenzikry/snazzybuddy.nvim",
 		--	    name = 'snazzybuddy',
@@ -615,7 +609,7 @@ vim.g.UltiSnipsEditSplit = "vertical"
 
 -- Colorscheme settings
 vim.opt.termguicolors = true -- enables 256 colors
-vim.opt.background = "dark" -- sets the background to dark
+vim.opt.background = "dark"  -- sets the background to dark
 
 -- Function to add C++ headers
 local function cpplang_header()
@@ -642,12 +636,14 @@ vim.g.jsx_ext_required = 0
 -- Exit Vim if NERDTree is the only window remaining in the only tab.
 vim.api.nvim_create_autocmd("BufEnter", {
 	pattern = "*",
-	command = [[if tabpagenr('$') == 1 && winnr('$') == 1 && exists('b:NERDTree') && b:NERDTree.isTabTree() | quit | endif]],
+	command =
+	[[if tabpagenr('$') == 1 && winnr('$') == 1 && exists('b:NERDTree') && b:NERDTree.isTabTree() | quit | endif]],
 })
 -- If another buffer tries to replace NERDTree, put it in the other window, and bring back NERDTree.
 vim.api.nvim_create_autocmd("BufEnter", {
 	pattern = "*",
-	command = [[if bufname('#') =~ 'NERD_tree_\\d+' && bufname('%') !~ 'NERD_tree_\\d+' && winnr('$') > 1 | let buf=bufnr() | buffer# | execute "normal! \<C-W>w" | execute 'buffer'.buf | endif]],
+	command =
+	[[if bufname('#') =~ 'NERD_tree_\\d+' && bufname('%') !~ 'NERD_tree_\\d+' && winnr('$') > 1 | let buf=bufnr() | buffer# | execute "normal! \<C-W>w" | execute 'buffer'.buf | endif]],
 })
 
 vim.g.tlist_cpp_settings = "c++;c:class;f:function"
@@ -655,6 +651,8 @@ vim.api.nvim_create_autocmd("BufWritePost", {
 	pattern = "*.cc",
 	command = "TlistUpdate",
 })
+
+
 
 -- vim.keymap.set("n", "<F2>", ":NERDTreeToggle | wincmd p<CR>", { noremap = true })
 vim.keymap.set("n", "<F2>", ":Neotree toggle<CR>", { noremap = true })
@@ -668,6 +666,8 @@ vim.keymap.set("n", "<leader>fg", builtin.live_grep, {})
 vim.keymap.set("n", "<leader>fb", builtin.buffers, {})
 vim.keymap.set("n", "<leader>fh", builtin.help_tags, {})
 
+vim.api.nvim_create_user_command("Tn", "tabnew", { nargs = "*" })
+--
 -- Define the SplitBelow function
 local function SplitBelow()
 	vim.cmd("split")
@@ -678,7 +678,7 @@ end
 vim.api.nvim_create_user_command("Sp", SplitBelow, {})
 
 -- Define the RunSplitPython function
-local function RunSplitExecutor(executor)
+local function RunSplitExecutor(executor, inputFile, outputFile)
 	for i = 1, vim.fn.winnr("$") do
 		if vim.fn.getwinvar(i, "&buftype") == "terminal" then
 			vim.cmd(i .. "wincmd c")
@@ -688,18 +688,22 @@ local function RunSplitExecutor(executor)
 
 	SplitBelow()
 	vim.cmd("resize 10")
-	vim.cmd("term " .. executor .. " %")
+	vim.cmd("term " .. executor .. " " .. inputFile .. " " .. outputFile)
 end
 
 -- F5 키를 눌렀을 때 실행할 함수를 설정합니다.
 local function RunCode()
 	local bufname = vim.api.nvim_buf_get_name(0)
+	local filename = bufname:gsub("%..+$", "")
 	if bufname:match("%.py$") then
-		RunSplitExecutor("python")
+		RunSplitExecutor("python", bufname, "")
 	elseif bufname:match("%.js$") then
-		RunSplitExecutor("node")
+		RunSplitExecutor("node", bufname, "")
 	elseif bufname:match("%.ts$") then
-		RunSplitExecutor("npx ts-node")
+		RunSplitExecutor("npx ts-node", bufname, "")
+	elseif bufname:match("%.scss$") then
+		local filename = bufname:gsub("%.scss$", "")
+		RunSplitExecutor("sass", bufname, filename .. ".css")
 	end
 end
 
@@ -739,5 +743,11 @@ vim.api.nvim_set_keymap("v", "s", '"+s', { noremap = true })
 vim.api.nvim_set_keymap("n", "S", '"+S', { noremap = true })
 vim.api.nvim_set_keymap("v", "S", '"+S', { noremap = true })
 
+require("neo-tree").setup({
+	window = {
+		position = "left",
+		width = 33,
+	},
+})
 -- vim.api.nvim_set_keymap("n", "p", '"+p', { noremap = true })
 -- vim.api.nvim_set_keymap("v", "p", '"+p', { noremap = true })
