@@ -382,6 +382,7 @@ require("lazy").setup({
 		end,
 	},
 	{ "lukas-reineke/indent-blankline.nvim", main = "ibl", opts = {} },
+	{ "github/copilot.vim" },
 
 	-- ################### Color schemes ###################
 	{
@@ -476,6 +477,7 @@ keyset("i", "<c-space>", "coc#refresh()", { silent = true, expr = true })
 -- Use `:CocDiagnostics` to get all diagnostics of current buffer in location list
 keyset("n", "[g", "<Plug>(coc-diagnostic-prev)", { silent = true })
 keyset("n", "]g", "<Plug>(coc-diagnostic-next)", { silent = true })
+vim.api.nvim_create_user_command("CD", "CocDiagnostics", {})
 
 -- GoTo code navigation
 keyset("n", "gd", "<Plug>(coc-definition)", { silent = true })
@@ -748,6 +750,14 @@ require("neo-tree").setup({
 		position = "left",
 		width = 33,
 	},
+	filesystem = {
+		window = {
+			fuzzy_finder_mappings = {
+				["<C-k>"] = "move_cursor_up",
+				["<C-j>"] = "move_cursor_down",
+			}
+		}
+	}
 })
 -- vim.api.nvim_set_keymap("n", "p", '"+p', { noremap = true })
 -- vim.api.nvim_set_keymap("v", "p", '"+p', { noremap = true })
