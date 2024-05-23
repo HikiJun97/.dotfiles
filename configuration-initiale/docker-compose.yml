@@ -1,0 +1,334 @@
+version: '3.8'
+services:
+  ComfyUI_0:
+    image: comfyui-container:latest
+    container_name: comfyui_0
+    volumes:
+      - /nas/comfyui_models:/workspace/ComfyUI/models
+      - /nas/animate_zip:/workspace/ComfyUI/animate_zip
+    networks:
+      - comfyui-network
+    environment:
+      - NVIDIA_VISIBLE_DEVICES=0
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - driver: nvidia
+              device_ids: ['0']
+              capabilities: [gpu]
+    healthcheck:
+      test: ["CMD-SHELL", "curl -f localhost:8188/queue || exit 1"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 20s
+
+  animate_worker_0:
+    image: animate_worker:latest
+    container_name: animate_worker_0
+    volumes:
+      - /nas/api-json:/workspace/api-json
+    networks:
+      - comfyui-network
+    environment:
+      - NVIDIA_VISIBLE_DEVICES=0
+    env_file:
+      - aws_credentials.env
+    depends_on:
+      ComfyUI_0:
+        condition: service_healthy
+
+# -------------------------------------------------------------------
+
+  ComfyUI_1:
+    image: comfyui-container:latest
+    container_name: comfyui_1
+    volumes:
+      - /nas/comfyui_models:/workspace/ComfyUI/models
+      - /nas/animate_zip:/workspace/ComfyUI/animate_zip
+    networks:
+      - comfyui-network
+    environment:
+      - NVIDIA_VISIBLE_DEVICES=1
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - driver: nvidia
+              device_ids: ['1']
+              capabilities: [gpu]
+    healthcheck:
+      test: ["CMD-SHELL", "curl -f localhost:8188/queue || exit 1"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 20s
+
+  animate_worker_1:
+    image: animate_worker:latest
+    container_name: animate_worker_1
+    volumes:
+      - /nas/api-json:/workspace/api-json
+    networks:
+      - comfyui-network
+    environment:
+      - NVIDIA_VISIBLE_DEVICES=1
+    env_file:
+      - aws_credentials.env
+    depends_on:
+      ComfyUI_1:
+        condition: service_healthy
+
+# -------------------------------------------------------------------
+
+  ComfyUI_2:
+    image: comfyui-container:latest
+    container_name: comfyui_2
+    volumes:
+      - /nas/comfyui_models:/workspace/ComfyUI/models
+      - /nas/animate_zip:/workspace/ComfyUI/animate_zip
+    networks:
+      - comfyui-network
+    environment:
+      - NVIDIA_VISIBLE_DEVICES=2
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - driver: nvidia
+              device_ids: ['2']
+              capabilities: [gpu]
+    healthcheck:
+      test: ["CMD-SHELL", "curl -f localhost:8188/queue || exit 1"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 20s
+
+  animate_worker_2:
+    image: animate_worker:latest
+    container_name: animate_worker_2
+    volumes:
+      - /nas/api-json:/workspace/api-json
+    networks:
+      - comfyui-network
+    environment:
+      - NVIDIA_VISIBLE_DEVICES=2
+    env_file:
+      - aws_credentials.env
+    depends_on:
+      ComfyUI_2:
+        condition: service_healthy
+
+# -------------------------------------------------------------------
+
+  ComfyUI_3:
+    image: comfyui-container:latest
+    container_name: comfyui_3
+    volumes:
+      - /nas/comfyui_models:/workspace/ComfyUI/models
+      - /nas/animate_zip:/workspace/ComfyUI/animate_zip
+    networks:
+      - comfyui-network
+    environment:
+      - NVIDIA_VISIBLE_DEVICES=3
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - driver: nvidia
+              device_ids: ['3']
+              capabilities: [gpu]
+    healthcheck:
+      test: ["CMD-SHELL", "curl -f localhost:8188/queue || exit 1"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 20s
+
+  animate_worker_3:
+    image: animate_worker:latest
+    container_name: animate_worker_3
+    volumes:
+      - /nas/api-json:/workspace/api-json
+    networks:
+      - comfyui-network
+    environment:
+      - NVIDIA_VISIBLE_DEVICES=3
+    env_file:
+      - aws_credentials.env
+    depends_on:
+      ComfyUI_3:
+        condition: service_healthy
+
+# -------------------------------------------------------------------
+
+  ComfyUI_4:
+    image: comfyui-container:latest
+    container_name: comfyui_4
+    volumes:
+      - /nas/comfyui_models:/workspace/ComfyUI/models
+      - /nas/animate_zip:/workspace/ComfyUI/animate_zip
+    networks:
+      - comfyui-network
+    environment:
+      - NVIDIA_VISIBLE_DEVICES=4
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - driver: nvidia
+              device_ids: ['4']
+              capabilities: [gpu]
+    healthcheck:
+      test: ["CMD-SHELL", "curl -f localhost:8188/queue || exit 1"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 20s
+
+  animate_worker_4:
+    image: animate_worker:latest
+    container_name: animate_worker_4
+    volumes:
+      - /nas/api-json:/workspace/api-json
+    networks:
+      - comfyui-network
+    environment:
+      - NVIDIA_VISIBLE_DEVICES=4
+    env_file:
+      - aws_credentials.env
+    depends_on:
+      ComfyUI_4:
+        condition: service_healthy
+
+# -------------------------------------------------------------------
+
+  ComfyUI_5:
+    image: comfyui-container:latest
+    container_name: comfyui_5
+    volumes:
+      - /nas/comfyui_models:/workspace/ComfyUI/models
+      - /nas/animate_zip:/workspace/ComfyUI/animate_zip
+    networks:
+      - comfyui-network
+    environment:
+      - NVIDIA_VISIBLE_DEVICES=5
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - driver: nvidia
+              device_ids: ['5']
+              capabilities: [gpu]
+    healthcheck:
+      test: ["CMD-SHELL", "curl -f localhost:8188/queue || exit 1"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 20s
+
+  animate_worker_5:
+    image: animate_worker:latest
+    container_name: animate_worker_5
+    volumes:
+      - /nas/api-json:/workspace/api-json
+    networks:
+      - comfyui-network
+    environment:
+      - NVIDIA_VISIBLE_DEVICES=5
+    env_file:
+      - aws_credentials.env
+    depends_on:
+      ComfyUI_5:
+        condition: service_healthy
+
+# -------------------------------------------------------------------
+
+  ComfyUI_6:
+    image: comfyui-container:latest
+    container_name: comfyui_6
+    volumes:
+      - /nas/comfyui_models:/workspace/ComfyUI/models
+      - /nas/animate_zip:/workspace/ComfyUI/animate_zip
+    networks:
+      - comfyui-network
+    environment:
+      - NVIDIA_VISIBLE_DEVICES=6
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - driver: nvidia
+              device_ids: ['6']
+              capabilities: [gpu]
+    healthcheck:
+      test: ["CMD-SHELL", "curl -f localhost:8188/queue || exit 1"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 20s
+
+  animate_worker_6:
+    image: animate_worker:latest
+    container_name: animate_worker_6
+    volumes:
+      - /nas/api-json:/workspace/api-json
+    networks:
+      - comfyui-network
+    environment:
+      - NVIDIA_VISIBLE_DEVICES=6
+    env_file:
+      - aws_credentials.env
+    depends_on:
+      ComfyUI_6:
+        condition: service_healthy
+
+# -------------------------------------------------------------------
+
+  ComfyUI_7:
+    image: comfyui-container:latest
+    container_name: comfyui_7
+    volumes:
+      - /nas/comfyui_models:/workspace/ComfyUI/models
+      - /nas/animate_zip:/workspace/ComfyUI/animate_zip
+    networks:
+      - comfyui-network
+    environment:
+      - NVIDIA_VISIBLE_DEVICES=7
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - driver: nvidia
+              device_ids: ['7']
+              capabilities: [gpu]
+    healthcheck:
+      test: ["CMD-SHELL", "curl -f localhost:8188/queue || exit 1"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 20s
+
+  animate_worker_7:
+    image: animate_worker:latest
+    container_name: animate_worker_7
+    volumes:
+      - /nas/api-json:/workspace/api-json
+    networks:
+      - comfyui-network
+    environment:
+      - NVIDIA_VISIBLE_DEVICES=7
+    env_file:
+      - aws_credentials.env
+    depends_on:
+      ComfyUI_7:
+        condition: service_healthy
+
+# -------------------------------------------------------------------
+
+networks:
+  comfyui-network:
+    name: comfyui_network
+    driver: bridge
