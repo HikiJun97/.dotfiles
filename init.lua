@@ -478,6 +478,7 @@ keyset("i", "<c-space>", "coc#refresh()", { silent = true, expr = true })
 keyset("n", "[g", "<Plug>(coc-diagnostic-prev)", { silent = true })
 keyset("n", "]g", "<Plug>(coc-diagnostic-next)", { silent = true })
 vim.api.nvim_create_user_command("CD", "CocDiagnostics", {})
+vim.api.nvim_create_user_command("CR", "CocRestart", {})
 
 -- GoTo code navigation
 keyset("n", "gd", "<Plug>(coc-definition)", { silent = true })
