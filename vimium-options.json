@@ -1,0 +1,4 @@
+{
+  "keyMappings": "# Insert your preferred key mappings here.\nmap q LinkHints.activateMode\nmap Q LinkHints.activateModeToOpenInNewTab\nmap yq LinkHints.activateModeToCopyLinkUrl\nunmap f\nunmap F\nunmap m\nunmap yf\nunmap t",
+  "settingsVersion": "2.1.2"
+}
