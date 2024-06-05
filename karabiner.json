@@ -59,7 +59,7 @@
             ]
           },
           {
-            "description": "L_CMD -> L_OPT, L_OPT -> L_CTRL on terminal unless Apple Intenral Keyboard",
+            "description": "L_CMD -> L_OPT, L_OPT -> L_CTRL on terminal unless Apple Keyboard",
             "manipulators": [
               {
                 "conditions": [
@@ -72,7 +72,12 @@
                       {
                         "is_keyboard": true,
                         "location_id": 165
-                      },
+                      }
+                    ],
+                    "type": "device_unless"
+                  },
+                  {
+                    "identifiers": [
                       {
                         "is_keyboard": true,
                         "product_id": 615
@@ -103,7 +108,12 @@
                       {
                         "is_keyboard": true,
                         "location_id": 165
-                      },
+                      }
+                    ],
+                    "type": "device_unless"
+                  },
+                  {
+                    "identifiers": [
                       {
                         "is_keyboard": true,
                         "product_id": 615
@@ -126,7 +136,7 @@
             ]
           },
           {
-            "description": "LEFT_CMD <-> LEFT_OPT unless Apple Internal Keyboard",
+            "description": "LEFT_CMD <-> LEFT_OPT unless Apple Keyboard",
             "manipulators": [
               {
                 "conditions": [
@@ -135,7 +145,12 @@
                       {
                         "is_keyboard": true,
                         "location_id": 165
-                      },
+                      }
+                    ],
+                    "type": "device_unless"
+                  },
+                  {
+                    "identifiers": [
                       {
                         "is_keyboard": true,
                         "product_id": 615
@@ -165,7 +180,12 @@
                       {
                         "is_keyboard": true,
                         "location_id": 165
-                      },
+                      }
+                    ],
+                    "type": "device_unless"
+                  },
+                  {
+                    "identifiers": [
                       {
                         "is_keyboard": true,
                         "product_id": 615
@@ -234,7 +254,7 @@
             ]
           },
           {
-            "description": "from R_OPT to F18 if Korean unless Apple Keyboard",
+            "description": "from R_OPT to F18 if Korean",
             "manipulators": [
               {
                 "conditions": [
@@ -245,23 +265,13 @@
                       }
                     ],
                     "type": "input_source_if"
-                  },
-                  {
-                    "identifiers": [
-                      {
-                        "is_keyboard": true,
-                        "location_id": 165
-                      },
-                      {
-                        "is_keyboard": true,
-                        "product_id": 615
-                      }
-                    ],
-                    "type": "device_unless"
                   }
                 ],
                 "from": {
-                  "key_code": "right_alt"
+                  "key_code": "right_alt",
+                  "modifiers": {
+                    "optional": ["right_shift", "left_shift"]
+                  }
                 },
                 "to": [
                   {
@@ -274,47 +284,7 @@
             ]
           },
           {
-            "description": "from R_CMD to F18 if Korean if Apple Keyboard",
-            "manipulators": [
-              {
-                "conditions": [
-                  {
-                    "input_sources": [
-                      {
-                        "language": "ko"
-                      }
-                    ],
-                    "type": "input_source_if"
-                  },
-                  {
-                    "identifiers": [
-                      {
-                        "is_keyboard": true,
-                        "location_id": 165
-                      },
-                      {
-                        "is_keyboard": true,
-                        "product_id": 615
-                      }
-                    ],
-                    "type": "device_if"
-                  }
-                ],
-                "from": {
-                  "key_code": "right_command"
-                },
-                "to": [
-                  {
-                    "key_code": "f18",
-                    "repeat": true
-                  }
-                ],
-                "type": "basic"
-              }
-            ]
-          },
-          {
-            "description": "from R_OPT to double F18 if English unless Apple Keyboard",
+            "description": "from R_OPT to double F18 if English",
             "manipulators": [
               {
                 "conditions": [
@@ -325,71 +295,13 @@
                       }
                     ],
                     "type": "input_source_if"
-                  },
-                  {
-                    "identifiers": [
-                      {
-                        "is_keyboard": true,
-                        "location_id": 165
-                      },
-                      {
-                        "is_keyboard": true,
-                        "product_id": 615
-                      }
-                    ],
-                    "type": "device_unless"
                   }
                 ],
                 "from": {
+                  "modifiers": {
+                    "optional": ["right_shift", "left_shift"]
+                  },
                   "key_code": "right_alt"
-                },
-                "to": [
-                  {
-                    "key_code": "f18",
-                    "repeat": true
-                  },
-                  {
-                    "key_code": "f18",
-                    "repeat": true
-                  }
-                ],
-                "type": "basic"
-              },
-              {
-                "from": {},
-                "type": "basic"
-              }
-            ]
-          },
-          {
-            "description": "from R_CMD to double F18 if English if Apple Keyboard",
-            "manipulators": [
-              {
-                "conditions": [
-                  {
-                    "input_sources": [
-                      {
-                        "language": "en"
-                      }
-                    ],
-                    "type": "input_source_if"
-                  },
-                  {
-                    "identifiers": [
-                      {
-                        "is_keyboard": true,
-                        "location_id": 165
-                      },
-                      {
-                        "is_keyboard": true,
-                        "product_id": 615
-                      }
-                    ],
-                    "type": "device_if"
-                  }
-                ],
-                "from": {
-                  "key_code": "right_command"
                 },
                 "to": [
                   {
@@ -444,7 +356,7 @@
             ]
           },
           {
-            "description": "from R_OPT to single F18 if Japanese unless Apple Keyboard",
+            "description": "from R_OPT to single F18 if Japanese",
             "manipulators": [
               {
                 "conditions": [
@@ -455,67 +367,10 @@
                       }
                     ],
                     "type": "input_source_if"
-                  },
-                  {
-                    "identifiers": [
-                      {
-                        "is_keyboard": true,
-                        "location_id": 165
-                      },
-                      {
-                        "is_keyboard": true,
-                        "product_id": 615
-                      }
-                    ],
-                    "type": "device_unless"
                   }
                 ],
                 "from": {
                   "key_code": "right_alt"
-                },
-                "to": [
-                  {
-                    "key_code": "f18",
-                    "repeat": true
-                  }
-                ],
-                "type": "basic"
-              },
-              {
-                "from": {},
-                "type": "basic"
-              }
-            ]
-          },
-          {
-            "description": "from R_CMD to single F18 if Japanese if Apple Keyboard",
-            "manipulators": [
-              {
-                "conditions": [
-                  {
-                    "input_sources": [
-                      {
-                        "language": "ja"
-                      }
-                    ],
-                    "type": "input_source_if"
-                  },
-                  {
-                    "identifiers": [
-                      {
-                        "is_keyboard": true,
-                        "location_id": 165
-                      },
-                      {
-                        "is_keyboard": true,
-                        "product_id": 615
-                      }
-                    ],
-                    "type": "device_if"
-                  }
-                ],
-                "from": {
-                  "key_code": "right_command"
                 },
                 "to": [
                   {
@@ -570,7 +425,7 @@
             ]
           },
           {
-            "description": "from L_CTRL + SPACEBAR to single F18 if Japanese",
+            "description": "from_L_CTRL_+_SPACEBAR_to_single_F18_if_Japanese",
             "manipulators": [
               {
                 "conditions": [
@@ -1124,7 +979,7 @@
             "is_keyboard": true,
             "is_pointing_device": false,
             "product_id": 615,
-            "vendor_id": 76
+            "vendor_id": 1452
           },
           "ignore": false,
           "manipulate_caps_lock_led": true,
@@ -1134,7 +989,28 @@
           "mouse_flip_y": false,
           "mouse_swap_wheels": false,
           "mouse_swap_xy": false,
-          "simple_modifications": [],
+          "simple_modifications": [
+            {
+              "from": {
+                "key_code": "right_command"
+              },
+              "to": [
+                {
+                  "key_code": "right_option"
+                }
+              ]
+            },
+            {
+              "from": {
+                "key_code": "right_option"
+              },
+              "to": [
+                {
+                  "key_code": "f17"
+                }
+              ]
+            }
+          ],
           "treat_as_built_in_keyboard": false
         },
         {
@@ -1143,13 +1019,13 @@
           "game_pad_swap_sticks": false,
           "identifiers": {
             "is_game_pad": false,
-            "is_keyboard": true,
+            "is_keyboard": false,
             "is_pointing_device": true,
-            "product_id": 183,
-            "vendor_id": 5426
+            "product_id": 617,
+            "vendor_id": 76
           },
           "ignore": true,
-          "manipulate_caps_lock_led": true,
+          "manipulate_caps_lock_led": false,
           "mouse_flip_horizontal_wheel": false,
           "mouse_flip_vertical_wheel": false,
           "mouse_flip_x": false,
@@ -1167,8 +1043,51 @@
             "is_game_pad": false,
             "is_keyboard": true,
             "is_pointing_device": false,
-            "product_id": 183,
-            "vendor_id": 5426
+            "product_id": 615,
+            "vendor_id": 76
+          },
+          "ignore": false,
+          "manipulate_caps_lock_led": true,
+          "mouse_flip_horizontal_wheel": false,
+          "mouse_flip_vertical_wheel": false,
+          "mouse_flip_x": false,
+          "mouse_flip_y": false,
+          "mouse_swap_wheels": false,
+          "mouse_swap_xy": false,
+          "simple_modifications": [
+            {
+              "from": {
+                "key_code": "right_command"
+              },
+              "to": [
+                {
+                  "key_code": "right_option"
+                }
+              ]
+            },
+            {
+              "from": {
+                "key_code": "right_option"
+              },
+              "to": [
+                {
+                  "key_code": "f17"
+                }
+              ]
+            }
+          ],
+          "treat_as_built_in_keyboard": false
+        },
+        {
+          "disable_built_in_keyboard_if_exists": false,
+          "fn_function_keys": [],
+          "game_pad_swap_sticks": false,
+          "identifiers": {
+            "is_game_pad": false,
+            "is_keyboard": true,
+            "is_pointing_device": false,
+            "product_id": 34304,
+            "vendor_id": 1452
           },
           "ignore": false,
           "manipulate_caps_lock_led": true,
@@ -1189,8 +1108,8 @@
             "is_game_pad": false,
             "is_keyboard": false,
             "is_pointing_device": true,
-            "product_id": 183,
-            "vendor_id": 5426
+            "product_id": 613,
+            "vendor_id": 76
           },
           "ignore": true,
           "manipulate_caps_lock_led": false,
