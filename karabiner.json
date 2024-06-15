@@ -18,125 +18,7 @@
         },
         "rules": [
           {
-            "description": "CAPS_LOCK -> L_CTRL, L_CTRL -> L_CMD from on wezterm",
-            "manipulators": [
-              {
-                "conditions": [
-                  {
-                    "bundle_identifiers": ["com.github.wez.wezterm"],
-                    "type": "frontmost_application_if"
-                  }
-                ],
-                "from": {
-                  "key_code": "caps_lock"
-                },
-                "to": [
-                  {
-                    "key_code": "left_control",
-                    "repeat": true
-                  }
-                ],
-                "type": "basic"
-              },
-              {
-                "conditions": [
-                  {
-                    "bundle_identifiers": ["com.github.wez.wezterm"],
-                    "type": "frontmost_application_if"
-                  }
-                ],
-                "from": {
-                  "key_code": "left_control"
-                },
-                "to": [
-                  {
-                    "key_code": "left_command",
-                    "repeat": true
-                  }
-                ],
-                "type": "basic"
-              }
-            ]
-          },
-          {
-            "description": "L_CMD -> L_OPT, L_OPT -> L_CTRL on terminal unless Apple Keyboard",
-            "manipulators": [
-              {
-                "conditions": [
-                  {
-                    "bundle_identifiers": ["com.googlecode.iterm2"],
-                    "type": "frontmost_application_if"
-                  },
-                  {
-                    "identifiers": [
-                      {
-                        "is_keyboard": true,
-                        "location_id": 165
-                      }
-                    ],
-                    "type": "device_unless"
-                  },
-                  {
-                    "identifiers": [
-                      {
-                        "is_keyboard": true,
-                        "product_id": 615
-                      }
-                    ],
-                    "type": "device_unless"
-                  }
-                ],
-                "from": {
-                  "key_code": "left_gui"
-                },
-                "to": [
-                  {
-                    "key_code": "left_alt",
-                    "repeat": true
-                  }
-                ],
-                "type": "basic"
-              },
-              {
-                "conditions": [
-                  {
-                    "bundle_identifiers": ["com.googlecode.iterm2"],
-                    "type": "frontmost_application_if"
-                  },
-                  {
-                    "identifiers": [
-                      {
-                        "is_keyboard": true,
-                        "location_id": 165
-                      }
-                    ],
-                    "type": "device_unless"
-                  },
-                  {
-                    "identifiers": [
-                      {
-                        "is_keyboard": true,
-                        "product_id": 615
-                      }
-                    ],
-                    "type": "device_unless"
-                  }
-                ],
-                "from": {
-                  "key_code": "left_alt"
-                },
-                "to": [
-                  {
-                    "key_code": "left_control",
-                    "repeat": true
-                  }
-                ],
-                "type": "basic"
-              }
-            ]
-          },
-          {
-            "description": "LEFT_CMD <-> LEFT_OPT unless Apple Keyboard",
+            "description": "L-CMD <-> L-OPT unless Mac mode",
             "manipulators": [
               {
                 "conditions": [
@@ -145,12 +27,11 @@
                       {
                         "is_keyboard": true,
                         "location_id": 165
-                      }
-                    ],
-                    "type": "device_unless"
-                  },
-                  {
-                    "identifiers": [
+                      },
+                      {
+                        "is_keyboard": true,
+                        "product_id": 33
+                      },
                       {
                         "is_keyboard": true,
                         "product_id": 615
@@ -180,12 +61,11 @@
                       {
                         "is_keyboard": true,
                         "location_id": 165
-                      }
-                    ],
-                    "type": "device_unless"
-                  },
-                  {
-                    "identifiers": [
+                      },
+                      {
+                        "is_keyboard": true,
+                        "product_id": 33
+                      },
                       {
                         "is_keyboard": true,
                         "product_id": 615
@@ -211,21 +91,49 @@
             ]
           },
           {
-            "description": "L_CMD -> L_CTRL on iTerm2",
+            "description": "ESC <-> Backtick unless mini layout",
             "manipulators": [
               {
                 "conditions": [
                   {
-                    "bundle_identifiers": ["com.googlecode.iterm2"],
-                    "type": "frontmost_application_if"
+                    "identifiers": [
+                      {
+                        "is_keyboard": true,
+                        "product_id": 33
+                      }
+                    ],
+                    "type": "device_unless"
                   }
                 ],
                 "from": {
-                  "key_code": "left_gui"
+                  "key_code": "escape"
                 },
                 "to": [
                   {
-                    "key_code": "left_control",
+                    "key_code": "grave_accent_and_tilde",
+                    "repeat": true
+                  }
+                ],
+                "type": "basic"
+              },
+              {
+                "conditions": [
+                  {
+                    "identifiers": [
+                      {
+                        "is_keyboard": true,
+                        "product_id": 33
+                      }
+                    ],
+                    "type": "device_unless"
+                  }
+                ],
+                "from": {
+                  "key_code": "grave_accent_and_tilde"
+                },
+                "to": [
+                  {
+                    "key_code": "escape",
                     "repeat": true
                   }
                 ],
@@ -234,7 +142,7 @@
             ]
           },
           {
-            "description": "Map Shift+ESC to TILDE (~)",
+            "description": "Map Shift+ESC to Tilde(~)",
             "manipulators": [
               {
                 "from": {
@@ -254,7 +162,7 @@
             ]
           },
           {
-            "description": "from R_OPT to F18 if Korean",
+            "description": "Korean, English, Japanese Configurations",
             "manipulators": [
               {
                 "conditions": [
@@ -268,7 +176,7 @@
                   }
                 ],
                 "from": {
-                  "key_code": "right_alt",
+                  "key_code": "right_command",
                   "modifiers": {
                     "optional": ["right_shift", "left_shift"]
                   }
@@ -280,12 +188,7 @@
                   }
                 ],
                 "type": "basic"
-              }
-            ]
-          },
-          {
-            "description": "from R_OPT to double F18 if English",
-            "manipulators": [
+              },
               {
                 "conditions": [
                   {
@@ -298,10 +201,10 @@
                   }
                 ],
                 "from": {
+                  "key_code": "right_command",
                   "modifiers": {
                     "optional": ["right_shift", "left_shift"]
-                  },
-                  "key_code": "right_alt"
+                  }
                 },
                 "to": [
                   {
@@ -318,12 +221,7 @@
               {
                 "from": {},
                 "type": "basic"
-              }
-            ]
-          },
-          {
-            "description": "from L_CTRL + SPACEBAR to single F18 if English",
-            "manipulators": [
+              },
               {
                 "conditions": [
                   {
@@ -338,7 +236,7 @@
                 "from": {
                   "key_code": "spacebar",
                   "modifiers": {
-                    "mandatory": ["left_control"]
+                    "mandatory": ["left_alt"]
                   }
                 },
                 "to": [
@@ -352,12 +250,7 @@
               {
                 "from": {},
                 "type": "basic"
-              }
-            ]
-          },
-          {
-            "description": "from R_OPT to single F18 if Japanese",
-            "manipulators": [
+              },
               {
                 "conditions": [
                   {
@@ -370,7 +263,7 @@
                   }
                 ],
                 "from": {
-                  "key_code": "right_alt"
+                  "key_code": "right_command"
                 },
                 "to": [
                   {
@@ -383,12 +276,7 @@
               {
                 "from": {},
                 "type": "basic"
-              }
-            ]
-          },
-          {
-            "description": "from L_CTRL + SPACEBAR to double F18 if Korean",
-            "manipulators": [
+              },
               {
                 "conditions": [
                   {
@@ -403,7 +291,7 @@
                 "from": {
                   "key_code": "spacebar",
                   "modifiers": {
-                    "mandatory": ["left_control"]
+                    "mandatory": ["left_alt"]
                   }
                 },
                 "to": [
@@ -421,12 +309,7 @@
               {
                 "from": {},
                 "type": "basic"
-              }
-            ]
-          },
-          {
-            "description": "from_L_CTRL_+_SPACEBAR_to_single_F18_if_Japanese",
-            "manipulators": [
+              },
               {
                 "conditions": [
                   {
@@ -441,7 +324,7 @@
                 "from": {
                   "key_code": "spacebar",
                   "modifiers": {
-                    "mandatory": ["left_control"]
+                    "mandatory": ["left_alt"]
                   }
                 },
                 "to": [
@@ -451,20 +334,42 @@
                   }
                 ],
                 "type": "basic"
-              }
-            ]
-          },
-          {
-            "description": "from CAPS_LOCK to L_CMD",
-            "manipulators": [
+              },
               {
+                "conditions": [
+                  {
+                    "identifiers": [
+                      {
+                        "is_keyboard": true,
+                        "vendor_id": 33
+                      }
+                    ],
+                    "type": "device_unless"
+                  }
+                ],
                 "from": {
                   "key_code": "caps_lock"
                 },
                 "to": [
                   {
-                    "key_code": "left_gui",
+                    "key_code": "left_control",
                     "repeat": true
+                  }
+                ],
+                "type": "basic"
+              }
+            ]
+          },
+          {
+            "description": "R_OPT -> FN unless Apple Keyboard",
+            "manipulators": [
+              {
+                "from": {
+                  "key_code": "right_option"
+                },
+                "to": [
+                  {
+                    "apple_vendor_top_case_key_code": "keyboard_fn"
                   }
                 ],
                 "type": "basic"
@@ -1121,6 +1026,28 @@
           "mouse_swap_xy": false,
           "simple_modifications": [],
           "treat_as_built_in_keyboard": false
+        },
+        {
+          "disable_built_in_keyboard_if_exists": false,
+          "fn_function_keys": [],
+          "game_pad_swap_sticks": false,
+          "identifiers": {
+            "is_game_pad": false,
+            "is_keyboard": true,
+            "is_pointing_device": false,
+            "product_id": 33,
+            "vendor_id": 1278
+          },
+          "ignore": false,
+          "manipulate_caps_lock_led": true,
+          "mouse_flip_horizontal_wheel": false,
+          "mouse_flip_vertical_wheel": false,
+          "mouse_flip_x": false,
+          "mouse_flip_y": false,
+          "mouse_swap_wheels": false,
+          "mouse_swap_xy": false,
+          "simple_modifications": [],
+          "treat_as_built_in_keyboard": false
         }
       ],
       "fn_function_keys": [
@@ -1250,28 +1177,7 @@
         "delay_milliseconds_before_open_device": 1000
       },
       "selected": true,
-      "simple_modifications": [
-        {
-          "from": {
-            "key_code": "escape"
-          },
-          "to": [
-            {
-              "key_code": "grave_accent_and_tilde"
-            }
-          ]
-        },
-        {
-          "from": {
-            "key_code": "grave_accent_and_tilde"
-          },
-          "to": [
-            {
-              "key_code": "escape"
-            }
-          ]
-        }
-      ],
+      "simple_modifications": [],
       "virtual_hid_keyboard": {
         "country_code": 0,
         "indicate_sticky_modifier_keys_state": true,
@@ -1603,4 +1509,3 @@
     }
   ]
 }
-
