@@ -162,7 +162,7 @@
             ]
           },
           {
-            "description": "Korean, English, Japanese Configurations",
+            "description": "Language(Korean, English, Japanese) Configurations",
             "manipulators": [
               {
                 "conditions": [
@@ -170,6 +170,66 @@
                     "input_sources": [
                       {
                         "language": "ko"
+                      },
+                      {
+                        "language": "ja"
+                      }
+                    ],
+                    "type": "input_source_if"
+                  }
+                ],
+                "from": {
+                  "key_code": "spacebar",
+                  "modifiers": {
+                    "mandatory": ["left_control"]
+                  }
+                },
+                "to": [
+                  {
+                    "key_code": "f18",
+                    "repeat": true
+                  }
+                ],
+                "type": "basic"
+              },
+              {
+                "conditions": [
+                  {
+                    "input_sources": [
+                      {
+                        "language": "en"
+                      }
+                    ],
+                    "type": "input_source_if"
+                  }
+                ],
+                "from": {
+                  "key_code": "spacebar",
+                  "modifiers": {
+                    "mandatory": ["left_control"]
+                  }
+                },
+                "to": [
+                  {
+                    "key_code": "f18",
+                    "repeat": true
+                  },
+                  {
+                    "key_code": "f18",
+                    "repeat": true
+                  }
+                ],
+                "type": "basic"
+              },
+              {
+                "conditions": [
+                  {
+                    "input_sources": [
+                      {
+                        "language": "ko"
+                      },
+                      {
+                        "language": "ja"
                       }
                     ],
                     "type": "input_source_if"
@@ -249,28 +309,6 @@
               },
               {
                 "from": {},
-                "type": "basic"
-              },
-              {
-                "conditions": [
-                  {
-                    "input_sources": [
-                      {
-                        "language": "ja"
-                      }
-                    ],
-                    "type": "input_source_if"
-                  }
-                ],
-                "from": {
-                  "key_code": "right_command"
-                },
-                "to": [
-                  {
-                    "key_code": "f18",
-                    "repeat": true
-                  }
-                ],
                 "type": "basic"
               },
               {
@@ -361,7 +399,7 @@
             ]
           },
           {
-            "description": "R_OPT -> FN unless Apple Keyboard",
+            "description": "R-OPT -> FN unless Apple Keyboard",
             "manipulators": [
               {
                 "from": {
