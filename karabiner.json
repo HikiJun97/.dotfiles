@@ -418,6 +418,21 @@
             "description": "Shortcuts with modifiers",
             "manipulators": [
               {
+                "from": {
+                  "key_code": "m",
+                  "modifiers": {
+                    "mandatory": ["left_control"]
+                  }
+                },
+                "to": [
+                  {
+                    "key_code": "return_or_enter",
+                    "repeat": true
+                  }
+                ],
+                "type": "basic"
+              },
+              {
                 "conditions": [
                   {
                     "bundle_identifiers": ["com.github.wez.wezterm"],
@@ -1783,4 +1798,3 @@
     }
   ]
 }
-
