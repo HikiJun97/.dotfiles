@@ -54,7 +54,7 @@ vim.cmd([[
 
 -- FileType 이벤트에 대한 자동 명령을 설정합니다.
 vim.api.nvim_create_autocmd("FileType", {
-	pattern = { "typescript", "javascript", "html", "css" },
+	pattern = { "typescript", "javascript", "html", "css", "javascriptreact", "typescriptreact" },
 	callback = function()
 		vim.bo.shiftwidth = 2
 		vim.bo.tabstop = 2
@@ -77,7 +77,7 @@ vim.api.nvim_create_autocmd("FileType", {
 vim.api.nvim_create_autocmd("FileType", {
 	pattern = "json",
 	callback = function()
-		-- json 파일의 들여쓰기를 2로 설정
+		-- json 파일의 들여쓰기를 4로 설정
 		vim.opt_local.shiftwidth = 4
 		vim.opt_local.tabstop = 4
 		vim.opt_local.softtabstop = 4
@@ -127,6 +127,7 @@ vim.api.nvim_create_autocmd("BufReadPost", {
 }) -- remember cursor position
 
 -- Syntax enable
+vim.cmd("syntax enable")
 if vim.fn.has("syntax") == 1 then
 	vim.cmd("syntax on")
 end
@@ -385,12 +386,7 @@ require("lazy").setup({
 	{ "github/copilot.vim" },
 
 	-- ################### Color schemes ###################
-	{
-		"morhetz/gruvbox",
-		--        config = function()
-		--            vim.cmd([[colorscheme gruvbox]])
-		--        end,
-	},                             -- Provides the Gruvbox color scheme, loaded immediately
+	{ "morhetz/gruvbox" },                             -- Provides the Gruvbox color scheme, loaded immediately
 	{ "NLKNguyen/papercolor-theme" }, -- Offers a highly readable color scheme
 	{ "sainnhe/sonokai" },         -- Provides the Sonokai color scheme
 	{
@@ -432,10 +428,14 @@ require("lazy").setup({
 		--	    priority = 1000,
 		--	    config = catppuccin_frappe
 	}, -- Smooth and comfy Neovim color scheme
-	{ "rebelot/kanagawa.nvim" }
+	{ "rebelot/kanagawa.nvim" },
+	{ "crusoexia/vim-monokai" },
+	{
+		"loctvl842/monokai-pro.nvim"
+	}
 })
 
-vim.cmd("colorscheme kanagawa")
+vim.cmd("colorscheme monokai-pro")
 
 -- vim.api.nvim_create_user_command("Format", function(args)
 -- 	local range = nil

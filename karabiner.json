@@ -27,11 +27,21 @@
                       {
                         "is_keyboard": true,
                         "location_id": 165
-                      },
+                      }
+                    ],
+                    "type": "device_unless"
+                  },
+                  {
+                    "identifiers": [
                       {
                         "is_keyboard": true,
                         "product_id": 33
-                      },
+                      }
+                    ],
+                    "type": "device_unless"
+                  },
+                  {
+                    "identifiers": [
                       {
                         "is_keyboard": true,
                         "product_id": 615
