@@ -1,6 +1,9 @@
 -- Ubuntu
+-- Color Scheme setting at line 486
+
 -- Basic settings
 -- vim.opt.clipboard = "unnamedplus"
+
 vim.g.clipboard = {
 	name = "OSC 52",
 	copy = {
@@ -12,6 +15,16 @@ vim.g.clipboard = {
 		["*"] = require("vim.ui.clipboard.osc52").paste("*"),
 	},
 }
+
+-- Syntax enable
+vim.cmd("syntax enable")
+if vim.fn.has("syntax") == 1 then
+	vim.cmd("syntax on")
+end
+
+-- Colorscheme settings
+vim.opt.termguicolors = true -- enables 256 colors
+vim.opt.background = "dark" -- sets the background to dark
 
 vim.opt.mouse = "a"
 vim.opt.hlsearch = true
@@ -54,7 +67,7 @@ vim.cmd([[
 
 -- FileType 이벤트에 대한 자동 명령을 설정합니다.
 vim.api.nvim_create_autocmd("FileType", {
-	pattern = { "typescript", "javascript", "html", "css", "javascriptreact", "typescriptreact" },
+	pattern = { "typescript", "javascript", "html", "css" },
 	callback = function()
 		vim.bo.shiftwidth = 2
 		vim.bo.tabstop = 2
@@ -77,7 +90,7 @@ vim.api.nvim_create_autocmd("FileType", {
 vim.api.nvim_create_autocmd("FileType", {
 	pattern = "json",
 	callback = function()
-		-- json 파일의 들여쓰기를 4로 설정
+		-- json 파일의 들여쓰기를 2로 설정
 		vim.opt_local.shiftwidth = 4
 		vim.opt_local.tabstop = 4
 		vim.opt_local.softtabstop = 4
@@ -86,13 +99,6 @@ vim.api.nvim_create_autocmd("FileType", {
 		vim.g.vim_json_conceal = 0
 	end,
 })
-
--- g:coc_filetype_map 설정
-vim.g.coc_filetype_map = {
-	["yaml.docker-compose"] = "dockercompose",
-}
-vim.opt.backspace = "eol,start,indent"
-vim.opt.foldmethod = "indent"
 
 -- Encoding and backup settings
 vim.opt.encoding = "utf-8"
@@ -113,9 +119,6 @@ vim.cmd([[
   endif
 ]])
 
--- Setting global variables
-vim.g["one_allow_italics"] = 1
-
 -- Autocommands
 vim.api.nvim_create_autocmd("BufReadPost", {
 	pattern = "*",
@@ -125,12 +128,6 @@ vim.api.nvim_create_autocmd("BufReadPost", {
 		end
 	end,
 }) -- remember cursor position
-
--- Syntax enable
-vim.cmd("syntax enable")
-if vim.fn.has("syntax") == 1 then
-	vim.cmd("syntax on")
-end
 
 vim.cmd("filetype off")
 
@@ -149,29 +146,37 @@ end
 vim.opt.rtp:prepend(lazypath)
 
 require("lazy").setup({
-	{ "vim-scripts/taglist.vim" },                        -- Displays a list of tags (functions, variables, etc.) in the source code
-	{ "SirVer/ultisnips",       event = { "InsertEnter" } }, -- Manages and quickly inserts snippets (code fragments)
-	{ "honza/vim-snippets" },                             -- Collection of snippets for various programming languages
+	{ "VonHeikemen/lsp-zero.nvim", branch = "v4.x" },
 	{
-		"davidhalter/jedi-vim",
-		config = function()
-			vim.g["jedi#show_call_signatures"] = 0
-			vim.g["jedi#popup_select_first"] = "0"
-			vim.g["jedi#force_py_version"] = 3
-		end,
-	}, -- Auto-completion for Python code
+		"neovim/nvim-lspconfig",
+		"williamboman/mason.nvim",
+		"williamboman/mason-lspconfig.nvim",
+		"hrsh7th/cmp-nvim-lsp",
+		"hrsh7th/nvim-cmp",
+	},
+	{ "vim-scripts/taglist.vim" }, -- Displays a list of tags (functions, variables, etc.) in the source code
+	{ "SirVer/ultisnips", event = { "InsertEnter" } }, -- Manages and quickly inserts snippets (code fragments)
+	{ "honza/vim-snippets" }, -- Collection of snippets for various programming languages
+	-- {
+	-- 	"davidhalter/jedi-vim",
+	-- 	config = function()
+	-- 		vim.g["jedi#show_call_signatures"] = 0
+	-- 		vim.g["jedi#popup_select_first"] = "0"
+	-- 		vim.g["jedi#force_py_version"] = 3
+	-- 	end,
+	-- }, -- Auto-completion for Python code
 	-- {
 	-- 	"hynek/vim-python-pep8-indent",
 	-- 	config = function()
 	-- 		vim.g.python_pep8_indent_multiline_string = -1
 	-- 	end,
 	-- }, -- Applies PEP 8 style indentation to Python code
-	{ "nvie/vim-flake8" },                                    -- Grammar check for Python code
-	{ "anscoral/winmanager.vim" },                            -- Enhances window management capabilities
-	{ "shime/vim-livedown" },                                 -- Markdown preview functionality
-	{ "tpope/vim-sensible" },                                 -- Sensible default settings for Vim
-	{ "junegunn/fzf",           lazy = { event = "VimEnter" } }, -- Fuzzy file finder
-	{ "junegunn/goyo.vim" },                                  -- Distraction-free writing mode
+	-- { "nvie/vim-flake8" }, -- Grammar check for Python code
+	{ "anscoral/winmanager.vim" }, -- Enhances window management capabilities
+	{ "shime/vim-livedown" }, -- Markdown preview functionality
+	{ "tpope/vim-sensible" }, -- Sensible default settings for Vim
+	{ "junegunn/fzf", lazy = { event = "VimEnter" } }, -- Fuzzy file finder
+	{ "junegunn/goyo.vim" }, -- Distraction-free writing mode
 	-- { "thaerkh/vim-indentguides" }, -- Visual display of indent levels
 	{
 		"nathanaelkane/vim-indent-guides",
@@ -181,16 +186,16 @@ require("lazy").setup({
 			vim.g.indent_guides_guide_size = 1
 		end,
 	},
-	{ "Raimondi/delimitMate" },                 -- Auto-completion for quotes, parens, brackets, etc.
-	{ "preservim/nerdtree" },                   -- Tree explorer for navigating the filesystem
-	{ "blueyed/vim-diminactive" },              -- Dim inactive windows
-	{ "majutsushi/tagbar" },                    -- Displays tags in a sidebar
+	{ "Raimondi/delimitMate" }, -- Auto-completion for quotes, parens, brackets, etc.
+	{ "preservim/nerdtree" }, -- Tree explorer for navigating the filesystem
+	{ "blueyed/vim-diminactive" }, -- Dim inactive windows
+	{ "majutsushi/tagbar" }, -- Displays tags in a sidebar
 	{ "PhilRunninger/nerdtree-visual-selection" }, -- Enhanced visual selection for NERDTree
-	{ "ctrlpvim/ctrlp.vim" },                   -- Full path fuzzy file, buffer, tag, etc. finder
-	{
-		"neoclide/coc.nvim",
-		branch = "release",
-	}, -- Intellisense engine for Vim8 & Neovim
+	{ "ctrlpvim/ctrlp.vim" }, -- Full path fuzzy file, buffer, tag, etc. finder
+	-- {
+	-- 	"neoclide/coc.nvim",
+	-- 	branch = "release",
+	-- }, -- Intellisense engine for Vim8 & Neovim
 	{
 		"nvim-treesitter/nvim-treesitter",
 		build = ":TSUpdate",
@@ -234,7 +239,7 @@ require("lazy").setup({
 				respect_scrolloff = false, -- Stop scrolling when the cursor reaches the scrolloff margin of the file
 				cursor_scrolls_alone = true, -- The cursor will keep on scrolling even if the window cannot scroll further
 				easing_function = nil, -- Default easing function
-				pre_hook = nil,  -- Function to run before the scrolling animation starts
+				pre_hook = nil, -- Function to run before the scrolling animation starts
 				post_hook = nil, -- Function to run after the scrolling animation ends
 				performance_mode = false, -- Disable "Performance Mode" on all buffers.
 			})
@@ -243,13 +248,28 @@ require("lazy").setup({
 	-- 	{ "pangloss/vim-javascript" }, -- JavaScript bundle for Vim
 	-- 	{ "mxw/vim-jsx" },          -- React JSX syntax highlighting and indenting
 	{ "uiiaoo/java-syntax.vim" }, -- Improved Java syntax highlighting
-	{ "tpope/vim-surround" },  -- Quoting/parenthesizing made simple
-	{ "alvan/vim-closetag" },  -- Auto close (X)HTML tags
+	{ "tpope/vim-surround" }, -- Quoting/parenthesizing made simple
+	{ "alvan/vim-closetag" }, -- Auto close (X)HTML tags
 	{ "nvim-lua/plenary.nvim" },
 	{
 		"nvim-telescope/telescope.nvim",
 		tag = "0.1.5",
 		dependencies = { "nvim-lua/plenary.nvim" },
+	},
+	{
+		"nvim-telescope/telescope-file-browser.nvim",
+		dependencies = { "nvim-telescope/telescope.nvim", "nvim-lua/plenary.nvim" },
+		config = function()
+			require("telescope").setup({
+				extensions = {
+					file_browser = {
+						theme = "ivy",
+						-- disables netrw and use telescope-file-browser in its place
+						hijack_netrw = true,
+					},
+				},
+			})
+		end,
 	},
 	{ "nvim-tree/nvim-web-devicons" },
 	{
@@ -386,34 +406,48 @@ require("lazy").setup({
 	{ "github/copilot.vim" },
 
 	-- ################### Color schemes ###################
-	{ "morhetz/gruvbox" },                             -- Provides the Gruvbox color scheme, loaded immediately
+	{ "morhetz/gruvbox" }, -- Provides the Gruvbox color scheme, loaded immediately
 	{ "NLKNguyen/papercolor-theme" }, -- Offers a highly readable color scheme
-	{ "sainnhe/sonokai" },         -- Provides the Sonokai color scheme
+	{ "sainnhe/sonokai" }, -- Provides the Sonokai color scheme
 	{
 		"joshdick/onedark.vim",
-	},                           -- Offers the One Dark color scheme
-	{ "rakr/vim-one" },          -- Provides the One color scheme from Atom editor
-	{ "sainnhe/edge" },          -- Offers the Edge color scheme
+		config = function()
+			vim.g.onedark_terminal_italics = 1
+		end,
+	}, -- Offers the One Dark color scheme
+	{ "rakr/vim-one" }, -- Provides the One color scheme from Atom editor
+	{ "sainnhe/edge" }, -- Offers the Edge color scheme
 	{ "connorholyday/vim-snazzy" }, -- Provides the Snazzy color scheme
 	{ "junegunn/seoul256.vim" }, -- Seoul256 color scheme
 	{
 		"nanotech/jellybeans.vim",
-	},                                 -- Colorful, dark color scheme
-	{ "sainnhe/everforest" },          -- Green-based warm color scheme
-	{ "patstockwell/vim-monokai-tasty" }, -- Monokai color scheme
+	}, -- Colorful, dark color scheme
+	{
+		"sainnhe/everforest",
+		config = function()
+			vim.g.everforest_background = "hard"
+		end,
+	}, -- Green-based warm color scheme
+	{
+		"loctvl842/monokai-pro.nvim",
+		config = function()
+			-- require("monokai-pro").setup({ filter = "default" })
+		end,
+	},
+	{ "patstockwell/vim-monokai-tasty" }, -- Monokai-tasty color scheme
 	{
 		"sonph/onehalf",
 		lazy = { rtp = "vim" },
 	}, -- Light/Dark color scheme based on Atom's One
 	{
 		"tomasr/molokai",
-	},                                -- Molokai color scheme
-	{ "bluz71/vim-moonfly-colors" },  -- Dark color scheme with vibrant colors
-	{ "cocopon/iceberg.vim" },        -- Dark blue color scheme
-	{ "ghifarit53/tokyonight-vim" },  -- Tokyo Night color scheme
+	}, -- Molokai color scheme
+	{ "bluz71/vim-moonfly-colors" }, -- Dark color scheme with vibrant colors
+	{ "cocopon/iceberg.vim" }, -- Dark blue color scheme
+	{ "ghifarit53/tokyonight-vim" }, -- Tokyo Night color scheme
 	{ "bluz71/vim-nightfly-guicolors" }, -- Dark color scheme with bright accents
-	{ "mangeshrex/everblush.vim" },   -- Soft, dark color scheme with vibrant colors
-	{ "tjdevries/colorbuddy.nvim" },  -- Helper for creating Neovim color schemes
+	{ "mangeshrex/everblush.vim" }, -- Soft, dark color scheme with vibrant colors
+	{ "tjdevries/colorbuddy.nvim" }, -- Helper for creating Neovim color schemes
 	{
 		"bbenzikry/snazzybuddy.nvim",
 		--	    name = 'snazzybuddy',
@@ -429,13 +463,48 @@ require("lazy").setup({
 		--	    config = catppuccin_frappe
 	}, -- Smooth and comfy Neovim color scheme
 	{ "rebelot/kanagawa.nvim" },
-	{ "crusoexia/vim-monokai" },
 	{
-		"loctvl842/monokai-pro.nvim"
-	}
+		"shawilly/ponokai",
+		lazy = false,
+		priority = 1000,
+		config = function()
+			vim.g.sonokai_enable_italic = true
+		end,
+	},
+	{
+		"marko-cerovac/material.nvim",
+		config = function()
+			vim.g.material_style = "lighter"
+		end,
+	},
+	{
+		"kaicataldo/material.vim",
+		config = function()
+			vim.g.material_theme_style = "dark-community"
+		end,
+	},
+	{
+		"rose-pine/neovim",
+		name = "rose-pine",
+		-- config = function()
+		-- 	require("rose-pine").setup({
+		-- 	})
+		-- end,
+	},
+	{
+		"drewtempelmeyer/palenight.vim",
+		config = function()
+			vim.g.palenight_terminal_italics = true
+		end,
+	},
 })
 
+-- vim.cmd "colorscheme kanagawa"
 vim.cmd("colorscheme monokai-pro")
+-- vim.cmd "colorscheme rose-pine-dawn"
+-- vim.cmd "colorscheme palenight"
+-- vim.cmd "colorscheme everforest"
+-- vim.cmd "colorscheme onedark"
 
 -- vim.api.nvim_create_user_command("Format", function(args)
 -- 	local range = nil
@@ -452,6 +521,7 @@ vim.cmd("colorscheme monokai-pro")
 vim.cmd("filetype plugin indent on")
 
 local keyset = vim.keymap.set
+
 vim.g.mapleader = "\\"
 -- Autocomplete
 function _G.check_back_space()
@@ -459,160 +529,163 @@ function _G.check_back_space()
 	return col == 0 or vim.fn.getline("."):sub(col, col):match("%s") ~= nil
 end
 
-local opts = { silent = true, noremap = true, expr = true, replace_keycodes = false }
-keyset("i", "<TAB>", 'coc#pum#visible() ? coc#pum#next(1) : v:lua.check_back_space() ? "<TAB>" : coc#refresh()', opts)
-keyset("i", "<S-TAB>", [[coc#pum#visible() ? coc#pum#prev(1) : "\<C-h>"]], opts)
-
--- Make <CR> to accept selected completion item or notify coc.nvim to format
--- <C-g>u breaks current undo, please make your own choice
-keyset("i", "<cr>", [[coc#pum#visible() ? coc#pum#confirm() : "\<C-g>u\<CR>\<c-r>=coc#on_enter()\<CR>"]], opts)
-
--- Use <c-j> to trigger snippets
-keyset("i", "<c-j>", "<Plug>(coc-snippets-expand-jump)")
-
--- Use <c-space> to trigger completion
-keyset("i", "<c-space>", "coc#refresh()", { silent = true, expr = true })
-
--- Use `[g` and `]g` to navigate diagnostics
--- Use `:CocDiagnostics` to get all diagnostics of current buffer in location list
-keyset("n", "[g", "<Plug>(coc-diagnostic-prev)", { silent = true })
-keyset("n", "]g", "<Plug>(coc-diagnostic-next)", { silent = true })
-vim.api.nvim_create_user_command("CD", "CocDiagnostics", {})
-vim.api.nvim_create_user_command("CR", "CocRestart", {})
-
--- GoTo code navigation
-keyset("n", "gd", "<Plug>(coc-definition)", { silent = true })
-keyset("n", "gb", "<C-o>", { silent = true })
-keyset("n", "gy", "<Plug>(coc-type-definition)", { silent = true })
-keyset("n", "gi", "<Plug>(coc-implementation)", { silent = true })
-keyset("n", "gr", "<Plug>(coc-references)", { silent = true })
-
--- Highlight the symbol and its references on a CursorHold event(cursor is idle)
-vim.api.nvim_create_augroup("CocGroup", {})
-vim.api.nvim_create_autocmd("CursorHold", {
-	group = "CocGroup",
-	command = "silent call CocActionAsync('highlight')",
-	desc = "Highlight symbol under cursor on CursorHold",
-})
-
--- Symbol renaming
-keyset("n", "<leader>rn", "<Plug>(coc-rename)", { silent = true })
-
--- Formatting selected code
-keyset("x", "<leader>f", "<Plug>(coc-format-selected)", { silent = true })
-keyset("n", "<leader>f", "<Plug>(coc-format-selected)", { silent = true })
-
--- Setup formatexpr specified filetype(s)
-vim.api.nvim_create_autocmd("FileType", {
-	group = "CocGroup",
-	pattern = "typescript,json",
-	command = "setl formatexpr=CocAction('formatSelected')",
-	desc = "Setup formatexpr specified filetype(s).",
-})
-
--- Update signature help on jump placeholder
-vim.api.nvim_create_autocmd("User", {
-	group = "CocGroup",
-	pattern = "CocJumpPlaceholder",
-	command = "call CocActionAsync('showSignatureHelp')",
-	desc = "Update signature help on jump placeholder",
-})
-
--- Apply codeAction to the selected region
--- Example: `<leader>aap` for current paragraph
-local opts = { silent = true, nowait = true }
-keyset("x", "<leader>a", "<Plug>(coc-codeaction-selected)", opts)
-keyset("n", "<leader>a", "<Plug>(coc-codeaction-selected)", opts)
-
--- Remap keys for apply code actions at the cursor position.
-keyset("n", "<leader>ac", "<Plug>(coc-codeaction-cursor)", opts)
--- Remap keys for apply source code actions for current file.
-keyset("n", "<leader>as", "<Plug>(coc-codeaction-source)", opts)
--- Apply the most preferred quickfix action on the current line.
-keyset("n", "<leader>qf", "<Plug>(coc-fix-current)", opts)
-
--- Remap keys for apply refactor code actions.
-keyset("n", "<leader>re", "<Plug>(coc-codeaction-refactor)", { silent = false })
-keyset("x", "<leader>r", "<Plug>(coc-codeaction-refactor-selected)", { silent = false })
-keyset("n", "<leader>r", "<Plug>(coc-codeaction-refactor-selected)", { silent = false })
-
--- Run the Code Lens actions on the current line
-keyset("n", "<leader>cl", "<Plug>(coc-codelens-action)", opts)
-
--- Map function and class text objects
--- NOTE: Requires 'textDocument.documentSymbol' support from the language server
-keyset("x", "if", "<Plug>(coc-funcobj-i)", opts)
-keyset("o", "if", "<Plug>(coc-funcobj-i)", opts)
-keyset("x", "af", "<Plug>(coc-funcobj-a)", opts)
-keyset("o", "af", "<Plug>(coc-funcobj-a)", opts)
-keyset("x", "ic", "<Plug>(coc-classobj-i)", opts)
-keyset("o", "ic", "<Plug>(coc-classobj-i)", opts)
-keyset("x", "ac", "<Plug>(coc-classobj-a)", opts)
-keyset("o", "ac", "<Plug>(coc-classobj-a)", opts)
-
--- Remap <C-f> and <C-b> to scroll float windows/popups
----@diagnostic disable-next-line: redefined-local
-local opts = { silent = true, nowait = true, expr = true }
-keyset("n", "<C-f>", 'coc#float#has_scroll() ? coc#float#scroll(1) : "<C-f>"', opts)
-keyset("n", "<C-b>", 'coc#float#has_scroll() ? coc#float#scroll(0) : "<C-b>"', opts)
-keyset("i", "<C-f>", 'coc#float#has_scroll() ? "<c-r>=coc#float#scroll(1)<cr>" : "<Right>"', opts)
-keyset("i", "<C-b>", 'coc#float#has_scroll() ? "<c-r>=coc#float#scroll(0)<cr>" : "<Left>"', opts)
-keyset("v", "<C-f>", 'coc#float#has_scroll() ? coc#float#scroll(1) : "<C-f>"', opts)
-keyset("v", "<C-b>", 'coc#float#has_scroll() ? coc#float#scroll(0) : "<C-b>"', opts)
-
--- Use CTRL-S for selections ranges
--- Requires 'textDocument/selectionRange' support of language server
-keyset("n", "<C-s>", "<Plug>(coc-range-select)", { silent = true })
-keyset("x", "<C-s>", "<Plug>(coc-range-select)", { silent = true })
-
--- Add `:Format` command to format current buffer
-vim.api.nvim_create_user_command("Format", "call CocAction('format')", {})
-vim.api.nvim_create_user_command("Prettier", function()
-	vim.fn.CocAction("runCommand", "prettier.formatFile")
-end, {})
-
--- " Add `:Fold` command to fold current buffer
-vim.api.nvim_create_user_command("Fold", "call CocAction('fold', <f-args>)", { nargs = "?" })
-
--- Add `:OR` command for organize imports of the current buffer
-vim.api.nvim_create_user_command("OR", "call CocActionAsync('runCommand', 'editor.action.organizeImport')", {})
-
--- Add (Neo)Vim's native statusline support
--- NOTE: Please see `:h coc-status` for integrations with external plugins that
--- provide custom statusline: lightline.vim, vim-airline
---vim.opt.statusline:prepend("%{coc#status()}%{get(b:,'coc_current_function','')}")  -- makes error
---vim.o.statusline = "%{coc#status()}%{get(b:,'coc_current_function','')}" .. vim.o.statusline  -- GPT said like this
-
--- Mappings for CoCList
--- code actions and coc stuff
----@diagnostic disable-next-line: redefined-local
-local opts = { silent = true, nowait = true }
--- Show all diagnostics
-keyset("n", "<space>a", ":<C-u>CocList diagnostics<cr>", opts)
--- Manage extensions
-keyset("n", "<space>e", ":<C-u>CocList extensions<cr>", opts)
--- Show commands
-keyset("n", "<space>c", ":<C-u>CocList commands<cr>", opts)
--- Find symbol of current document
-keyset("n", "<space>o", ":<C-u>CocList outline<cr>", opts)
--- Search workspace symbols
-keyset("n", "<space>s", ":<C-u>CocList -I symbols<cr>", opts)
--- Do default action for next item
-keyset("n", "<space>j", ":<C-u>CocNext<cr>", opts)
--- Do default action for previous item
-keyset("n", "<space>k", ":<C-u>CocPrev<cr>", opts)
--- Resume latest coc list
-keyset("n", "<space>p", ":<C-u>CocListResume<cr>", opts)
+-- g:coc_filetype_map 설정
+-- vim.g.coc_filetype_map = {
+-- 	["yaml.docker-compose"] = "dockercompose",
+-- }
+-- vim.opt.backspace = "eol,start,indent"
+-- vim.opt.foldmethod = "indent"
+--
+-- local opts = { silent = true, noremap = true, expr = true, replace_keycodes = false }
+-- keyset("i", "<TAB>", 'coc#pum#visible() ? coc#pum#next(1) : v:lua.check_back_space() ? "<TAB>" : coc#refresh()', opts)
+-- keyset("i", "<S-TAB>", [[coc#pum#visible() ? coc#pum#prev(1) : "\<C-h>"]], opts)
+--
+-- -- Make <CR> to accept selected completion item or notify coc.nvim to format
+-- -- <C-g>u breaks current undo, please make your own choice
+-- keyset("i", "<cr>", [[coc#pum#visible() ? coc#pum#confirm() : "\<C-g>u\<CR>\<c-r>=coc#on_enter()\<CR>"]], opts)
+--
+-- -- Use <c-j> to trigger snippets
+-- keyset("i", "<c-j>", "<Plug>(coc-snippets-expand-jump)")
+--
+-- -- Use <c-space> to trigger completion
+-- keyset("i", "<c-space>", "coc#refresh()", { silent = true, expr = true })
+--
+-- -- Use `[g` and `]g` to navigate diagnostics
+-- -- Use `:CocDiagnostics` to get all diagnostics of current buffer in location list
+-- keyset("n", "[g", "<Plug>(coc-diagnostic-prev)", { silent = true })
+-- keyset("n", "]g", "<Plug>(coc-diagnostic-next)", { silent = true })
+-- vim.api.nvim_create_user_command("CD", "CocDiagnostics", {})
+-- vim.api.nvim_create_user_command("CR", "CocRestart", {})
+--
+-- -- GoTo code navigation
+-- keyset("n", "gd", "<Plug>(coc-definition)", { silent = true })
+-- keyset("n", "gb", "<C-o>", { silent = true })
+-- keyset("n", "gy", "<Plug>(coc-type-definition)", { silent = true })
+-- keyset("n", "gi", "<Plug>(coc-implementation)", { silent = true })
+-- keyset("n", "gr", "<Plug>(coc-references)", { silent = true })
+--
+-- -- Highlight the symbol and its references on a CursorHold event(cursor is idle)
+-- vim.api.nvim_create_augroup("CocGroup", {})
+-- vim.api.nvim_create_autocmd("CursorHold", {
+-- 	group = "CocGroup",
+-- 	command = "silent call CocActionAsync('highlight')",
+-- 	desc = "Highlight symbol under cursor on CursorHold",
+-- })
+--
+-- -- Symbol renaming
+-- keyset("n", "<leader>rn", "<Plug>(coc-rename)", { silent = true })
+--
+-- -- Formatting selected code
+-- keyset("x", "<leader>f", "<Plug>(coc-format-selected)", { silent = true })
+-- keyset("n", "<leader>f", "<Plug>(coc-format-selected)", { silent = true })
+--
+-- -- Setup formatexpr specified filetype(s)
+-- vim.api.nvim_create_autocmd("FileType", {
+-- 	group = "CocGroup",
+-- 	pattern = "typescript,json",
+-- 	command = "setl formatexpr=CocAction('formatSelected')",
+-- 	desc = "Setup formatexpr specified filetype(s).",
+-- })
+--
+-- -- Update signature help on jump placeholder
+-- vim.api.nvim_create_autocmd("User", {
+-- 	group = "CocGroup",
+-- 	pattern = "CocJumpPlaceholder",
+-- 	command = "call CocActionAsync('showSignatureHelp')",
+-- 	desc = "Update signature help on jump placeholder",
+-- })
+--
+-- -- Apply codeAction to the selected region
+-- -- Example: `<leader>aap` for current paragraph
+-- local opts = { silent = true, nowait = true }
+-- keyset("x", "<leader>a", "<Plug>(coc-codeaction-selected)", opts)
+-- keyset("n", "<leader>a", "<Plug>(coc-codeaction-selected)", opts)
+--
+-- -- Remap keys for apply code actions at the cursor position.
+-- keyset("n", "<leader>ac", "<Plug>(coc-codeaction-cursor)", opts)
+-- -- Remap keys for apply source code actions for current file.
+-- keyset("n", "<leader>as", "<Plug>(coc-codeaction-source)", opts)
+-- -- Apply the most preferred quickfix action on the current line.
+-- keyset("n", "<leader>qf", "<Plug>(coc-fix-current)", opts)
+--
+-- -- Remap keys for apply refactor code actions.
+-- keyset("n", "<leader>re", "<Plug>(coc-codeaction-refactor)", { silent = false })
+-- keyset("x", "<leader>r", "<Plug>(coc-codeaction-refactor-selected)", { silent = false })
+-- keyset("n", "<leader>r", "<Plug>(coc-codeaction-refactor-selected)", { silent = false })
+--
+-- -- Run the Code Lens actions on the current line
+-- keyset("n", "<leader>cl", "<Plug>(coc-codelens-action)", opts)
+--
+-- -- Map function and class text objects
+-- -- NOTE: Requires 'textDocument.documentSymbol' support from the language server
+-- keyset("x", "if", "<Plug>(coc-funcobj-i)", opts)
+-- keyset("o", "if", "<Plug>(coc-funcobj-i)", opts)
+-- keyset("x", "af", "<Plug>(coc-funcobj-a)", opts)
+-- keyset("o", "af", "<Plug>(coc-funcobj-a)", opts)
+-- keyset("x", "ic", "<Plug>(coc-classobj-i)", opts)
+-- keyset("o", "ic", "<Plug>(coc-classobj-i)", opts)
+-- keyset("x", "ac", "<Plug>(coc-classobj-a)", opts)
+-- keyset("o", "ac", "<Plug>(coc-classobj-a)", opts)
+--
+-- -- Remap <C-f> and <C-b> to scroll float windows/popups
+-- ---@diagnostic disable-next-line: redefined-local
+-- local opts = { silent = true, nowait = true, expr = true }
+-- keyset("n", "<C-f>", 'coc#float#has_scroll() ? coc#float#scroll(1) : "<C-f>"', opts)
+-- keyset("n", "<C-b>", 'coc#float#has_scroll() ? coc#float#scroll(0) : "<C-b>"', opts)
+-- keyset("i", "<C-f>", 'coc#float#has_scroll() ? "<c-r>=coc#float#scroll(1)<cr>" : "<Right>"', opts)
+-- keyset("i", "<C-b>", 'coc#float#has_scroll() ? "<c-r>=coc#float#scroll(0)<cr>" : "<Left>"', opts)
+-- keyset("v", "<C-f>", 'coc#float#has_scroll() ? coc#float#scroll(1) : "<C-f>"', opts)
+-- keyset("v", "<C-b>", 'coc#float#has_scroll() ? coc#float#scroll(0) : "<C-b>"', opts)
+--
+-- -- Use CTRL-S for selections ranges
+-- -- Requires 'textDocument/selectionRange' support of language server
+-- keyset("n", "<C-s>", "<Plug>(coc-range-select)", { silent = true })
+-- keyset("x", "<C-s>", "<Plug>(coc-range-select)", { silent = true })
+--
+-- -- Add `:Format` command to format current buffer
+-- vim.api.nvim_create_user_command("Format", "call CocAction('format')", {})
+-- vim.api.nvim_create_user_command("Prettier", function()
+-- 	vim.fn.CocAction("runCommand", "prettier.formatFile")
+-- end, {})
+--
+-- -- " Add `:Fold` command to fold current buffer
+-- vim.api.nvim_create_user_command("Fold", "call CocAction('fold', <f-args>)", { nargs = "?" })
+--
+-- -- Add `:OR` command for organize imports of the current buffer
+-- vim.api.nvim_create_user_command("OR", "call CocActionAsync('runCommand', 'editor.action.organizeImport')", {})
+--
+-- -- Add (Neo)Vim's native statusline support
+-- -- NOTE: Please see `:h coc-status` for integrations with external plugins that
+-- -- provide custom statusline: lightline.vim, vim-airline
+-- --vim.opt.statusline:prepend("%{coc#status()}%{get(b:,'coc_current_function','')}")  -- makes error
+-- --vim.o.statusline = "%{coc#status()}%{get(b:,'coc_current_function','')}" .. vim.o.statusline  -- GPT said like this
+--
+-- -- Mappings for CoCList
+-- -- code actions and coc stuff
+-- ---@diagnostic disable-next-line: redefined-local
+-- local opts = { silent = true, nowait = true }
+-- -- Show all diagnostics
+-- keyset("n", "<space>a", ":<C-u>CocList diagnostics<cr>", opts)
+-- -- Manage extensions
+-- keyset("n", "<space>e", ":<C-u>CocList extensions<cr>", opts)
+-- -- Show commands
+-- keyset("n", "<space>c", ":<C-u>CocList commands<cr>", opts)
+-- -- Find symbol of current document
+-- keyset("n", "<space>o", ":<C-u>CocList outline<cr>", opts)
+-- -- Search workspace symbols
+-- keyset("n", "<space>s", ":<C-u>CocList -I symbols<cr>", opts)
+-- -- Do default action for next item
+-- keyset("n", "<space>j", ":<C-u>CocNext<cr>", opts)
+-- -- Do default action for previous item
+-- keyset("n", "<space>k", ":<C-u>CocPrev<cr>", opts)
+-- -- Resume latest coc list
+-- keyset("n", "<space>p", ":<C-u>CocListResume<cr>", opts)
 
 -- UltiSnips settings
 vim.g.UltiSnipsExpandTrigger = "<CR>"
 vim.g.UltiSnipsJumpForwardTrigger = "<CR>"
 vim.g.UltiSnipsJumpBackwardTrigger = "<S-CR>"
 vim.g.UltiSnipsEditSplit = "vertical"
-
--- Colorscheme settings
-vim.opt.termguicolors = true -- enables 256 colors
-vim.opt.background = "dark"  -- sets the background to dark
 
 -- Function to add C++ headers
 local function cpplang_header()
@@ -639,14 +712,12 @@ vim.g.jsx_ext_required = 0
 -- Exit Vim if NERDTree is the only window remaining in the only tab.
 vim.api.nvim_create_autocmd("BufEnter", {
 	pattern = "*",
-	command =
-	[[if tabpagenr('$') == 1 && winnr('$') == 1 && exists('b:NERDTree') && b:NERDTree.isTabTree() | quit | endif]],
+	command = [[if tabpagenr('$') == 1 && winnr('$') == 1 && exists('b:NERDTree') && b:NERDTree.isTabTree() | quit | endif]],
 })
 -- If another buffer tries to replace NERDTree, put it in the other window, and bring back NERDTree.
 vim.api.nvim_create_autocmd("BufEnter", {
 	pattern = "*",
-	command =
-	[[if bufname('#') =~ 'NERD_tree_\\d+' && bufname('%') !~ 'NERD_tree_\\d+' && winnr('$') > 1 | let buf=bufnr() | buffer# | execute "normal! \<C-W>w" | execute 'buffer'.buf | endif]],
+	command = [[if bufname('#') =~ 'NERD_tree_\\d+' && bufname('%') !~ 'NERD_tree_\\d+' && winnr('$') > 1 | let buf=bufnr() | buffer# | execute "normal! \<C-W>w" | execute 'buffer'.buf | endif]],
 })
 
 vim.g.tlist_cpp_settings = "c++;c:class;f:function"
@@ -655,12 +726,10 @@ vim.api.nvim_create_autocmd("BufWritePost", {
 	command = "TlistUpdate",
 })
 
-
-
 -- vim.keymap.set("n", "<F2>", ":NERDTreeToggle | wincmd p<CR>", { noremap = true })
-vim.keymap.set("n", "<F2>", ":Neotree toggle<CR>", { noremap = true })
+-- vim.keymap.set("n", "<F2>", ":Neotree toggle<CR>", { noremap = true })
 vim.keymap.set("n", "<F3>", ":TlistToggle<CR>", { noremap = true })
-vim.keymap.set("n", "<F4>", ":TagbarToggle<CR>", { noremap = true })
+-- vim.keymap.set("n", "<F4>", ":TagbarToggle<CR>", { noremap = true })
 vim.keymap.set("n", "<F6>", ":TagbarTogglePause<CR>", { noremap = true })
 
 local builtin = require("telescope.builtin")
@@ -719,9 +788,9 @@ vim.keymap.set("n", "<F5>", RunCode, { noremap = true })
 -- -- Normal Mode에서 '='를 두 번 눌렀을 때 :Format 실행
 -- vim.api.nvim_set_keymap('n', '==', ':Format<CR>', { noremap = true, silent = true })
 
-vim.api.nvim_create_user_command("Prettier", function()
-	vim.cmd("CocCommand prettier.forceFormatDocument")
-end, { nargs = 0 })
+-- vim.api.nvim_create_user_command("Prettier", function()
+-- 	vim.cmd("CocCommand prettier.forceFormatDocument")
+-- end, { nargs = 0 })
 
 -- Clipboard
 vim.api.nvim_set_keymap("n", "y", '"+y', { noremap = true })
@@ -733,7 +802,6 @@ vim.api.nvim_set_keymap("v", "Y", '"+Y', { noremap = true })
 vim.api.nvim_set_keymap("n", "x", '"+x', { noremap = true })
 vim.api.nvim_set_keymap("v", "x", '"+x', { noremap = true })
 
-vim.api.nvim_set_keymap("n", "d", '"+d', { noremap = true })
 vim.api.nvim_set_keymap("v", "d", '"+d', { noremap = true })
 vim.api.nvim_set_keymap("n", "D", '"+D', { noremap = true })
 vim.api.nvim_set_keymap("v", "D", '"+D', { noremap = true })
@@ -756,9 +824,150 @@ require("neo-tree").setup({
 			fuzzy_finder_mappings = {
 				["<C-k>"] = "move_cursor_up",
 				["<C-j>"] = "move_cursor_down",
-			}
-		}
-	}
+			},
+		},
+	},
 })
+
+-- Telescope-file-browser settings
+vim.keymap.set("n", "<leader>fb", ":Telescope file_browser<CR>", { noremap = true })
+vim.keymap.set("n", "<leader>ff", ":Telescope find_files<CR>", { noremap = true })
+
 -- vim.api.nvim_set_keymap("n", "p", '"+p', { noremap = true })
 -- vim.api.nvim_set_keymap("v", "p", '"+p', { noremap = true })
+
+-- LSP settings
+local lsp_zero = require("lsp-zero")
+
+-- lsp_attach is where you enable features that only work
+-- if there is a language server active in the file
+local lsp_attach = function(client, bufnr)
+	lsp_zero.default_keymaps({ buffer = bufnr, preserve_mappings = true })
+end
+
+lsp_zero.extend_lspconfig({
+	sign_text = true,
+	lsp_attach = lsp_attach,
+	capabilities = require("cmp_nvim_lsp").default_capabilities(),
+})
+
+local lspconfig = require("lspconfig")
+lspconfig.pyright.setup({
+	on_attach = function(client, bufnr)
+		print("hello pyright")
+	end,
+	root_dir = lspconfig.util.root_pattern("setup.py", "pyproject.toml", ".git", "requirements.txt"),
+	settings = {
+		python = {
+			analysis = {
+				typeCheckingMode = "strict",
+			},
+		},
+	},
+})
+lspconfig.tsserver.setup({})
+lspconfig.lua_ls.setup({
+	settings = {
+		Lua = {
+			runtime = {
+				version = "LuaJIT",
+			},
+			diagnostics = {
+				globals = { "vim" },
+			},
+			workspace = {
+				library = vim.api.nvim_get_runtime_file("", true),
+			},
+			telemetry = {
+				enable = false,
+			},
+		},
+	},
+	root_dir = function()
+		return vim.fn.getcwd()
+	end,
+})
+lspconfig.dockerls.setup({
+	settings = {
+		docker = {
+			languageserver = {
+				formatter = {
+					ignoreMultilineInstructions = true,
+				},
+			},
+		},
+	},
+})
+lspconfig.docker_compose_language_service.setup({
+	root_dir = lspconfig.util.root_pattern("*compose.yml", "*compose.yaml"),
+})
+
+-- vim.api.nvim_create_autocmd("FileType", {
+-- 	-- This handler will fire when the buffer's 'filetype' is "python"
+-- 	pattern = "python",
+-- 	callback = function(args)
+-- 		vim.lsp.start({
+-- 			name = "pyright",
+-- 			-- Set the "root directory" to the parent directory of the file in the
+-- 			-- current buffer (`args.buf`) that contains either a "setup.py" or a
+-- 			-- "pyproject.toml" file. Files that share a root directory will reuse
+-- 			-- the connection to the same LSP server.
+-- 		})
+-- 	end,
+-- })
+
+-- Autocompletion setup
+local cmp = require("cmp")
+cmp.setup({
+	sources = {
+		{ name = "nvim_lsp" },
+	},
+	snippet = {
+		expand = function(args)
+			-- You need Neovim v0.10 to use vim.snippet
+			vim.snippet.expand(args.body)
+		end,
+	},
+	mapping = cmp.mapping.preset.insert({}),
+})
+
+require("mason").setup({
+	ui = {
+		icons = {
+			package_installed = "✓",
+			package_pending = "➜",
+			package_uninstalled = "✗",
+		},
+	},
+})
+require("mason-lspconfig").setup({
+	handlers = {
+		function(server_name)
+			require("lspconfig")[server_name].setup({
+				on_attach = lsp_attach,
+			})
+		end,
+		tsserver = function()
+			require("lspconfig").tsserver.setup({
+				single_file_support = true,
+				on_attach = lsp_attach,
+			})
+		end,
+	},
+	ensure_installed = {
+		"cssls",
+		"docker_compose_language_service",
+		"dockerls",
+		"html",
+		"jdtls",
+		"lua_ls",
+		"pyright",
+		"tailwindcss",
+		"tsserver",
+		"lua_ls",
+		-- "prettier",
+		-- "debugpy",
+		-- "flake8"
+	},
+	automatic_installation = true,
+})
