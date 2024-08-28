@@ -153,6 +153,7 @@ require("lazy").setup({
 		"williamboman/mason-lspconfig.nvim",
 		"hrsh7th/cmp-nvim-lsp",
 		"hrsh7th/nvim-cmp",
+		"onsails/lspkind.nvim",
 	},
 	{ "vim-scripts/taglist.vim" }, -- Displays a list of tags (functions, variables, etc.) in the source code
 	{ "SirVer/ultisnips", event = { "InsertEnter" } }, -- Manages and quickly inserts snippets (code fragments)
@@ -682,9 +683,9 @@ end
 -- keyset("n", "<space>p", ":<C-u>CocListResume<cr>", opts)
 
 -- UltiSnips settings
-vim.g.UltiSnipsExpandTrigger = "<CR>"
-vim.g.UltiSnipsJumpForwardTrigger = "<CR>"
-vim.g.UltiSnipsJumpBackwardTrigger = "<S-CR>"
+-- vim.g.UltiSnipsExpandTrigger = "<CR>"
+-- vim.g.UltiSnipsJumpForwardTrigger = "<CR>"
+-- vim.g.UltiSnipsJumpBackwardTrigger = "<S-CR>"
 vim.g.UltiSnipsEditSplit = "vertical"
 
 -- Function to add C++ headers
@@ -728,10 +729,11 @@ vim.api.nvim_create_autocmd("BufWritePost", {
 
 -- vim.keymap.set("n", "<F2>", ":NERDTreeToggle | wincmd p<CR>", { noremap = true })
 -- vim.keymap.set("n", "<F2>", ":Neotree toggle<CR>", { noremap = true })
+
 vim.keymap.set("n", "<F3>", ":TlistToggle<CR>", { noremap = true })
 -- vim.keymap.set("n", "<F4>", ":TagbarToggle<CR>", { noremap = true })
 vim.keymap.set("n", "<F6>", ":TagbarTogglePause<CR>", { noremap = true })
-
+vim.api.nvim_create_user_command("Nt", "Neotree toggle", {})
 local builtin = require("telescope.builtin")
 vim.keymap.set("n", "<leader>ff", builtin.find_files, {})
 vim.keymap.set("n", "<leader>fg", builtin.live_grep, {})
@@ -829,6 +831,10 @@ require("neo-tree").setup({
 	},
 })
 
+-- Copilot settings
+vim.keymap.set("i", "<C-J>", 'copilot#Accept("\\<CR>")', { replace_keycodes = false, expr = true })
+vim.g.copilot_no_tab_map = true
+
 -- Telescope-file-browser settings
 vim.keymap.set("n", "<leader>fb", ":Telescope file_browser<CR>", { noremap = true })
 vim.keymap.set("n", "<leader>ff", ":Telescope find_files<CR>", { noremap = true })
@@ -867,32 +873,42 @@ lspconfig.pyright.setup({
 })
 lspconfig.tsserver.setup({})
 lspconfig.lua_ls.setup({
-	settings = {
-		Lua = {
+	on_init = function(client)
+		local path = client.workspace_folders[1].name
+		if vim.loop.fs_stat(path .. "/.luarc.json") or vim.loop.fs_stat(path .. "/.luarc.jsonc") then
+			return
+		end
+
+		client.config.settings.Lua = vim.tbl_deep_extend("force", client.config.settings.Lua, {
 			runtime = {
+				-- Tell the language server which version of Lua you're using
+				-- (most likely LuaJIT in the case of Neovim)
 				version = "LuaJIT",
 			},
-			diagnostics = {
-				globals = { "vim" },
-			},
+			-- Make the server aware of Neovim runtime files
 			workspace = {
-				library = vim.api.nvim_get_runtime_file("", true),
+				checkThirdParty = false,
+				library = {
+					vim.env.VIMRUNTIME,
+					-- Depending on the usage, you might want to add additional paths here.
+					-- "${3rd}/luv/library"
+					-- "${3rd}/busted/library",
+				},
+				-- or pull in all of 'runtimepath'. NOTE: this is a lot slower
+				-- library = vim.api.nvim_get_runtime_file("", true)
 			},
-			telemetry = {
-				enable = false,
-			},
-		},
-	},
-	root_dir = function()
-		return vim.fn.getcwd()
+		})
 	end,
+	settings = {
+		Lua = {},
+	},
 })
 lspconfig.dockerls.setup({
 	settings = {
 		docker = {
 			languageserver = {
 				formatter = {
-					ignoreMultilineInstructions = true,
+					ignoremultilineinstructions = true,
 				},
 			},
 		},
@@ -918,9 +934,11 @@ lspconfig.docker_compose_language_service.setup({
 
 -- Autocompletion setup
 local cmp = require("cmp")
+local lspkind = require("lspkind")
 cmp.setup({
 	sources = {
 		{ name = "nvim_lsp" },
+		{ name = "ultisnips" },
 	},
 	snippet = {
 		expand = function(args)
@@ -928,7 +946,20 @@ cmp.setup({
 			vim.snippet.expand(args.body)
 		end,
 	},
-	mapping = cmp.mapping.preset.insert({}),
+	mapping = cmp.mapping.preset.insert({
+		["<C-e>"] = cmp.mapping.close(),
+		["<Tab>"] = cmp.mapping.confirm({ select = true }),
+		["<Down>"] = cmp.mapping.select_next_item({ behavior = cmp.SelectBehavior.Insert }),
+		["<Up>"] = cmp.mapping.select_prev_item({ behavior = cmp.SelectBehavior.Insert }),
+	}),
+	formatting = {
+		format = lspkind.cmp_format({
+			mode = "symbol",
+			maxwidth = 50,
+			ellipsis_char = "...",
+			show_labelDetails = true,
+		}),
+	},
 })
 
 require("mason").setup({
