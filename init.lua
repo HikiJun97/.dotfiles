@@ -154,6 +154,7 @@ require("lazy").setup({
 		"hrsh7th/cmp-nvim-lsp",
 		"hrsh7th/nvim-cmp",
 		"onsails/lspkind.nvim",
+		"quangnguyen30192/cmp-nvim-ultisnips",
 	},
 	{ "vim-scripts/taglist.vim" }, -- Displays a list of tags (functions, variables, etc.) in the source code
 	{ "SirVer/ultisnips", event = { "InsertEnter" } }, -- Manages and quickly inserts snippets (code fragments)
@@ -937,8 +938,8 @@ local cmp = require("cmp")
 local lspkind = require("lspkind")
 cmp.setup({
 	sources = {
-		{ name = "nvim_lsp" },
 		{ name = "ultisnips" },
+		{ name = "nvim_lsp" },
 	},
 	snippet = {
 		expand = function(args)
