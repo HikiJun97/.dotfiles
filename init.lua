@@ -40,9 +40,11 @@ vim.opt.scrolloff = 2
 vim.opt.history = 256
 vim.opt.laststatus = 2
 
+-- Indentation settings
 vim.bo.shiftwidth = 4
 vim.bo.tabstop = 4
 vim.bo.softtabstop = 4
+vim.bo.expandtab = true
 
 vim.opt.smarttab = true
 vim.opt.smartindent = true
@@ -67,7 +69,7 @@ vim.cmd([[
 
 -- FileType 이벤트에 대한 자동 명령을 설정합니다.
 vim.api.nvim_create_autocmd("FileType", {
-	pattern = { "typescript", "javascript", "html", "css" },
+	pattern = { "typescript", "javascript", "html", "css", "javascriptreact", "typescriptreact" },
 	callback = function()
 		vim.bo.shiftwidth = 2
 		vim.bo.tabstop = 2
@@ -729,10 +731,9 @@ vim.api.nvim_create_autocmd("BufWritePost", {
 })
 
 -- vim.keymap.set("n", "<F2>", ":NERDTreeToggle | wincmd p<CR>", { noremap = true })
--- vim.keymap.set("n", "<F2>", ":Neotree toggle<CR>", { noremap = true })
-
+vim.keymap.set("n", "<F2>", ":Neotree toggle<CR>", { noremap = true })
 vim.keymap.set("n", "<F3>", ":TlistToggle<CR>", { noremap = true })
--- vim.keymap.set("n", "<F4>", ":TagbarToggle<CR>", { noremap = true })
+vim.keymap.set("n", "<F4>", ":TagbarToggle<CR>", { noremap = true })
 vim.keymap.set("n", "<F6>", ":TagbarTogglePause<CR>", { noremap = true })
 vim.api.nvim_create_user_command("Nt", "Neotree toggle", {})
 local builtin = require("telescope.builtin")
