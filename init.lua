@@ -957,7 +957,7 @@ require("mason-lspconfig").setup({
 				on_attach = lsp_attach,
 			})
 		end,
-		tsserver = function()
+		ts_ls = function()
 			require("lspconfig").ts_ls.setup({
 				single_file_support = true,
 				on_attach = lsp_attach,
@@ -973,7 +973,7 @@ require("mason-lspconfig").setup({
 		"lua_ls",
 		"pyright",
 		"tailwindcss",
-		"tsserver",
+		"ts_ls",
 		"lua_ls",
 		-- "prettier",
 		-- "debugpy",
