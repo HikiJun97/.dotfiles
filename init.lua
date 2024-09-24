@@ -255,24 +255,42 @@ require("lazy").setup({
 			local configs = require("nvim-treesitter.configs")
 			configs.setup({
 				ensure_installed = {
+					"bash",
+					"powershell",
+					"comment",
 					"c",
 					"cpp",
+					"make",
+					"cmake",
 					"go",
 					"lua",
 					"vim",
 					"vimdoc",
-					"query",
-					"elixir",
-					"heex",
+					"svelte",
 					"javascript",
 					"typescript",
 					"tsx",
 					"html",
 					"json",
-					"python",
-					"java",
-					"json",
 					"css",
+					"scss",
+					"json",
+					"jq",
+					"sql",
+					"nginx",
+					"markdown",
+					"python",
+					"requirements",
+					"java",
+					"dockerfile",
+					"git_config",
+					"git_rebase",
+					"gitattributes",
+					"gitcommit",
+					"gitignore",
+					"graphql",
+					"xml",
+					"yaml",
 				},
 				sync_install = false,
 				highlight = {
@@ -898,6 +916,7 @@ vim.keymap.set("n", "<leader>ff", ":Telescope find_files<CR>", { noremap = true 
 
 -- LSP settings
 local lsp_zero = require("lsp-zero")
+local lspconfig = require("lspconfig")
 
 -- lsp_attach is where you enable features that only work
 -- if there is a language server active in the file
@@ -914,62 +933,26 @@ lsp_zero.extend_lspconfig({
 	capabilities = require("cmp_nvim_lsp").default_capabilities(),
 })
 
-local lspconfig = require("lspconfig")
-lspconfig.pyright.setup({
-	on_attach = function(client, bufnr)
-		print("hello pyright")
-	end,
-	root_dir = lspconfig.util.root_pattern("setup.py", "pyproject.toml", ".git", "requirements.txt"),
-	settings = {
-		python = {
-			analysis = {
-				typeCheckingMode = "strict",
-			},
-		},
-	},
-})
-lspconfig.ts_ls.setup({})
-lspconfig.lua_ls.setup({
-	on_init = function(client)
-		local path = client.workspace_folders[1].name
-		if vim.loop.fs_stat(path .. "/.luarc.json") or vim.loop.fs_stat(path .. "/.luarc.jsonc") then
-			return
+local function is_lsp_active(lsp_name)
+	for _, client in ipairs(vim.lsp.get_active_clients()) do
+		if client.name == lsp_name then
+			return true
 		end
+	end
+	return false
+end
 
-		client.config.settings.Lua = vim.tbl_deep_extend("force", client.config.settings.Lua, {
-			runtime = {
-				version = "LuaJIT",
-			},
-			workspace = {
-				checkThirdParty = false,
-				library = {
-					vim.env.VIMRUNTIME,
-				},
-			},
-		})
-	end,
-	settings = {
-		Lua = {},
-	},
-})
-lspconfig.dockerls.setup({
-	settings = {
-		docker = {
-			languageserver = {
-				formatter = {
-					ignoremultilineinstructions = true,
-				},
-			},
-		},
-	},
-})
-lspconfig.docker_compose_language_service.setup({
-	root_dir = lspconfig.util.root_pattern("*compose.yml", "*compose.yaml"),
-})
+-- local function stop_lsp(lsp_name)
+-- 	for _, client in ipairs(vim.lsp.get_active_clients()) do
+-- 		if client.name == lsp_name then
+-- 			vim.lsp.stop_client(client.id)
+-- 			return
+-- 		end
+-- 	end
+-- end
 
 -- Autocompletion setup
 local cmp = require("cmp")
-local lspkind = require("lspkind")
 cmp.setup({
 	sources = {
 		{ name = "ultisnips" },
@@ -989,7 +972,7 @@ cmp.setup({
 		["<Up>"] = cmp.mapping.select_prev_item({ behavior = cmp.SelectBehavior.Insert }),
 	}),
 	formatting = {
-		format = lspkind.cmp_format({
+		format = require("lspkind").cmp_format({
 			mode = "symbol",
 			maxwidth = 50,
 			ellipsis_char = "...",
@@ -1010,19 +993,88 @@ require("mason").setup({
 require("mason-lspconfig").setup({
 	handlers = {
 		function(server_name)
-			require("lspconfig")[server_name].setup({
+			lspconfig[server_name].setup({
 				on_attach = lsp_attach,
 			})
 		end,
 		ts_ls = function()
-			require("lspconfig").ts_ls.setup({
+			lspconfig.ts_ls.setup({
 				single_file_support = true,
+				-- on_attach = lsp_attach,
+			})
+		end,
+		tailwindcss = function()
+			lspconfig.ts_ls.setup({
+				filetypes = { "html", "javascriptreact", "typescriptreact", "css", "scss" },
+			})
+		end,
+		cssls = function()
+			lspconfig.cssls.setup({
+				on_attach = function(client, bufnr)
+					if is_lsp_active("tailwindcss") then
+						client.stop()
+					end
+				end,
+			})
+		end,
+		pyright = function()
+			lspconfig.pyright.setup({
 				on_attach = lsp_attach,
+				root_dir = lspconfig.util.root_pattern("setup.py", "pyproject.toml", ".git", "requirements.txt"),
+				settings = {
+					python = {
+						analysis = {
+							typeCheckingMode = "strict",
+						},
+					},
+				},
+			})
+		end,
+		dockerls = function()
+			lspconfig.dockerls.setup({
+				settings = {
+					docker = {
+						languageserver = {
+							formatter = {
+								ignoremultilineinstructions = true,
+							},
+						},
+					},
+				},
+			})
+		end,
+		docker_compose_language_service = function()
+			lspconfig.docker_compose_language_service.setup({
+				root_dir = lspconfig.util.root_pattern("*compose.yml", "*compose.yaml"),
+			})
+		end,
+		lua_ls = function()
+			lspconfig.lua_ls.setup({
+				on_init = function(client)
+					local path = client.workspace_folders[1].name
+					if vim.loop.fs_stat(path .. "/.luarc.json") or vim.loop.fs_stat(path .. "/.luarc.jsonc") then
+						return
+					end
+
+					client.config.settings.Lua = vim.tbl_deep_extend("force", client.config.settings.Lua, {
+						runtime = {
+							version = "LuaJIT",
+						},
+						workspace = {
+							checkThirdParty = false,
+							library = {
+								vim.env.VIMRUNTIME,
+							},
+						},
+					})
+				end,
+				settings = {
+					Lua = {},
+				},
 			})
 		end,
 	},
 	ensure_installed = {
-		"cssls",
 		"docker_compose_language_service",
 		"dockerls",
 		"html",
@@ -1030,6 +1082,7 @@ require("mason-lspconfig").setup({
 		"lua_ls",
 		"pyright",
 		"tailwindcss",
+		"cssls",
 		"ts_ls",
 		"lua_ls",
 		-- "prettier",
@@ -1038,7 +1091,18 @@ require("mason-lspconfig").setup({
 	},
 	automatic_installation = true,
 })
-
+--
+-- local css_setup = function()
+-- 	if not is_lsp_active("tailwindcss") then
+-- 		lspconfig.cssls.setup({
+-- 			autostart = false,
+-- 		})
+-- 	else
+-- 		print("CSS LSP not started because Tailwind CSS server is active")
+-- 	end
+-- end
+--
+-- css_setup()
 -- require("ts_context_commentstring").setup({
 -- 	enable_autocmd = false,
 -- })
