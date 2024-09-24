@@ -1004,7 +1004,7 @@ require("mason-lspconfig").setup({
 			})
 		end,
 		tailwindcss = function()
-			lspconfig.ts_ls.setup({
+			lspconfig.tailwindcss.setup({
 				filetypes = { "html", "javascriptreact", "typescriptreact", "css", "scss" },
 			})
 		end,
