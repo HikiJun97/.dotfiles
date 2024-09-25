@@ -918,21 +918,6 @@ vim.keymap.set("n", "<leader>ff", ":Telescope find_files<CR>", { noremap = true 
 local lsp_zero = require("lsp-zero")
 local lspconfig = require("lspconfig")
 
--- lsp_attach is where you enable features that only work
--- if there is a language server active in the file
-local lsp_attach = function(client, bufnr)
-	lsp_zero.default_keymaps({ buffer = bufnr, preserve_mappings = true })
-	vim.keymap.set("n", "gl", "<cmd>lua vim.diagnostic.open_float()<CR>", { noremap = true })
-	vim.keymap.set("n", "gb", "<C-o>", { noremap = true })
-	vim.keymap.set("n", "<leader>rn", "<cmd>lua vim.lsp.buf.rename()<CR>", { noremap = true })
-end
-
-lsp_zero.extend_lspconfig({
-	sign_text = true,
-	lsp_attach = lsp_attach,
-	capabilities = require("cmp_nvim_lsp").default_capabilities(),
-})
-
 local function is_lsp_active(lsp_name)
 	for _, client in ipairs(vim.lsp.get_active_clients()) do
 		if client.name == lsp_name then
@@ -941,6 +926,24 @@ local function is_lsp_active(lsp_name)
 	end
 	return false
 end
+
+-- lsp_attach is where you enable features that only work
+-- if there is a language server active in the file
+local lsp_attach = function(client, bufnr)
+	lsp_zero.default_keymaps({ buffer = bufnr, preserve_mappings = true })
+	vim.keymap.set("n", "gl", "<cmd>lua vim.diagnostic.open_float()<CR>", { noremap = true })
+	vim.keymap.set("n", "gb", "<C-o>", { noremap = true })
+	vim.keymap.set("n", "<leader>rn", "<cmd>lua vim.lsp.buf.rename()<CR>", { noremap = true })
+	if client.name == "cssls" and is_lsp_active("tailwindcss") then
+		client.stop()
+	end
+end
+
+lsp_zero.extend_lspconfig({
+	sign_text = true,
+	lsp_attach = lsp_attach,
+	capabilities = require("cmp_nvim_lsp").default_capabilities(),
+})
 
 -- local function stop_lsp(lsp_name)
 -- 	for _, client in ipairs(vim.lsp.get_active_clients()) do
@@ -990,90 +993,8 @@ require("mason").setup({
 		},
 	},
 })
-require("mason-lspconfig").setup({
-	handlers = {
-		function(server_name)
-			lspconfig[server_name].setup({
-				on_attach = lsp_attach,
-			})
-		end,
-		ts_ls = function()
-			lspconfig.ts_ls.setup({
-				single_file_support = true,
-				-- on_attach = lsp_attach,
-			})
-		end,
-		tailwindcss = function()
-			lspconfig.tailwindcss.setup({
-				filetypes = { "html", "javascriptreact", "typescriptreact", "css", "scss" },
-			})
-		end,
-		cssls = function()
-			lspconfig.cssls.setup({
-				on_attach = function(client, bufnr)
-					if is_lsp_active("tailwindcss") then
-						client.stop()
-					end
-				end,
-			})
-		end,
-		pyright = function()
-			lspconfig.pyright.setup({
-				on_attach = lsp_attach,
-				root_dir = lspconfig.util.root_pattern("setup.py", "pyproject.toml", ".git", "requirements.txt"),
-				settings = {
-					python = {
-						analysis = {
-							typeCheckingMode = "strict",
-						},
-					},
-				},
-			})
-		end,
-		dockerls = function()
-			lspconfig.dockerls.setup({
-				settings = {
-					docker = {
-						languageserver = {
-							formatter = {
-								ignoremultilineinstructions = true,
-							},
-						},
-					},
-				},
-			})
-		end,
-		docker_compose_language_service = function()
-			lspconfig.docker_compose_language_service.setup({
-				root_dir = lspconfig.util.root_pattern("*compose.yml", "*compose.yaml"),
-			})
-		end,
-		lua_ls = function()
-			lspconfig.lua_ls.setup({
-				on_init = function(client)
-					local path = client.workspace_folders[1].name
-					if vim.loop.fs_stat(path .. "/.luarc.json") or vim.loop.fs_stat(path .. "/.luarc.jsonc") then
-						return
-					end
 
-					client.config.settings.Lua = vim.tbl_deep_extend("force", client.config.settings.Lua, {
-						runtime = {
-							version = "LuaJIT",
-						},
-						workspace = {
-							checkThirdParty = false,
-							library = {
-								vim.env.VIMRUNTIME,
-							},
-						},
-					})
-				end,
-				settings = {
-					Lua = {},
-				},
-			})
-		end,
-	},
+require("mason-lspconfig").setup({
 	ensure_installed = {
 		"docker_compose_language_service",
 		"dockerls",
@@ -1091,6 +1012,78 @@ require("mason-lspconfig").setup({
 	},
 	automatic_installation = true,
 })
+
+require("mason-lspconfig").setup_handlers({
+	function(server_name)
+		lspconfig[server_name].setup({
+			on_attach = lsp_attach,
+			autostart = true,
+		})
+	end,
+})
+
+lspconfig.ts_ls.setup({
+	filetypes = { "javascript", "javascriptreact", "typescript", "typescriptreact" },
+	single_file_support = true,
+})
+
+lspconfig.tailwindcss.setup({
+	filetypes = { "html", "javascriptreact", "typescriptreact", "css", "scss" },
+})
+
+lspconfig.cssls.setup({})
+
+lspconfig.pyright.setup({
+	root_dir = lspconfig.util.root_pattern("setup.py", "pyproject.toml", ".git", "requirements.txt"),
+	settings = {
+		python = {
+			analysis = {
+				typeCheckingMode = "strict",
+			},
+		},
+	},
+})
+
+lspconfig.dockerls.setup({
+	settings = {
+		docker = {
+			languageserver = {
+				formatter = {
+					ignoremultilineinstructions = true,
+				},
+			},
+		},
+	},
+})
+
+lspconfig.docker_compose_language_service.setup({
+	root_dir = lspconfig.util.root_pattern("*compose.yml", "*compose.yaml"),
+})
+
+lspconfig.lua_ls.setup({
+	on_init = function(client)
+		local path = client.workspace_folders[1].name
+		if vim.loop.fs_stat(path .. "/.luarc.json") or vim.loop.fs_stat(path .. "/.luarc.jsonc") then
+			return
+		end
+
+		client.config.settings.Lua = vim.tbl_deep_extend("force", client.config.settings.Lua, {
+			runtime = {
+				version = "LuaJIT",
+			},
+			workspace = {
+				checkThirdParty = false,
+				library = {
+					vim.env.VIMRUNTIME,
+				},
+			},
+		})
+	end,
+	settings = {
+		Lua = {},
+	},
+})
+
 --
 -- local css_setup = function()
 -- 	if not is_lsp_active("tailwindcss") then
