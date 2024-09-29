@@ -220,6 +220,8 @@ require("lazy").setup({
         version = false, -- set this if you want to always pull the latest change
         opts = {
             -- add any opts here
+            provider = "openai",
+            auto_suggestions_provider = "copilot",
         },
         -- if you want to build from source then do `make BUILD_FROM_SOURCE=true`
         build = "make",
@@ -258,6 +260,7 @@ require("lazy").setup({
                 ft = { "markdown", "Avante" },
             },
         },
+
     },
     -- {
     -- 	"JoosepAlviste/nvim-ts-context-commentstring",
