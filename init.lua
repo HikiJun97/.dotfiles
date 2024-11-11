@@ -1028,6 +1028,7 @@ require("mason-lspconfig").setup({
 		"cssls",
 		"ts_ls",
 		"lua_ls",
+		"jsonls",
 		-- "prettier",
 		-- "debugpy",
 		-- "flake8"
@@ -1065,6 +1066,8 @@ lspconfig.pyright.setup({
 		},
 	},
 })
+
+lspconfig.jsonls.setup({})
 
 lspconfig.dockerls.setup({
 	settings = {
