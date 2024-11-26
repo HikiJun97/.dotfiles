@@ -225,8 +225,9 @@ require("lazy").setup({
         lazy = false,
         version = false, -- set this if you want to always pull the latest change
         opts = {
+            ---@alias Provider "claude" | "openai" | "azure" | "gemini" | "cohere" | "copilot" | string
             -- add any opts here
-            provider = "openai",
+            provider = "claude",
             auto_suggestions_provider = "copilot",
         },
         -- if you want to build from source then do `make BUILD_FROM_SOURCE=true`
