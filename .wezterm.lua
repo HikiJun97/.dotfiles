@@ -9,8 +9,9 @@ local act = wezterm.action
 -- For example, changing the color scheme:
 -- local COLOR_SCHEME = 'Kanagawa (Gogh)'
 -- local COLOR_SCHEME = 'kanagawabones'
--- local COLOR_SCHEME = 'Monokai Pro (Gogh)'
-local COLOR_SCHEME = 'rose-pine-dawn'
+local COLOR_SCHEME = 'Monokai Pro (Gogh)'
+-- local COLOR_SCHEME = 'rose-pine-dawn'
+-- local COLOR_SCHEME = 'One Dark (Gogh)'
 local FONT  = 'Monaco Nerd Font Mono'
 config.color_scheme = COLOR_SCHEME
 config.font = wezterm.font(FONT)
