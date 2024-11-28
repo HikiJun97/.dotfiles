@@ -161,6 +161,8 @@ require("lazy").setup({
         "williamboman/mason-lspconfig.nvim",
         "hrsh7th/cmp-nvim-lsp",
         "hrsh7th/nvim-cmp",
+        "hrsh7th/cmp-path",
+        "hrsh7th/cmp-buffer",
         "onsails/lspkind.nvim",
         "quangnguyen30192/cmp-nvim-ultisnips",
     },
@@ -1008,6 +1010,8 @@ cmp.setup({
     sources = {
         { name = "ultisnips" },
         { name = "nvim_lsp" },
+        { name = "path" },
+        { name = "buffer" },
     },
     snippet = {
         expand = function(args)
@@ -1048,7 +1052,6 @@ require("mason-lspconfig").setup({
         "dockerls",
         "html",
         "jdtls",
-        "lua_ls",
         "pyright",
         "tailwindcss",
         "cssls",
