@@ -231,6 +231,17 @@ require("lazy").setup({
             -- add any opts here
             provider = "claude",
             auto_suggestions_provider = "copilot",
+            behaviour = {
+                auto_suggestions = true,
+                auto_set_highlight_group = true,
+                auto_set_keymaps = true,
+                auto_apply_diff_after_generation = false,
+                support_paste_from_clipboard = true,
+                minimize_diff = true
+            },
+            mappings = {
+                --- @class AvanteConflictMappings
+            }
         },
         -- if you want to build from source then do `make BUILD_FROM_SOURCE=true`
         build = "make",
@@ -242,7 +253,29 @@ require("lazy").setup({
             "MunifTanjim/nui.nvim",
             --- The below dependencies are optional,
             "nvim-tree/nvim-web-devicons", -- or echasnovski/mini.icons
-            "zbirenbaum/copilot.lua",      -- for providers='copilot'
+            {
+                "zbirenbaum/copilot.lua",
+                config = function()
+                    require("copilot").setup({
+                        panel = {
+                            auto_refresh = true,
+                            keymap = {
+                                accept = "<CR>",
+                            }
+                        },
+                        suggestion = {
+                            auto_trigger = true,
+                            hide_during_completion = false,
+                            keymap = {
+                                accept = "<C-j>"
+                            }
+                        },
+                        filetypes = {
+                            ["*"] = true
+                        }
+                    })
+                end,
+            }, -- for providers='copilot'
             {
                 -- support for image pasting
                 "HakonHarnes/img-clip.nvim",
@@ -524,8 +557,7 @@ require("lazy").setup({
         dependencies = { "nvim-tree/nvim-web-devicons" },
     },
     { "lukas-reineke/indent-blankline.nvim", main = "ibl", opts = {} },
-    { "github/copilot.vim" },
-
+    -- { "github/copilot.vim" },
     -- ################### Color schemes ###################
     { "morhetz/gruvbox" },            -- Provides the Gruvbox color scheme, loaded immediately
     { "NLKNguyen/papercolor-theme" }, -- Offers a highly readable color scheme
@@ -954,7 +986,14 @@ require("neo-tree").setup({
 })
 
 -- Copilot settings
-vim.keymap.set("i", "<C-j>", 'copilot#Accept("\\<CR>")', { replace_keycodes = false, expr = true })
+-- vim.keymap.set("i", "<C-j>", 'copilot#Accept("\\<CR>")', { replace_keycodes = false, expr = true })
+-- vim.keymap.set("i", "<C-j>", function()
+--     if require("copilot.suggestion").is_visible() then
+--         require("copilot.suggestion").accept()
+--     else
+--         return "<C-j>"
+--     end
+-- end, { replace_keycodes = false, expr = true })
 vim.g.copilot_no_tab_map = true
 
 -- Telescope-file-browser settings
@@ -1190,7 +1229,7 @@ require("lualine").setup({
     inactive_winbar = {},
     extensions = {},
 })
---
+
 -- local css_setup = function()
 -- 	if not is_lsp_active("tailwindcss") then
 -- 		lspconfig.cssls.setup({
