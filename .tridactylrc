@@ -2,6 +2,8 @@ set smoothscroll true
 unbind f
 unbind F
 unbind yq
+unbind m
+unbind t
 bind q hint
 bind Q hint -b
 bind yq hint -y
