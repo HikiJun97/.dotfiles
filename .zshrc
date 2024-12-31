@@ -7,6 +7,9 @@ if [[ -r "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh" ]]
 fi
 
 [[ ! -f ~/.p10k.zsh ]] || source ~/.p10k.zsh
+
+fpath+=($HOME/.zsh/pure)
+
 # If you come from bash you might have to change your $PATH.
 # export PATH=$HOME/bin:/usr/local/bin:$PATH
 
@@ -19,7 +22,8 @@ source "$HOME/.zsh_aliases"
 # load a random theme each time oh-my-zsh is loaded, in which case,
 # to know which specific one was loaded, run: echo $RANDOM_THEME
 # See https://github.com/ohmyzsh/ohmyzsh/wiki/Themes
-ZSH_THEME="robbyrussell"
+# ZSH_THEME="robbyrussell"
+# ZSH_THEME="pure"
 
 # Set list of themes to pick from when loading at random
 # Setting this variable when ZSH_THEME=random will cause zsh to load
@@ -124,7 +128,7 @@ plugins=(
 
 cd() { builtin cd "$@" && ls; } #execute ls after cd
 export TERM=xterm-256color
-
+export COLORTERM=truecolor
 
 bindkey -v
 
@@ -140,3 +144,15 @@ else
 fi
 unset __mamba_setup
 # <<< mamba initialize <<<
+
+# Disable mamba's env name display
+export CONDA_ENV_PROMPT=
+
+for env_file in ~/.zsh_env*; do
+    source $env_file
+done
+
+autoload -U promptinit; promptinit
+prompt pure
+
+micromamba activate engine
