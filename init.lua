@@ -16,6 +16,8 @@ vim.g.clipboard = {
 	},
 }
 
+vim.g.python3_host_prog = "~/micromamba/envs/basic/bin/python"
+
 -- Syntax enable
 vim.cmd("syntax enable")
 if vim.fn.has("syntax") == 1 then
@@ -49,6 +51,7 @@ vim.opt.smarttab = true -- 앞의 코드 블록에 맞춰서 탭이 자동으로
 vim.opt.smartindent = true -- 자동으로 문맥에 맞게 스마트한 들여쓰기를 적용
 vim.opt.autoindent = true -- 현재 줄의 들여쓰기를 다음 줄에도 유지
 vim.cmd([[abbr funciton function]]) -- "funciton"을 잘못 입력했을 때 "function"으로 자동 수정되도록 설정
+vim.keymap.set("", "<C-c>", "<Esc>")
 
 -- tags setting
 -- vim.opt.tags:append("./tags,tags")
@@ -224,21 +227,6 @@ require("lazy").setup({
 		},
 	},
 	{
-		"kndndrj/nvim-dbee",
-		dependencies = {
-			"MunifTanjim/nui.nvim",
-		},
-		build = function()
-			-- Install tries to automatically detect the install method.
-			-- if it fails, try calling it with one of these parameters:
-			--    "curl", "wget", "bitsadmin", "go"
-			require("dbee").install()
-		end,
-		config = function()
-			require("dbee").setup(--[[optional config]])
-		end,
-	},
-	{
 		"yetone/avante.nvim",
 		event = "VeryLazy",
 		lazy = false,
@@ -249,7 +237,7 @@ require("lazy").setup({
 			provider = "claude",
 			auto_suggestions_provider = "copilot",
 			behaviour = {
-				auto_suggestions = true,
+				auto_suggestions = false,
 				auto_set_highlight_group = true,
 				auto_set_keymaps = true,
 				auto_apply_diff_after_generation = false,
@@ -505,7 +493,7 @@ require("lazy").setup({
 					javascript = { { "prettierd", "prettier" } },
 				},
 				format_on_save = {
-					timeout_ms = 500,
+					t5meout_ms = 1000,
 					lsp_fallback = true,
 				},
 			})
@@ -580,7 +568,22 @@ require("lazy").setup({
 		dependencies = { "nvim-tree/nvim-web-devicons" },
 	},
 	{ "lukas-reineke/indent-blankline.nvim", main = "ibl", opts = {} },
-	{ "github/copilot.vim" },
+	-- { "github/copilot.vim" },
+	{
+		"zbirenbaum/copilot.lua",
+		cmd = "Copilot",
+		event = "InsertEnter",
+		config = function()
+			require("copilot").setup({
+				suggestion = {
+					auto_trigger = true,
+					keymap = {
+						accept = "<C-l>",
+					},
+				},
+			})
+		end,
+	},
 	-- ################### Color schemes ###################
 	{ "morhetz/gruvbox" }, -- Provides the Gruvbox color scheme, loaded immediately
 	{ "NLKNguyen/papercolor-theme" }, -- Offers a highly readable color scheme
@@ -1007,14 +1010,14 @@ require("neo-tree").setup({
 })
 
 -- Copilot settings
-vim.keymap.set("i", "<C-j>", 'copilot#Accept("\\<CR>")', { replace_keycodes = false, expr = true })
-vim.keymap.set("i", "<C-j>", function()
-	if require("copilot.suggestion").is_visible() then
-		require("copilot.suggestion").accept()
-	else
-		return "<C-j>"
-	end
-end, { replace_keycodes = false, expr = true })
+-- vim.keymap.set("i", "<M-l>", 'copilot#Accept("\\<CR>")', { replace_keycodes = false, expr = true })
+-- vim.keymap.set("i", "<C-j>", function()
+-- 	if require("copilot.suggestion").is_visible() then
+-- 		require("copilot.suggestion").accept()
+-- 	else
+-- 		return "<C-j>"
+-- 	end
+-- end, { replace_keycodes = false, expr = true })
 vim.g.copilot_no_tab_map = true
 
 -- Telescope-file-browser settings
