@@ -1,22 +1,32 @@
 -- Pull in the wezterm API
-local wezterm = require 'wezterm' 
+local wezterm = require("wezterm")
 
 -- This will hold the configuration.
 local config = wezterm.config_builder()
 local act = wezterm.action
 -- This is where you actually apply your config choices
 
--- For example, changing the color scheme:
+config.term = "xterm-256color"
+
+-- Color Scheme Config
 -- local COLOR_SCHEME = 'Kanagawa (Gogh)'
 -- local COLOR_SCHEME = 'kanagawabones'
-local COLOR_SCHEME = 'Monokai Pro (Gogh)'
+local COLOR_SCHEME = "Monokai Pro (Gogh)"
 -- local COLOR_SCHEME = 'rose-pine-dawn'
+-- local COLOR_SCHEME = 'Palenight (Gogh)'
 -- local COLOR_SCHEME = 'One Dark (Gogh)'
-local FONT  = 'Monaco Nerd Font Mono'
+
+-- Font Config
+local FONT = "Monaco Nerd Font Mono"
+-- local FONT = "UbuntuMono Nerd Font"
 config.color_scheme = COLOR_SCHEME
-config.font = wezterm.font(FONT)
-config.font_size = 13.0
-config.leader = { key = 'a', mods = 'SHIFT' }
+config.freetype_load_target = "Light"
+config.font = wezterm.font(FONT, { weight = "Medium" })
+config.freetype_load_target = "Light"
+config.font_size = 12.0
+config.line_height = 1.00
+config.leader = { key = "a", mods = "SHIFT" }
+config.enable_wayland = true
 
 local color_scheme = wezterm.color.get_builtin_schemes()[COLOR_SCHEME]
 
@@ -42,112 +52,106 @@ function tab_title(tab_info)
 	return tab_info.active_pane.title
 end
 
-wezterm.on(
-	'format-tab-title',
-	function(tab, tabs, panes, config, hover, max_width)
-		local inactive_background = color_scheme.ansi[5]
-		local edge_background = color_scheme.background
-		local edge_foreground = color_scheme.foreground
-		local background = color_scheme.background
-		local foreground = color_scheme.foreground
+wezterm.on("format-tab-title", function(tab, tabs, panes, config, hover, max_width)
+	local inactive_background = color_scheme.ansi[5]
+	local edge_background = color_scheme.background
+	local edge_foreground = color_scheme.foreground
+	local background = color_scheme.background
+	local foreground = color_scheme.foreground
 
-		-- local title = tab_title(tab)
-		local title = tab.active_pane.title
-		title = wezterm.truncate_right(title, max_width)
-		if tab.is_active then
-			return {
-				{ Background = { Color = edge_background } },
-				{ Foreground = { Color = edge_foreground } },
-				{ Text = SOLID_LEFT_ARROW },
-				{ Background = { Color = foreground } },
-				{ Foreground = { Color = background } },
-				{ Text = title },
-				{ Background = { Color = edge_background } },
-				{ Foreground = { Color = edge_foreground } },
-				{ Text = SOLID_RIGHT_ARROW },
-			}
-		else
-			return {
-				-- { Background = { Color = edge_background } },
-				-- { Foreground = { Color = edge_foreground } },
-				-- { Text = SOLID_LEFT_ARROW },
-				{ Background = { Color = inactive_background } },
-				{ Foreground = { Color = foreground } },
-				{ Text = title },
-				-- { Background = { Color = edge_background } },
-				-- { Foreground = { Color = edge_foreground } },
-				-- { Text = SOLID_RIGHT_ARROW },
-			}
-		end
-
+	-- local title = tab_title(tab)
+	local title = tab.active_pane.title
+	title = wezterm.truncate_right(title, max_width)
+	if tab.is_active then
+		return {
+			{ Background = { Color = edge_background } },
+			{ Foreground = { Color = edge_foreground } },
+			{ Text = SOLID_LEFT_ARROW },
+			{ Background = { Color = foreground } },
+			{ Foreground = { Color = background } },
+			{ Text = title },
+			{ Background = { Color = edge_background } },
+			{ Foreground = { Color = edge_foreground } },
+			{ Text = SOLID_RIGHT_ARROW },
+		}
+	else
+		return {
+			-- { Background = { Color = edge_background } },
+			-- { Foreground = { Color = edge_foreground } },
+			-- { Text = SOLID_LEFT_ARROW },
+			{ Background = { Color = inactive_background } },
+			{ Foreground = { Color = foreground } },
+			{ Text = title },
+			-- { Background = { Color = edge_background } },
+			-- { Foreground = { Color = edge_foreground } },
+			-- { Text = SOLID_RIGHT_ARROW },
+		}
 	end
-)
+end)
 
 -- Key Bindings
 config.keys = {
-  -- This will create a new split and run the `top` program inside it
-  {
-    key = '%',
-    mods = 'CTRL|SHIFT|ALT',
-    action = wezterm.action.SplitPane {
-      direction = 'Left',
-      command = { args = { 'top' } },
-      size = { Percent = 50 },
-    },
-  },
-  {
-    key = '"',
-    mods = 'CTRL|SHIFT|ALT',
-    action = wezterm.action.SplitVertical {
-      args = { 'top' },
-    },
-  },
-  {
-    key = '%',
-    mods = 'CTRL|SHIFT|ALT',
-    action = wezterm.action.SplitHorizontal {
-      args = { 'top' },
-    },
-  },
-  {
-    key = 'H',
-    mods = 'LEADER',
-    action = act.AdjustPaneSize { 'Left', 5 },
-  },
-  {
-    key = 'J',
-    mods = 'LEADER',
-    action = act.AdjustPaneSize { 'Down', 5 },
-  },
-  { key = 'K', mods = 'LEADER', action = act.AdjustPaneSize { 'Up', 5 } },
-  {
-    key = 'L',
-    mods = 'LEADER',
-    action = act.AdjustPaneSize { 'Right', 5 },
-  },
-  {
-    key = 'H',
-    mods = 'CTRL|SHIFT',
-    action = act.ActivatePaneDirection 'Left',
-  },
-  {
-    key = 'L',
-    mods = 'CTRL|SHIFT',
-    action = act.ActivatePaneDirection 'Right',
-  },
-  {
-    key = 'K',
-    mods = 'CTRL|SHIFT',
-    action = act.ActivatePaneDirection 'Up',
-  },
-  {
-    key = 'J',
-    mods = 'CTRL|SHIFT',
-    action = act.ActivatePaneDirection 'Down',
-  },
+	-- This will create a new split and run the `top` program inside it
+	{
+		key = "%",
+		mods = "CTRL|SHIFT|ALT",
+		action = wezterm.action.SplitPane({
+			direction = "Left",
+			command = { args = { "top" } },
+			size = { Percent = 50 },
+		}),
+	},
+	{
+		key = '"',
+		mods = "CTRL|SHIFT|ALT",
+		action = wezterm.action.SplitVertical({
+			args = { "top" },
+		}),
+	},
+	{
+		key = "%",
+		mods = "CTRL|SHIFT|ALT",
+		action = wezterm.action.SplitHorizontal({
+			args = { "top" },
+		}),
+	},
+	{
+		key = "H",
+		mods = "LEADER",
+		action = act.AdjustPaneSize({ "Left", 5 }),
+	},
+	{
+		key = "J",
+		mods = "LEADER",
+		action = act.AdjustPaneSize({ "Down", 5 }),
+	},
+	{ key = "K", mods = "LEADER", action = act.AdjustPaneSize({ "Up", 5 }) },
+	{
+		key = "L",
+		mods = "LEADER",
+		action = act.AdjustPaneSize({ "Right", 5 }),
+	},
+	{
+		key = "H",
+		mods = "CTRL|SHIFT",
+		action = act.ActivatePaneDirection("Left"),
+	},
+	{
+		key = "L",
+		mods = "CTRL|SHIFT",
+		action = act.ActivatePaneDirection("Right"),
+	},
+	{
+		key = "K",
+		mods = "CTRL|SHIFT",
+		action = act.ActivatePaneDirection("Up"),
+	},
+	{
+		key = "J",
+		mods = "CTRL|SHIFT",
+		action = act.ActivatePaneDirection("Down"),
+	},
 }
 
 -- and finally, return the configuration to wezterm
 return config
-
-
