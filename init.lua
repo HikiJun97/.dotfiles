@@ -7,6 +7,40 @@ if vim.g.vscode then
 	print("Running in VSCode-neovim")
 	local vscode = require("vscode")
 	vim.g.clipboard = vim.g.vscode_clipboard
+	-- Go to references
+	vim.keymap.set("n", "gr", function()
+		require("vscode-neovim").call("editor.action.referenceSearch.trigger")
+	end, { silent = true })
+
+	-- Go to definition
+	vim.keymap.set("n", "gd", function()
+		require("vscode-neovim").call("editor.action.revealDefinition")
+	end, { silent = true })
+
+	-- Open definition aside
+	vim.keymap.set("n", "gD", function()
+		require("vscode-neovim").call("editor.action.revealDefinitionAside")
+	end, { silent = true })
+
+	-- Go back
+	vim.keymap.set("n", "gb", function()
+		require("vscode-neovim").call("workbench.action.navigateBack")
+	end, { silent = true })
+
+	-- Next error/warning
+	vim.keymap.set("n", "ge", function()
+		require("vscode-neovim").call("editor.action.marker.next")
+	end, { silent = true })
+
+	-- Previous error/warning
+	vim.keymap.set("n", "gE", function()
+		require("vscode-neovim").call("editor.action.marker.prev")
+	end, { silent = true })
+
+	-- Show hover
+	vim.keymap.set("n", "gh", function()
+		require("vscode-neovim").call("editor.action.showHover")
+	end, { silent = true })
 else
 	print("Running in Neovim")
 	vim.g.clipboard = {
@@ -31,7 +65,7 @@ if vim.fn.has("syntax") == 1 then
 end
 
 -- Colorscheme settings
-vim.opt.termguicolors = true -- enables 256 colors
+vim.opt.termguicolors = true
 vim.opt.background = "dark" -- sets the background to dark
 
 vim.opt.mouse = "a" -- 마우스를 모든 모드에서 사용할 수 있게 설정 (normal, insert, visual 모드에서 마우스 사용 가능)
@@ -57,7 +91,13 @@ vim.opt.smarttab = true -- 앞의 코드 블록에 맞춰서 탭이 자동으로
 vim.opt.smartindent = true -- 자동으로 문맥에 맞게 스마트한 들여쓰기를 적용
 vim.opt.autoindent = true -- 현재 줄의 들여쓰기를 다음 줄에도 유지
 vim.cmd([[abbr funciton function]]) -- "funciton"을 잘못 입력했을 때 "function"으로 자동 수정되도록 설정
-vim.keymap.set("", "<C-c>", "<Esc>")
+
+-- Escape mapping
+vim.keymap.set("", "<C-c>", "<Esc>", { noremap = true, silent = true })
+vim.keymap.set("i", "jk", "<Esc>", { noremap = true, silent = true })
+
+vim.api.nvim_create_user_command("Q", "q", { nargs = 0 })
+vim.keymap.set("n", ":ㅂ<CR>", ":q<CR>", { silent = true })
 
 -- tags setting
 -- vim.opt.tags:append("./tags,tags")
@@ -129,13 +169,13 @@ vim.opt.tags = "./tags;"
 vim.opt.statusline = "%<%l:%v [%P]%=%a %h%m%r %F"
 
 -- True colors settings
-vim.cmd([[
-  if exists('+termguicolors')
-    let &t_8f = "\<Esc>[38;2;%lu;%lu;%lum"
-    let &t_8b = "\<Esc>[48;2;%lu;%lu;%lum"
-    set termguicolors
-  endif
-]])
+-- vim.cmd([[
+--   if exists('+termguicolors')
+--     let &t_8f = "\<Esc>[38;2;%lu;%lu;%lum"
+--     let &t_8b = "\<Esc>[48;2;%lu;%lu;%lum"
+--     set termguicolors
+--   endif
+-- ]])
 
 -- Autocommands
 vim.api.nvim_create_autocmd("BufReadPost", {
@@ -169,6 +209,12 @@ vim.opt.rtp:prepend(lazypath)
 
 -- Lazy.nvim configuration
 require("lazy").setup({
+	{
+		"max397574/better-escape.nvim",
+		config = function()
+			require("better_escape").setup()
+		end,
+	},
 	{ "echasnovski/mini.ai", version = false },
 	{ "VonHeikemen/lsp-zero.nvim", branch = "v4.x" },
 	{
@@ -236,6 +282,10 @@ require("lazy").setup({
 			suppressed_dirs = { "~/", "~/Projects", "~/Downloads", "/" },
 			-- log_level = 'debug',
 		},
+		config = function()
+			require("auto-session").setup()
+			vim.api.nvim_create_user_command("SS", "SessionSave", {})
+		end,
 	},
 	{
 		"yetone/avante.nvim",
@@ -257,9 +307,9 @@ require("lazy").setup({
 			},
 			mappings = {
 				--- @class AvanteConflictMappings
-				-- suggestion = {
-				-- 	accept = "<C-j>",
-				-- },
+				suggestion = {
+					accept = "<C-l>",
+				},
 			},
 		},
 		-- if you want to build from source then do `make BUILD_FROM_SOURCE=true`
@@ -272,30 +322,31 @@ require("lazy").setup({
 			"MunifTanjim/nui.nvim",
 			--- The below dependencies are optional,
 			"nvim-tree/nvim-web-devicons", -- or echasnovski/mini.icons
+			"zbirenbaum/copilot.lua",
 			-- {
 			-- 	"zbirenbaum/copilot.lua",
-			-- config = function()
-			-- 	require("copilot").setup({
-			-- 		panel = {
-			-- 			auto_refresh = true,
-			-- 			keymap = {
-			-- 				accept = "<CR>",
+			-- 	cmd = "Copilot",
+			-- 	event = "InsertEnter",
+			-- 	config = function()
+			-- 		require("copilot").setup({
+			-- 			suggestion = {
+			-- 				auto_trigger = true,
+			-- 				keymap = {
+			-- 					-- accept = "<Tab>",
+			-- 					accept = false,
+			-- 				},
 			-- 			},
-			-- 		},
-			-- 		suggestion = {
-			-- 			enabled = true,
-			-- 			auto_trigger = true,
-			-- 			hide_during_completion = true,
-			-- 			-- keymap = {
-			-- 			-- 	accept = "<C-j>",
-			-- 			-- },
-			-- 		},
-			-- 		filetypes = {
-			-- 			["*"] = true,
-			-- 		},
-			-- 	})
-			-- end,
-			-- }, -- for providers='copilot'
+			-- 		})
+			--
+			-- 		vim.keymap.set("i", "<Tab>", function()
+			-- 			if require("copilot.suggestion").is_visible() then
+			-- 				require("copilot.suggestion").accept()
+			-- 			else
+			-- 				return "<Tab>"
+			-- 			end
+			-- 		end, { expr = true, noremap = true })
+			-- 	end,
+			-- },
 			{
 				-- support for image pasting
 				"HakonHarnes/img-clip.nvim",
@@ -504,7 +555,7 @@ require("lazy").setup({
 					javascript = { { "prettierd", "prettier" } },
 				},
 				format_on_save = {
-					t5meout_ms = 1000,
+					timeout_ms = 500,
 					lsp_fallback = true,
 				},
 			})
@@ -579,22 +630,6 @@ require("lazy").setup({
 		dependencies = { "nvim-tree/nvim-web-devicons" },
 	},
 	{ "lukas-reineke/indent-blankline.nvim", main = "ibl", opts = {} },
-	-- { "github/copilot.vim" },
-	{
-		"zbirenbaum/copilot.lua",
-		cmd = "Copilot",
-		event = "InsertEnter",
-		config = function()
-			require("copilot").setup({
-				suggestion = {
-					auto_trigger = true,
-					keymap = {
-						accept = "<C-l>",
-					},
-				},
-			})
-		end,
-	},
 	-- ################### Colorschemes ###################
 	{ "morhetz/gruvbox" }, -- Provides the Gruvbox color scheme, loaded immediately
 	{ "NLKNguyen/papercolor-theme" }, -- Offers a highly readable color scheme
@@ -615,7 +650,7 @@ require("lazy").setup({
 	{
 		"sainnhe/everforest",
 		config = function()
-			vim.g.everforest_background = "hard"
+			vim.g.everforest_background = "soft"
 		end,
 	}, -- Green-based warm color scheme
 	{
@@ -1069,6 +1104,16 @@ lspconfig.lua_ls.setup({
 if vim.g.vscode then
 else
 	require("avante_lib").load()
+	vim.keymap.set("i", "<Tab>", function()
+		-- avante suggestion이 visible한지 확인
+		if require("avante.suggestion"):is_visible() then
+			-- suggestion 수락
+			require("avante.suggestion"):accept()
+		else
+			-- 일반 Tab 동작 수행
+			return "<Tab>"
+		end
+	end, { expr = true, silent = true })
 
 	-- Lualine Setup
 	require("lualine").setup({

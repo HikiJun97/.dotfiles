@@ -6,7 +6,11 @@ local config = wezterm.config_builder()
 local act = wezterm.action
 -- This is where you actually apply your config choices
 
-config.term = "xterm-256color"
+-- config.term = "xterm-256color"
+-- config.term = "xterm"
+config.term = "wezterm"
+config.max_fps = 60
+config.enable_kitty_graphics = false
 
 -- Color Scheme Config
 -- local COLOR_SCHEME = 'Kanagawa (Gogh)'
@@ -17,31 +21,90 @@ local COLOR_SCHEME = "Monokai Pro (Gogh)"
 -- local COLOR_SCHEME = 'One Dark (Gogh)'
 
 -- Font Config
-local FONT = "Monaco Nerd Font Mono"
+-- local FONT = "Monaco Nerd Font Mono"
 -- local FONT = "UbuntuMono Nerd Font"
+local FONT = "JetBrains Mono"
+-- local FONT = "Menlo"
+-- local FONT = "Monaco"
+-- local FONT = "Iosevka"
 config.color_scheme = COLOR_SCHEME
+
+local font_config = {
+	["Monaco Nerd Font Mono"] = {
+		size = 12.0,
+		line_height = 1.05,
+		weight = "Medium",
+	},
+	["UbuntuMono Nerd Font"] = {
+		size = 12.0,
+		line_height = 1.05,
+		weight = "Medium",
+	},
+	["JetBrains Mono"] = {
+		size = 12.0,
+		line_height = 1.00,
+		weight = "Medium",
+	},
+	["Menlo"] = {
+		size = 12.0,
+		line_height = 1.05,
+		weight = "Medium",
+	},
+	["Iosevka"] = {
+		size = 14.0,
+		line_height = 1.05,
+		weight = "Medium",
+	},
+}
+
+local selected_font = font_config[FONT] or {
+	size = 12.0,
+	line_height = 1.05,
+}
+
+config.font_size = selected_font.size
+config.line_height = selected_font.line_height
 config.freetype_load_target = "Light"
-config.font = wezterm.font(FONT, { weight = "Medium" })
+config.font = wezterm.font(FONT, { weight = selected_font.weight })
 config.freetype_load_target = "Light"
-config.font_size = 12.0
-config.line_height = 1.00
 config.leader = { key = "a", mods = "SHIFT" }
 config.enable_wayland = true
 
 local color_scheme = wezterm.color.get_builtin_schemes()[COLOR_SCHEME]
 
 -- Tab Style
-config.hide_tab_bar_if_only_one_tab = true
+config.hide_tab_bar_if_only_one_tab = false
 config.use_fancy_tab_bar = true
-config.show_tab_index_in_tab_bar = false
+config.tab_bar_at_bottom = false
 local SOLID_LEFT_ARROW = wezterm.nerdfonts.pl_right_hard_divider
 local SOLID_RIGHT_ARROW = wezterm.nerdfonts.pl_left_hard_divider
-config.show_new_tab_button_in_tab_bar = false
+config.show_tab_index_in_tab_bar = true
+config.show_new_tab_button_in_tab_bar = true
+-- config.tab_bar_style = {
+-- 	new_tab = "🗝", -- 새 탭 버튼 아이콘
+-- 	new_tab_hover = "➕", -- 마우스 오버시 새 탭 버튼
+-- 	active_tab_left = "█", -- 활성 탭 왼쪽 구분자
+-- 	active_tab_right = "█", -- 활성 탭 오른쪽 구분자
+-- 	inactive_tab_left = "▒", -- 비활성 탭 왼쪽 구분자
+-- 	inactive_tab_right = "▒", -- 비활성 탭 오른쪽 구분자
+-- }
 
 -- Window Frame
-config.window_background_opacity = 1
+config.window_background_opacity = 100
 config.window_frame = {
 	active_titlebar_bg = color_scheme.background,
+	-- font = wezterm.font({ family = FONT, weight = "Bold" }),
+	font_size = 12.0,
+}
+config.window_decorations = "INTEGRATED_BUTTONS"
+config.enable_scroll_bar = false
+config.native_macos_fullscreen_mode = true
+config.adjust_window_size_when_changing_font_size = false -- 폰트 크기 변경시 창 크기 조정
+config.window_padding = {
+	left = 0,
+	right = 0,
+	top = 10,
+	bottom = 0,
 }
 
 function tab_title(tab_info)
@@ -153,5 +216,4 @@ config.keys = {
 	},
 }
 
--- and finally, return the configuration to wezterm
 return config
