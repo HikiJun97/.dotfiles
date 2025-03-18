@@ -1,19 +1,26 @@
 " General Settings
 set update.lastchecktime 1742107849788
+set update.lastnaggedversion 1.14.0
 set update.nag true
 set update.nagwait 7
-set update.lastnaggedversion 1.14.0
 set update.checkintervalsecs 86400
 set configversion 2.0
+set hintfiltermode simple
 set smoothscroll true
+set editorcmd /Applications/WezTerm.app/Contents/MacOS/wezterm start --always-new-process nvim
 set hintchars hjklasdfgyuiopwertnmzxcvb
 
 " Binds
-bind q hint
-bind Q hint -b
 unbind f
 unbind F
-bind <C-6> buffer #
+bind q hint
+bind Q hint -b
+bind gF hint -qb
+bind gQ hint -qb
+bind k scrollline -10
+bind j scrollline 10
+bind dd tabclose
+bind d scrollpage 0.5
 bind <A-p> pin
 bind <A-m> mute toggle
 bind <F1> help
@@ -21,7 +28,7 @@ bind o fillcmdline open
 bind O current_url open
 bind w fillcmdline winopen
 bind W current_url winopen
-bind t fillcmdline tabopen
+unbind t
 bind ]] followpage next
 bind [[ followpage prev
 bind [c urlincrement -1
@@ -35,14 +42,12 @@ bind yq text2qr --timeout 5
 bind yc clipboard yankcanon
 bind ym clipboard yankmd
 bind yo clipboard yankorg
-bind yt clipboard yanktitle
+bind yt tabduplicate
 bind gh home
 bind gH home true
 bind p clipboard open
 bind P clipboard tabopen
-bind j scrollline 10
 bind <C-e> scrollline 10
-bind k scrollline -10
 bind <C-y> scrollline -10
 bind h scrollpx -50
 bind l scrollpx 50
@@ -59,7 +64,6 @@ bind H back
 bind L forward
 bind <C-o> jumpprev
 bind <C-i> jumpnext
-bind d scrollpage 0.5
 bind D js tri.excmds.composite('tabprev;', 'tabclose #')
 bind gx0 tabclosealltoleft
 bind gx$ tabclosealltoright
@@ -93,7 +97,6 @@ bind M gobble 1 quickmark
 bind B fillcmdline taball
 bind b fillcmdline tab
 bind ZZ qall
-bind gF hint -qb
 bind ;i hint -i
 bind ;b hint -b
 bind ;o hint
@@ -117,9 +120,9 @@ bind ;v hint -W mpvsafe
 bind ;V hint -V
 bind ;w hint -w
 bind ;t hint -W tabopen
-bind ;O hint -W fillcmdline_notrail open 
-bind ;W hint -W fillcmdline_notrail winopen 
-bind ;T hint -W fillcmdline_notrail tabopen 
+bind ;O hint -W fillcmdline_notrail open
+bind ;W hint -W fillcmdline_notrail winopen
+bind ;T hint -W fillcmdline_notrail tabopen
 bind ;d hint -W tabopen --discard
 bind ;gd hint -qW tabopen --discard
 bind ;z hint -z
@@ -164,7 +167,20 @@ bind . repeat
 bind <AS-ArrowUp><AS-ArrowUp><AS-ArrowDown><AS-ArrowDown><AS-ArrowLeft><AS-ArrowRight><AS-ArrowLeft><AS-ArrowRight>ba open https://www.youtube.com/watch?v=M3iOROuTuMA
 bind m gobble 1 markadd
 bind ` gobble 1 markjump
+bind <C-6> buffer #
+bind tn fillcmdline tabopen
 bind --mode=hint q hint -c
+bind --mode=hint <Backspace> hint.popKey
+bind --mode=hint <Escape> hint.reset
+bind --mode=hint <C-[> hint.reset
+bind --mode=hint <Tab> hint.focusNextHint
+bind --mode=hint <S-Tab> hint.focusPreviousHint
+bind --mode=hint <ArrowUp> hint.focusTopHint
+bind --mode=hint <ArrowDown> hint.focusBottomHint
+bind --mode=hint <ArrowLeft> hint.focusLeftHint
+bind --mode=hint <ArrowRight> hint.focusRightHint
+bind --mode=hint <Enter> hint.selectFocusedHint
+bind --mode=hint <Space> hint.selectFocusedHint
 
 " For syntax highlighting see https://github.com/tridactyl/vim-tridactyl
 " vim: set filetype=tridactyl
