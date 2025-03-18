@@ -10,7 +10,7 @@ set hintchars hjklasdfgyuiopwertnmzxcvb
 
 " Binds
 bind q hint
-bind Q hint - b
+bind Q hint -b
 unbind f
 unbind F
 bind <C-6> buffer #
