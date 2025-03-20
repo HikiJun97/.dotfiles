@@ -1,5 +1,5 @@
 " General Settings
-set update.lastchecktime 1742107849788
+set update.lastchecktime 1742433373541
 set update.lastnaggedversion 1.14.0
 set update.nag true
 set update.nagwait 7
@@ -169,6 +169,14 @@ bind m gobble 1 markadd
 bind ` gobble 1 markjump
 bind <C-6> buffer #
 bind tn fillcmdline tabopen
+bind n findnext --search-from-view
+bind / fillcmdline find
+bind N findnext --search-from-view --reverse
+bind gn findselect
+bind ? fillcmdline find --reverse
+bind gN composite findnext --search-from-view --reverse; findselect
+bind ,<Space> nohlsearch
+unbind nohl
 bind --mode=hint q hint -c
 bind --mode=hint <Backspace> hint.popKey
 bind --mode=hint <Escape> hint.reset
