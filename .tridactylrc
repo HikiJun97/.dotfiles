@@ -19,7 +19,6 @@ bind gF hint -qb
 bind gQ hint -qb
 bind k scrollline -10
 bind j scrollline 10
-bind dd tabclose
 bind d scrollpage 0.5
 bind <A-p> pin
 bind <A-m> mute toggle
