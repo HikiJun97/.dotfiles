@@ -9,6 +9,7 @@ set hintfiltermode simple
 set smoothscroll true
 set editorcmd /Applications/WezTerm.app/Contents/MacOS/wezterm start --always-new-process nvim
 set hintchars hjklasdfgyuiopwertnmzxcvb
+set modeindicator false
 
 " Binds
 unbind f
@@ -37,7 +38,7 @@ bind <C-a> urlincrement 1
 bind T current_url tabopen
 bind yy clipboard yank
 bind ys clipboard yankshort
-bind yq text2qr --timeout 5
+bind yq hint -y
 bind yc clipboard yankcanon
 bind ym clipboard yankmd
 bind yo clipboard yankorg
