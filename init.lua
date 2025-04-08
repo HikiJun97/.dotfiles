@@ -501,6 +501,17 @@ require("lazy").setup({
 			})
 		end,
 	},
+	-- {
+	-- 	"luckasRanarison/tailwind-tools.nvim",
+	-- 	name = "tailwind-tools",
+	-- 	build = ":UpdateRemotePlugins",
+	-- 	dependencies = {
+	-- 		"nvim-treesitter/nvim-treesitter",
+	-- 		"nvim-telescope/telescope.nvim",
+	-- 		"neovim/nvim-lspconfig",
+	-- 	},
+	-- 	opts = {},
+	-- },
 	{
 		"karb94/neoscroll.nvim",
 		config = function()
@@ -559,7 +570,8 @@ require("lazy").setup({
 					-- Conform will run multiple formatters sequentially
 					python = { "isort", "black" },
 					-- Use a sub-list to run only the first available formatter
-					javascript = { { "prettierd", "prettier" } },
+					javascript = { { "biome", "prettierd", "prettier" } },
+					go = { "goimports", "gofmt" },
 				},
 				format_on_save = {
 					timeout_ms = 500,
@@ -1025,6 +1037,7 @@ require("mason-lspconfig").setup({
 		"lua_ls",
 		"jsonls",
 		"gopls",
+		-- "biome",
 		-- "prettier",
 		-- "debugpy",
 		-- "flake8"
@@ -1082,7 +1095,13 @@ lspconfig.ts_ls.setup({
 })
 
 lspconfig.tailwindcss.setup({
-	filetypes = { "html", "javascriptreact", "typescriptreact", "css", "scss" },
+	capabilities = require("cmp_nvim_lsp").default_capabilities(),
+	filetypes = { "html", "javascriptreact", "typescriptreact", "vue", "svelte", "css", "scss", "sass" },
+	init_options = {
+		userLanguages = {
+			typescriptreact = "javascriptreact",
+		},
+	},
 })
 
 lspconfig.cssls.setup({})
