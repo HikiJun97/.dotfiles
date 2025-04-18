@@ -63,7 +63,7 @@ else
 	}
 end
 
-vim.g.python3_host_prog = "~/micromamba/envs/basic/bin/python"
+vim.g.python3_host_prog = "~/pynvim/bin/python"
 
 -- Syntax enable
 vim.cmd("syntax enable")
@@ -568,10 +568,27 @@ require("lazy").setup({
 				formatters_by_ft = {
 					lua = { "stylua" },
 					-- Conform will run multiple formatters sequentially
-					python = { "isort", "black" },
+					python = function(bufnr)
+						if require("conform").get_formatter_info("ruff_format", bufnr).available then
+							return { "ruff_format" }
+						else
+							return { "isort", "black" }
+						end
+					end,
 					-- Use a sub-list to run only the first available formatter
-					javascript = { { "biome", "prettierd", "prettier" } },
+					javascript = { "biome", "prettierd", "prettier" },
 					go = { "goimports", "gofmt" },
+				},
+				formatters = {
+					biome = {
+						meta = { stop_after_first = true },
+					},
+					prettierd = {
+						meta = { stop_after_first = true },
+					},
+					prettier = {
+						meta = { stop_after_first = true },
+					},
 				},
 				format_on_save = {
 					timeout_ms = 500,
