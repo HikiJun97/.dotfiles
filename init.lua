@@ -429,15 +429,15 @@ require("lazy").setup({
 		end,
 	},
 	{ "junegunn/goyo.vim" }, -- Distraction-free writing mode
-	-- { "thaerkh/vim-indentguides" }, -- Visual display of indent levels
-	{
-		"nathanaelkane/vim-indent-guides",
-		config = function()
-			vim.g.indent_guides_enable_on_vim_startup = 1
-			vim.g.indent_guides_start_level = 2
-			vim.g.indent_guides_guide_size = 1
-		end,
-	},
+	-- {
+	-- 	"nathanaelkane/vim-indent-guides",
+	-- 	config = function()
+	-- 		vim.g.indent_guides_enable_on_vim_startup = 1
+	-- 		vim.g.indent_guides_start_level = 2
+	-- 		vim.g.indent_guides_guide_size = 1
+	-- 	end,
+	-- },
+	{ "lukas-reineke/indent-blankline.nvim", main = "ibl", opts = {} },
 	{ "Raimondi/delimitMate" }, -- Auto-completion for quotes, parens, brackets, etc.
 	{ "preservim/nerdtree" }, -- Tree explorer for navigating the filesystem
 	{ "blueyed/vim-diminactive" }, -- Dim inactive windows
@@ -665,7 +665,6 @@ require("lazy").setup({
 		"nvim-lualine/lualine.nvim",
 		dependencies = { "nvim-tree/nvim-web-devicons" },
 	},
-	{ "lukas-reineke/indent-blankline.nvim", main = "ibl", opts = {} },
 	-- ################### Colorschemes ###################
 	{ "morhetz/gruvbox" }, -- Provides the Gruvbox color scheme, loaded immediately
 	{ "NLKNguyen/papercolor-theme" }, -- Offers a highly readable color scheme
@@ -764,12 +763,29 @@ require("lazy").setup({
 	{ "ayu-theme/ayu-vim" },
 })
 
--- vim.cmd "colorscheme kanagawa"
+-- vim.cmd("colorscheme kanagawa")
 vim.cmd("colorscheme monokai-pro")
 -- vim.cmd "colorscheme rose-pine-dawn"
--- vim.cmd "colorscheme palenight"
+-- vim.cmd("colorscheme palenight")
 -- vim.cmd "colorscheme everforest"
--- vim.cmd "colorscheme onedark"
+-- vim.cmd("colorscheme onedark")
+
+-- 하이라이트 그룹 정의
+vim.api.nvim_set_hl(0, "IblIndent", { fg = "#4a4a4a" }) -- 어두운 회색 (기본 indent)
+vim.api.nvim_set_hl(0, "IblScope", { fg = "#ffffff" }) -- 밝은 흰색 (현재 scope)
+
+-- 플러그인 설정
+require("ibl").setup({
+	indent = {
+		highlight = "IblIndent",
+	},
+	scope = {
+		enabled = true,
+		highlight = "IblScope",
+		show_start = false,
+		show_end = true,
+	},
+})
 
 -- vim.api.nvim_create_user_command("Format", function(args)
 -- 	local range = nil
