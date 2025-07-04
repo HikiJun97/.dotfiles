@@ -1,7 +1,7 @@
 alias cmakelists='cmake CMakeLists.txt'
 alias nv='nvim'
 alias vi='nvim'
-alias uuu='sudo apt-get update && sudo apt-get -y upgrade && sudo apt-get autoremove'
+# alias uuu='sudo apt-get update && sudo apt-get -y upgrade && sudo apt-get autoremove'
 alias python='python3'
 alias pip='pip3'
 alias install="sudo apt-get install -y"
