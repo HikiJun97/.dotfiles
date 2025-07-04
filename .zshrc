@@ -132,27 +132,9 @@ export COLORTERM=truecolor
 
 bindkey -v
 
-# >>> mamba initialize >>>
-# !! Contents within this block are managed by 'mamba init' !!
-export MAMBA_EXE="${HOME}/.local/bin/micromamba";
-export MAMBA_ROOT_PREFIX="${HOME}/micromamba";
-__mamba_setup="$("$MAMBA_EXE" shell hook --shell zsh --root-prefix "$MAMBA_ROOT_PREFIX" 2> /dev/null)"
-if [ $? -eq 0 ]; then
-    eval "$__mamba_setup"
-else
-    alias micromamba="$MAMBA_EXE"  # Fallback on help from mamba activate
-fi
-unset __mamba_setup
-# <<< mamba initialize <<<
-
-# Disable mamba's env name display
-export CONDA_ENV_PROMPT=
-
 for env_file in ~/.zsh_env*; do
     source $env_file
 done
 
 autoload -U promptinit; promptinit
 prompt pure
-
-micromamba activate engine
