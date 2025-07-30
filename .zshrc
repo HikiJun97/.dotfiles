@@ -8,22 +8,12 @@ fi
 
 [[ ! -f ~/.p10k.zsh ]] || source ~/.p10k.zsh
 
-fpath+=($HOME/.zsh/pure)
-
-# If you come from bash you might have to change your $PATH.
-# export PATH=$HOME/bin:/usr/local/bin:$PATH
-
-# Path to your oh-my-zsh installation.
-export ZSH="$HOME/.oh-my-zsh"
-source $ZSH/oh-my-zsh.sh
-source "$HOME/.zsh_aliases"
-
 # Set name of the theme to load --- if set to "random", it will
 # load a random theme each time oh-my-zsh is loaded, in which case,
 # to know which specific one was loaded, run: echo $RANDOM_THEME
 # See https://github.com/ohmyzsh/ohmyzsh/wiki/Themes
-# ZSH_THEME="robbyrussell"
-# ZSH_THEME="pure"
+
+# .zshrc
 
 # Set list of themes to pick from when loading at random
 # Setting this variable when ZSH_THEME=random will cause zsh to load
@@ -113,9 +103,10 @@ source "$HOME/.zsh_aliases"
 # alias zshconfig="mate ~/.zshrc"
 # alias ohmyzsh="mate ~/.oh-my-zsh"
 
-# Set Node env
-export NVM_DIR="$([ -z "${XDG_CONFIG_HOME-}" ] && printf %s "${HOME}/.nvm" || printf %s "${XDG_CONFIG_HOME}/nvm")"
-[ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh" # This loads nvm
+# Path to your oh-my-zsh installation.
+export ZSH="$HOME/.oh-my-zsh"
+
+ZSH_THEME=""
 
 plugins=(
 	git
@@ -126,15 +117,35 @@ plugins=(
 #	autojump
 )
 
-cd() { builtin cd "$@" && ls; } #execute ls after cd
-export TERM=xterm-256color
-export COLORTERM=truecolor
+source $ZSH/oh-my-zsh.sh
 
-bindkey -v
+source "$HOME/.zsh_aliases"
+[[ -f ~/.zsh_env ]] && source ~/.zsh_env
 
-for env_file in ~/.zsh_env*; do
-    source $env_file
-done
+# Set Node env
+export NVM_DIR="$([ -z "${XDG_CONFIG_HOME-}" ] && printf %s "${HOME}/.nvm" || printf %s "${XDG_CONFIG_HOME}/nvm")"
+[ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh" # This loads nvm
 
+# bun
+export BUN_INSTALL="$HOME/.bun"
+export PATH="$BUN_INSTALL/bin:$PATH"
+
+# bun completions
+[ -s "/Users/sgn04088/.oh-my-zsh/completions/_bun" ] && source "/Users/sgn04088/.oh-my-zsh/completions/_bun"
+
+# bob-nvim
+export PATH="$HOME/.local/share/bob/nvim-bin:$PATH"
+
+source $HOME/pynvim/bin/activate
+
+fpath+=($HOME/.zsh/pure)
+
+. "$HOME/.local/bin/env"
 autoload -U promptinit; promptinit
 prompt pure
+
+
+cd() { builtin cd "$@" && ls; } #execute ls after cd
+export TERM=xterm-256color
+
+bindkey -v
