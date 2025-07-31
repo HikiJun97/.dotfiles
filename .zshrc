@@ -116,6 +116,7 @@ plugins=(
 	zsh-syntax-highlighting
 #	autojump
 )
+. "$HOME/.local/bin/env"
 
 source $ZSH/oh-my-zsh.sh
 
@@ -136,16 +137,12 @@ export PATH="$BUN_INSTALL/bin:$PATH"
 # bob-nvim
 export PATH="$HOME/.local/share/bob/nvim-bin:$PATH"
 
-source $HOME/pynvim/bin/activate
+export TERM=xterm-256color
+bindkey -v
 
+source $HOME/pynvim/bin/activate
 fpath+=($HOME/.zsh/pure)
 
-. "$HOME/.local/bin/env"
 autoload -U promptinit; promptinit
 prompt pure
 
-
-cd() { builtin cd "$@" && ls; } #execute ls after cd
-export TERM=xterm-256color
-
-bindkey -v
