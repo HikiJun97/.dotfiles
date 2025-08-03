@@ -1,5 +1,3 @@
-vim.g.python3_host_prog = "~/pynvim/bin/python"
-vim.opt.clipboard = "unnamedplus"
 vim.cmd([[
     highlight Normal guibg=none
     highlight NonText guibg=none
@@ -9,7 +7,7 @@ vim.cmd([[
 
 if vim.g.vscode then
     print("Running in VSCode-neovim")
-    local vscode = require("vscode")
+    -- local vscode = require("vscode")
     vim.g.clipboard = vim.g.vscode_clipboard
     -- Go to references
     vim.keymap.set("n", "gr", function()
@@ -79,47 +77,16 @@ vim.opt.writebackup = false
 vim.opt.updatetime = 500
 vim.opt.signcolumn = "yes"
 vim.opt.fileencodings = "utf-8,euc-kr"
+vim.opt.clipboard = "unnamedplus"
 
 -- 유용한 단축키와 명령어
 vim.cmd([[abbr funciton function]])
-vim.api.nvim_create_user_command("Q", "q", { nargs = 0 })
-vim.keymap.set("", "<C-c>", "<Esc>", { noremap = true, silent = true })
-vim.keymap.set("n", ":ㅂ<CR>", ":q<CR>", { silent = true })
 
 -- 파일 자동 새로고침
 vim.cmd([[
   set autoread
   au CursorHold,CursorHoldI * silent! checktime
 ]])
-
--- FileType 이벤트에 대한 자동 명령을 설정합니다.
-vim.api.nvim_create_autocmd("FileType", {
-    pattern = {
-        "typescript",
-        "javascript",
-        "html",
-        "css",
-        "javascriptreact",
-        "typescriptreact",
-        "lua",
-    },
-    callback = function()
-        vim.opt_local.shiftwidth = 2
-        vim.opt_local.tabstop = 2
-        vim.opt_local.softtabstop = 2
-    end,
-})
-
-vim.api.nvim_create_autocmd("FileType", {
-    pattern = "json",
-    callback = function()
-        vim.opt_local.shiftwidth = 2
-        vim.opt_local.tabstop = 2
-        vim.opt_local.softtabstop = 2
-        vim.g.conceallevel = 0
-        vim.g.vim_json_conceal = 0
-    end,
-})
 
 -- Bootstrap lazy.nvim
 local lazypath = vim.fn.stdpath("data") .. "/lazy/lazy.nvim"
@@ -150,6 +117,8 @@ vim.opt.rtp:prepend(lazypath)
 -- This is also a good place to setup other settings (vim.opt)
 vim.g.mapleader = "\\"
 vim.g.maplocalleader = "\\"
+
+vim.g.python3_host_prog = "~/pynvim/bin/python"
 
 local languages = {
     "bash",
@@ -203,11 +172,11 @@ require("lazy").setup({
     "SirVer/ultisnips",
     "honza/vim-snippets", -- Collection of snippets for various programming languages
     "hrsh7th/cmp-nvim-lsp",
-    "hrsh7th/nvim-cmp",
-    "hrsh7th/cmp-path",
     "hrsh7th/cmp-buffer",
-    "onsails/lspkind.nvim",
+    "hrsh7th/cmp-path",
+    "hrsh7th/cmp-cmdline",
     "quangnguyen30192/cmp-nvim-ultisnips",
+    "onsails/lspkind.nvim",
     "uiiaoo/java-syntax.vim", -- Improved Java syntax highlighting
     "tpope/vim-surround", -- Quoting/parenthesizing made simple
     "alvan/vim-closetag", -- Auto close (X)HTML tags
@@ -220,6 +189,46 @@ require("lazy").setup({
     "ctrlpvim/ctrlp.vim", -- Full path fuzzy file, buffer, tag, etc. finder
     "norcalli/nvim-colorizer.lua",
     { "echasnovski/mini.ai", version = false },
+    {
+        "hrsh7th/nvim-cmp",
+        config = function()
+            -- Autocompletion setup
+            local cmp = require("cmp")
+            cmp.setup({
+                sources = {
+                    { name = "ultisnips" },
+                    { name = "nvim_lsp" },
+                    { name = "path" },
+                    { name = "buffer" },
+                },
+                snippet = {
+                    expand = function(args)
+                        -- You need Neovim v0.10 to use vim.snippet
+                        vim.snippet.expand(args.body)
+                    end,
+                },
+                mapping = cmp.mapping.preset.insert({
+                    ["<C-e>"] = cmp.mapping.close(),
+                    -- ["<Tab>"] = cmp.mapping.confirm({ select = true }),
+                    -- ["<Tab>"] = cmp.mapping.select_next_item({ behavior = cmp.SelectBehavior.Insert }),
+                    ["<Down>"] = cmp.mapping.select_next_item({
+                        behavior = cmp.SelectBehavior.Insert,
+                    }),
+                    ["<Up>"] = cmp.mapping.select_prev_item({
+                        behavior = cmp.SelectBehavior.Insert,
+                    }),
+                }),
+                formatting = {
+                    format = require("lspkind").cmp_format({
+                        mode = "symbol",
+                        maxwidth = 50,
+                        ellipsis_char = "...",
+                        show_labelDetails = true,
+                    }),
+                },
+            })
+        end,
+    },
     {
         "mason-org/mason-lspconfig.nvim",
         lazy = false,
@@ -269,59 +278,64 @@ require("lazy").setup({
     },
     {
         "max397574/better-escape.nvim",
-        opt = {
-            timeout = vim.o.timeoutlen, -- after `timeout` passes, you can press the escape key and the plugin will ignore it
-            default_mappings = true, -- setting this to false removes all the default mappings
-            mappings = {
-                -- i for insert
-                i = {
-                    j = {
-                        -- These can all also be functions
-                        k = "<Esc>",
-                        j = false,
+        config = function()
+            require("better_escape").setup({
+                timeout = 100, -- after `timeout` passes, you can press the escape key and the plugin will ignore it
+                default_mappings = true, -- setting this to false removes all the default mappings
+                mappings = {
+                    -- i for insert
+                    i = {
+                        j = {
+                            -- These can all also be functions
+                            k = "<Esc>",
+                            j = false,
+                        },
                     },
-                },
-                c = {
-                    j = {
-                        k = "<C-c>",
-                        j = false,
+                    c = {
+                        j = {
+                            k = "<C-c>",
+                            j = false,
+                        },
                     },
-                },
-                t = {
-                    j = {
-                        k = "<C-\\><C-n>",
+                    t = {
+                        j = {
+                            k = "<C-\\><C-n>",
+                        },
                     },
-                },
-                v = {
-                    j = {
-                        k = "<Esc>",
+                    v = {
+                        j = {
+                            k = "<Esc>",
+                        },
+                        k = {
+                            k = false,
+                        },
                     },
-                },
-                s = {
-                    j = {
-                        k = "<Esc>",
+                    s = {
+                        j = {
+                            k = "<Esc>",
+                        },
                     },
+                    n = {},
                 },
-            },
-        },
+            })
+        end,
     },
     {
         "stevearc/conform.nvim",
-        opts = {},
+        lazy = false,
         config = function()
             require("conform").setup({
                 formatters_by_ft = {
                     lua = { "stylua" },
                     -- Conform will run multiple formatters sequentially
-                    python = function(bufnr)
-                        if
-                            require("conform").get_formatter_info("ruff_format", bufnr).available
-                        then
-                            return { "ruff_format" }
-                        else
-                            return { "isort", "black" }
-                        end
-                    end,
+                    python = { "ruff_organize_imports", "ruff_fix", "ruff_format" },
+                    -- python = function(bufnr)
+                    --     if require("conform").get_formatter_info("ruff_format", bufnr).available then
+                    --         return { "ruff_format" }
+                    --     else
+                    --         return { "isort", "black" }
+                    --     end
+                    -- end,
                     -- Use a sub-list to run only the first available formatter
                     javascript = { "biome", "prettierd", "prettier" },
                     go = { "goimports", "gofmt" },
@@ -341,12 +355,6 @@ require("lazy").setup({
                     timeout_ms = 500,
                     lsp_fallback = true,
                 },
-            })
-            vim.api.nvim_create_autocmd("BufWritePre", {
-                pattern = "*",
-                callback = function(args)
-                    require("conform").format({ bufnr = args.buf })
-                end,
             })
         end,
     },
@@ -383,28 +391,33 @@ require("lazy").setup({
         opts = {},
     },
     {
+        "nvim-telescope/telescope.nvim",
+        keys = function()
+            local builtin = require("telescope.builtin")
+            return {
+                { "<leader>ff", builtin.find_files, desc = "Find files" },
+                { "<leader>fg", builtin.live_grep, desc = "Live grep" },
+                { "<leader>fb", builtin.buffers, desc = "Find buffers" },
+                { "<leader>fh", builtin.help_tags, desc = "Help tags" },
+            }
+        end,
+    },
+    {
         "nvim-telescope/telescope-file-browser.nvim",
-        dependencies = {
-            {
-                "nvim-telescope/telescope.nvim",
-                tag = "0.1.8",
+        opts = {
+            extensions = {
+                file_browser = {
+                    theme = "ivy",
+                    -- disables netrw and use telescope-file-browser in its place
+                    hijack_netrw = false,
+                },
             },
+        },
+        dependencies = {
+            "nvim-telescope/telescope.nvim",
             "nvim-lua/plenary.nvim",
         },
-        config = function()
-            require("telescope").setup({
-                extensions = {
-                    file_browser = {
-                        theme = "ivy",
-                        -- disables netrw and use telescope-file-browser in its place
-                        hijack_netrw = true,
-                    },
-                },
-            })
-            -- Telescope-file-browser settings
-            vim.keymap.set("n", "<leader>fb", ":Telescope file_browser<CR>", { noremap = true })
-            vim.keymap.set("n", "<leader>ff", ":Telescope find_files<CR>", { noremap = true })
-        end,
+        config = function() end,
     },
     {
         "folke/trouble.nvim",
@@ -537,6 +550,10 @@ require("lazy").setup({
             window = {
                 position = "left",
                 width = 33,
+                mappings = {
+                    ["<bs>"] = false,
+                    ["-"] = "navigate_up",
+                },
             },
             filesystem = {
                 window = {
@@ -545,7 +562,11 @@ require("lazy").setup({
                         ["<C-j>"] = "move_cursor_down",
                     },
                 },
+                hijack_netrw_behavior = "disabled",
             },
+        },
+        keys = {
+            { "<F2>", ":Neotree toggle<CR>", { noremap = true } },
         },
     },
     {
@@ -574,10 +595,20 @@ require("lazy").setup({
         cmd = { "Outline", "OutlineOpen" },
         keys = { -- Example mapping to toggle outline
             { "<leader>o", "<cmd>Outline<CR>", desc = "Toggle outline" },
+            { "<F3>", "<cmd>Outline<CR>", desc = "Toggle outline" },
         },
         opts = {
             -- Your setup opts here
         },
+    },
+    {
+        "roobert/tailwindcss-colorizer-cmp.nvim",
+        -- optionally, override the default options:
+        config = function()
+            require("tailwindcss-colorizer-cmp").setup({
+                color_square_width = 2,
+            })
+        end,
     },
 
     -- ################### Colorschemes ###################
@@ -680,168 +711,6 @@ require("lazy").setup({
     { "ayu-theme/ayu-vim" },
 })
 
--- Clipboard
-vim.api.nvim_set_keymap("n", "y", '"+y', { noremap = true })
-vim.api.nvim_set_keymap("v", "y", '"+y', { noremap = true })
-
-vim.api.nvim_set_keymap("n", "Y", '"+Y', { noremap = true })
-vim.api.nvim_set_keymap("v", "Y", '"+Y', { noremap = true })
-
-vim.api.nvim_set_keymap("n", "x", '"+x', { noremap = true })
-vim.api.nvim_set_keymap("v", "x", '"+x', { noremap = true })
-
-vim.api.nvim_set_keymap("v", "d", '"+d', { noremap = true })
-vim.api.nvim_set_keymap("n", "D", '"+D', { noremap = true })
-vim.api.nvim_set_keymap("v", "D", '"+D', { noremap = true })
-
-vim.api.nvim_set_keymap("n", "c", '"+c', { noremap = true })
-
-vim.api.nvim_set_keymap("n", "s", '"+s', { noremap = true })
-vim.api.nvim_set_keymap("v", "s", '"+s', { noremap = true })
-
-vim.api.nvim_set_keymap("n", "S", '"+S', { noremap = true })
-vim.api.nvim_set_keymap("v", "S", '"+S', { noremap = true })
-
-vim.keymap.set("n", "<F2>", ":Neotree toggle<CR>", { noremap = true })
-vim.api.nvim_create_user_command("Nt", "Neotree toggle", {})
-
--- Telescope
-local builtin = require("telescope.builtin")
-vim.keymap.set("n", "<leader>ff", builtin.find_files, {})
-vim.keymap.set("n", "<leader>fg", builtin.live_grep, {})
-vim.keymap.set("n", "<leader>fb", builtin.buffers, {})
-vim.keymap.set("n", "<leader>fh", builtin.help_tags, {})
-
-vim.api.nvim_create_user_command("Tn", "tabnew", { nargs = "*" })
-vim.api.nvim_create_user_command("Pwd", "echo expand('%:p')", { nargs = "*" })
-
--- Function to add C++ headers
-local function cpplang_header()
-    vim.api.nvim_buf_set_lines(0, 0, -1, false, {
-        "#include <iostream>",
-        "using namespace std;",
-    })
-end
-
--- Autocommand to add headers for new .cc files
-vim.api.nvim_create_autocmd("BufNewFile", {
-    pattern = "*.cc",
-    callback = cpplang_header,
-})
-
--- Define the SplitBelow function
-local function SplitBelow()
-    vim.cmd("split")
-    vim.cmd("wincmd J")
-end
-
--- Define the RunSplitPython function
-local function RunSplitExecutor(executor, inputFile, outputFile)
-    for i = 1, vim.fn.winnr("$") do
-        if vim.fn.getwinvar(i, "&buftype") == "terminal" then
-            vim.cmd(i .. "wincmd c")
-            break
-        end
-    end
-
-    SplitBelow()
-    vim.cmd("resize 10")
-    vim.cmd("term " .. executor .. " " .. inputFile .. " " .. outputFile)
-end
-
--- F5 키를 눌렀을 때 실행할 함수를 설정합니다.
-local function RunCode()
-    local bufname = vim.api.nvim_buf_get_name(0)
-    if bufname:match("%.py$") then
-        RunSplitExecutor("python", bufname, "")
-    elseif bufname:match("%.js$") then
-        RunSplitExecutor("node", bufname, "")
-    elseif bufname:match("%.ts$") then
-        RunSplitExecutor("ts-node", bufname, "")
-    elseif bufname:match("%.scss$") then
-        local filename = bufname:gsub("%.scss$", "")
-        RunSplitExecutor("sass", bufname, filename .. ".css")
-    elseif bufname:match("%.go$") then
-        RunSplitExecutor("go run", bufname, "")
-    end
-end
-
--- Create a command 'Sp' to call SplitBelow
-vim.api.nvim_create_user_command("Sp", SplitBelow, {})
--- 키 매핑 설정: Normal 모드에서 F5 키를 누를 때 RunCode 함수를 실행합니다.
-vim.keymap.set("n", "<F5>", RunCode, { noremap = true })
-
-vim.lsp.enable({
-    "gopls",
-    "pyright",
-    "ts_ls",
-    "lua_ls",
-    "tailwindcss",
-    "cssls",
-    "jsonls",
-    "dockerls",
-    "docker_compose_language_service",
-})
-
-vim.api.nvim_create_autocmd("BufWritePre", {
-    pattern = "*.go",
-    callback = function()
-        local params = vim.lsp.util.make_range_params()
-        params.context = { only = { "source.organizeImports" } }
-        -- buf_request_sync defaults to a 1000ms timeout. Depending on your
-        -- machine and codebase, you may want longer. Add an additional
-        -- argument after params if you find that you have to write the file
-        -- twice for changes to be saved.
-        -- E.g., vim.lsp.buf_request_sync(0, "textDocument/codeAction", params, 3000)
-        local result = vim.lsp.buf_request_sync(0, "textDocument/codeAction", params)
-        for cid, res in pairs(result or {}) do
-            for _, r in pairs(res.result or {}) do
-                if r.edit then
-                    local enc = (vim.lsp.get_client_by_id(cid) or {}).offset_encoding or "utf-16"
-                    vim.lsp.util.apply_workspace_edit(r.edit, enc)
-                end
-            end
-        end
-        vim.lsp.buf.format({ async = false })
-    end,
-})
-
-vim.keymap.set("n", "gd", "<C-]>", { noremap = true })
-vim.keymap.set("n", "gb", "<C-o>", { noremap = true })
-vim.keymap.set("n", "gn", "<C-i>", { noremap = true })
-
--- Autocompletion setup
-local cmp = require("cmp")
-cmp.setup({
-    sources = {
-        { name = "ultisnips" },
-        { name = "nvim_lsp" },
-        { name = "path" },
-        { name = "buffer" },
-    },
-    snippet = {
-        expand = function(args)
-            -- You need Neovim v0.10 to use vim.snippet
-            vim.snippet.expand(args.body)
-        end,
-    },
-    mapping = cmp.mapping.preset.insert({
-        ["<C-e>"] = cmp.mapping.close(),
-        -- ["<Tab>"] = cmp.mapping.confirm({ select = true }),
-        -- ["<Tab>"] = cmp.mapping.select_next_item({ behavior = cmp.SelectBehavior.Insert }),
-        ["<Down>"] = cmp.mapping.select_next_item({ behavior = cmp.SelectBehavior.Insert }),
-        ["<Up>"] = cmp.mapping.select_prev_item({ behavior = cmp.SelectBehavior.Insert }),
-    }),
-    formatting = {
-        format = require("lspkind").cmp_format({
-            mode = "symbol",
-            maxwidth = 50,
-            ellipsis_char = "...",
-            show_labelDetails = true,
-        }),
-    },
-})
-
 local filetypes = {
     "bash",
     "sh",
@@ -905,6 +774,145 @@ local filetypes = {
     "yml", -- yaml
 }
 
+---------------------------------------------------------------------------------------
+--- Local Function
+-- Function to add C++ headers
+local function cpplang_header()
+    vim.api.nvim_buf_set_lines(0, 0, -1, false, {
+        "#include <iostream>",
+        "using namespace std;",
+    })
+end
+
+-- Define the SplitBelow function
+local function SplitBelow()
+    vim.cmd("split")
+    vim.cmd("wincmd J")
+end
+
+-- Define the RunSplitPython function
+local function RunSplitExecutor(executor, inputFile, outputFile)
+    for i = 1, vim.fn.winnr("$") do
+        if vim.fn.getwinvar(i, "&buftype") == "terminal" then
+            vim.cmd(i .. "wincmd c")
+            break
+        end
+    end
+
+    SplitBelow()
+    vim.cmd("resize 10")
+    vim.cmd("term " .. executor .. " " .. inputFile .. " " .. outputFile)
+end
+
+-- F5 키를 눌렀을 때 실행할 함수를 설정합니다.
+local function RunCode()
+    local bufname = vim.api.nvim_buf_get_name(0)
+    if bufname:match("%.py$") then
+        RunSplitExecutor("python", bufname, "")
+    elseif bufname:match("%.js$") then
+        RunSplitExecutor("node", bufname, "")
+    elseif bufname:match("%.ts$") then
+        RunSplitExecutor("ts-node", bufname, "")
+    elseif bufname:match("%.scss$") then
+        local filename = bufname:gsub("%.scss$", "")
+        RunSplitExecutor("sass", bufname, filename .. ".css")
+    elseif bufname:match("%.go$") then
+        RunSplitExecutor("go run", bufname, "")
+    end
+end
+
+---------------------------------------------------------------------------------------
+--- Keymap
+vim.keymap.set("n", "gd", "<C-]>", { noremap = true })
+vim.keymap.set("n", "gb", "<C-o>", { noremap = true })
+vim.keymap.set("n", "gn", "<C-i>", { noremap = true })
+vim.keymap.set("n", "gl", vim.diagnostic.open_float, { noremap = true })
+vim.keymap.set("n", "<F5>", RunCode, { noremap = true })
+vim.keymap.set("", "<C-c>", "<Esc>", { noremap = true, silent = true })
+vim.keymap.set("n", ":ㅂ<CR>", ":q<CR>", { silent = true })
+
+-- Clipboard
+vim.keymap.set("n", "y", '"+y', { noremap = true })
+vim.keymap.set("v", "y", '"+y', { noremap = true })
+
+vim.keymap.set("n", "Y", '"+Y', { noremap = true })
+vim.keymap.set("v", "Y", '"+Y', { noremap = true })
+
+vim.keymap.set("n", "x", '"+x', { noremap = true })
+vim.keymap.set("v", "x", '"+x', { noremap = true })
+
+vim.keymap.set("v", "d", '"+d', { noremap = true })
+vim.keymap.set("n", "D", '"+D', { noremap = true })
+vim.keymap.set("v", "D", '"+D', { noremap = true })
+
+vim.keymap.set("n", "c", '"+c', { noremap = true })
+
+vim.keymap.set("n", "s", '"+s', { noremap = true })
+vim.keymap.set("v", "s", '"+s', { noremap = true })
+
+vim.keymap.set("n", "S", '"+S', { noremap = true })
+vim.keymap.set("v", "S", '"+S', { noremap = true })
+
+---------------------------------------------------------------------------------------
+--- Autocommand
+-- FileType 이벤트에 대한 자동 명령을 설정합니다.
+vim.api.nvim_create_autocmd("FileType", {
+    pattern = {
+        "typescript",
+        "javascript",
+        "html",
+        "css",
+        "javascriptreact",
+        "typescriptreact",
+        "lua",
+    },
+    callback = function()
+        vim.opt_local.shiftwidth = 2
+        vim.opt_local.tabstop = 2
+        vim.opt_local.softtabstop = 2
+    end,
+})
+
+vim.api.nvim_create_autocmd("FileType", {
+    pattern = "json",
+    callback = function()
+        vim.opt_local.shiftwidth = 2
+        vim.opt_local.tabstop = 2
+        vim.opt_local.softtabstop = 2
+        vim.g.conceallevel = 0
+        vim.g.vim_json_conceal = 0
+    end,
+})
+
+-- Add headers for new .cc files
+vim.api.nvim_create_autocmd("BufNewFile", {
+    pattern = "*.cc",
+    callback = cpplang_header,
+})
+
+vim.api.nvim_create_autocmd("BufWritePre", {
+    pattern = "*.go",
+    callback = function()
+        local params = vim.lsp.util.make_range_params()
+        params.context = { only = { "source.organizeImports" } }
+        -- buf_request_sync defaults to a 1000ms timeout. Depending on your
+        -- machine and codebase, you may want longer. Add an additional
+        -- argument after params if you find that you have to write the file
+        -- twice for changes to be saved.
+        -- E.g., vim.lsp.buf_request_sync(0, "textDocument/codeAction", params, 3000)
+        local result = vim.lsp.buf_request_sync(0, "textDocument/codeAction", params)
+        for cid, res in pairs(result or {}) do
+            for _, r in pairs(res.result or {}) do
+                if r.edit then
+                    local enc = (vim.lsp.get_client_by_id(cid) or {}).offset_encoding or "utf-16"
+                    vim.lsp.util.apply_workspace_edit(r.edit, enc)
+                end
+            end
+        end
+        vim.lsp.buf.format({ async = false })
+    end,
+})
+
 -- nvim-treesitter highlighting --
 vim.api.nvim_create_autocmd("FileType", {
     pattern = filetypes,
@@ -917,4 +925,61 @@ vim.api.nvim_create_autocmd("FileType", {
         -- indentation, provided by nvim-treesitter
         -- vim.bo.indentexpr = "v:lua.require'nvim-treesitter'.indentexpr()"
     end,
+})
+
+---------------------------------------------------------------------------------------
+--- User command
+vim.api.nvim_create_user_command("Q", "q", { nargs = 0 })
+vim.api.nvim_create_user_command("Nt", "Neotree toggle", {})
+vim.api.nvim_create_user_command("Sp", SplitBelow, {})
+vim.api.nvim_create_user_command("Tn", "tabnew", { nargs = "*" })
+vim.api.nvim_create_user_command("Pwd", "echo expand('%:p')", { nargs = "*" })
+vim.api.nvim_create_user_command("Format", function()
+    require("conform").format({ lsp_fallback = false, timeout_ms = 1000 })
+end, { nargs = "*" })
+
+----------------------------------------------------------------------------------------
+--- LSP
+--Enable (broadcasting) snippet capability for completion
+-- local capabilities = vim.lsp.protocol.make_client_capabilities()
+local capabilities = require("cmp_nvim_lsp").default_capabilities()
+capabilities.textDocument.completion.completionItem.snippetSupport = true
+
+vim.lsp.config("cssls", {
+    capabilities = capabilities,
+})
+vim.lsp.config("html", {
+    capabilities = capabilities,
+})
+vim.lsp.config("jsonls", {
+    capabilities = capabilities,
+})
+local base_on_attach = vim.lsp.config.eslint.on_attach
+vim.lsp.config("eslint", {
+    on_attach = function(client, bufnr)
+        if not base_on_attach then
+            return
+        end
+
+        base_on_attach(client, bufnr)
+        vim.api.nvim_create_autocmd("BufWritePre", {
+            buffer = bufnr,
+            command = "LspEslintFixAll",
+        })
+    end,
+})
+vim.lsp.enable({
+    "gopls",
+    "pyright",
+    "ts_ls",
+    "lua_ls",
+    "tailwindcss",
+    "cssls",
+    -- "css_variables",
+    -- "cssmodules_ls",
+    "html",
+    "jsonls",
+    "eslint",
+    "dockerls",
+    "docker_compose_language_service",
 })
