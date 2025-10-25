@@ -193,6 +193,9 @@ bind --mode=hint <Space> hint.selectFocusedHint
 command yt tabopen -c 유튜브 https://www.youtube.com
 command ytm tabopen -c 유튜브 https://music.youtube.com
 command yts composite tabopen -c 유튜브 https://www.youtube.com/results?search_query= | fillcmdline_notrail
+command ㅛㅅ tabopen -c 유튜브 https://www.youtube.com
+command ㅛ스 tabopen -c 유튜브 https://music.youtube.com
+command ㅛㅅㄴ composite tabopen -c 유튜브 https://www.youtube.com/results?search_query= | fillcmdline_notrail
 
 " For syntax highlighting see https://github.com/tridactyl/vim-tridactyl
 " vim: set filetype=tridactyl
