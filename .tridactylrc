@@ -200,6 +200,7 @@ command ㅛ스 tabopen -c 유튜브 https://music.youtube.com
 command ㅛㅅㄴ composite tabopen -c 유튜브 https://www.youtube.com/results?search_query= | fillcmdline_notrail
 command namu tabopen https://namu.wiki
 command arca tabopen https://arca.live
+command chzzk tabopen https://chzzk.naver.com
 command hotnow tabopen https://arca.live/b/namuhotnow
 command spreadsheets tabopen https://docs.google.com/spreadsheets
 
