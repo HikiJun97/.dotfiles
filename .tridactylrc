@@ -14,6 +14,8 @@ set modeindicator false
 " Binds
 unbind f
 unbind F
+unbind m
+unbind M
 bind q hint
 bind Q hint -b
 bind gF hint -qb
@@ -25,7 +27,7 @@ bind <A-p> pin
 bind <A-m> mute toggle
 bind <F1> help
 bind o fillcmdline open
-bind O current_url open
+bind O fillcmdline open
 bind w fillcmdline winopen
 bind W current_url winopen
 unbind t
@@ -196,6 +198,10 @@ command yts composite tabopen -c 유튜브 https://www.youtube.com/results?searc
 command ㅛㅅ tabopen -c 유튜브 https://www.youtube.com
 command ㅛ스 tabopen -c 유튜브 https://music.youtube.com
 command ㅛㅅㄴ composite tabopen -c 유튜브 https://www.youtube.com/results?search_query= | fillcmdline_notrail
+command namu tabopen https://namu.wiki
+command arca tabopen https://arca.live
+command hotnow tabopen https://arca.live/b/namuhotnow
+command spreadsheets tabopen https://docs.google.com/spreadsheets
 
 " For syntax highlighting see https://github.com/tridactyl/vim-tridactyl
 " vim: set filetype=tridactyl
