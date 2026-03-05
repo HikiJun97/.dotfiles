@@ -206,6 +206,9 @@ command chzzk tabopen https://chzzk.naver.com
 command 촠카 tabopen https://chzzk.naver.com
 command hotnow tabopen https://arca.live/b/namuhotnow
 command spreadsheets tabopen https://docs.google.com/spreadsheets
+command endict tabopen https://en.dict.naver.com
+command kodict tabopen https://ko.dict.naver.com
+command jadict tabopen https://ja.dict.naver.com
 
 " For syntax highlighting see https://github.com/tridactyl/vim-tridactyl
 " vim: set filetype=tridactyl
