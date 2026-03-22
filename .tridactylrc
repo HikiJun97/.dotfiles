@@ -207,8 +207,15 @@ command 촠카 tabopen https://chzzk.naver.com
 command hotnow tabopen https://arca.live/b/namuhotnow
 command spreadsheets tabopen https://docs.google.com/spreadsheets
 command endict tabopen https://en.dict.naver.com
+command 두얓ㅅ tabopen https://en.dict.naver.com
 command kodict tabopen https://ko.dict.naver.com
+command ㅏㅐ얓ㅅ tabopen https://ko.dict.naver.com
 command jadict tabopen https://ja.dict.naver.com
+command ㅓㅁ얓ㅅ tabopen https://ja.dict.naver.com
+command webui tabopen https://hikijun.store
+command ㅈ듀ㅕㅑ tabopen https://hikijun.store
+command jellyfin tabopen https://jellyfin.hikijun.store
+command ㅓ디ㅣㅛ랴ㅜ tabopen https://jellyfin.hikijun.store
 
 " For syntax highlighting see https://github.com/tridactyl/vim-tridactyl
 " vim: set filetype=tridactyl
