@@ -217,5 +217,7 @@ command ㅈ듀ㅕㅑ tabopen https://hikijun.store
 command jellyfin tabopen https://jellyfin.hikijun.store
 command ㅓ디ㅣㅛ랴ㅜ tabopen https://jellyfin.hikijun.store
 
+command sourcemine source --url https://raw.githubusercontent.com/HikiJun97/.dotfiles/refs/heads/main/.tridactylrc
+
 " For syntax highlighting see https://github.com/tridactyl/vim-tridactyl
 " vim: set filetype=tridactyl
