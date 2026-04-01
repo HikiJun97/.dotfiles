@@ -10,12 +10,15 @@ set smoothscroll true
 set editorcmd /Applications/WezTerm.app/Contents/MacOS/wezterm start --always-new-process nvim
 set hintchars hjklasdfgyuiopwertnmzxcvb
 set modeindicator false
+bind m mute toggle
 
 " Binds
 unbind f
 unbind F
 unbind m
 unbind M
+unbind t
+unbind tn
 bind q hint
 bind Q hint -b
 bind gF hint -qb
@@ -30,7 +33,6 @@ bind o fillcmdline open
 bind O fillcmdline open
 bind w fillcmdline winopen
 bind W current_url winopen
-unbind t
 bind ]] followpage next
 bind [[ followpage prev
 bind [c urlincrement -1
