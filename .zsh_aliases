@@ -15,6 +15,7 @@ alias init.lua='nvim ~/.config/nvim/init.lua'
 alias activate='source .venv/bin/activate; prompt pure'
 alias pynvim='source $HOME/pynvim/bin/activate'
 alias nightly='NVIM_APPNAME=nvim11 bob run nightly'
+alias sqlite=sqlite3
 
 gpp (){
 	g++ "$1" && ./a.out
@@ -26,3 +27,24 @@ mkcd (){
 	mkdir -p -- "$1" && cd -P -- "$1"
 }
 
+nvim() {
+  local dir="$PWD"
+  local venv=""
+
+  # 현재 디렉토리부터 루트까지 .venv 탐색
+  while [[ "$dir" != "/" ]]; do
+    if [[ -f "$dir/.venv/bin/activate" ]]; then
+      venv="$dir/.venv/bin/activate"
+      break
+    fi
+    dir="$(dirname "$dir")"
+  done
+
+  if [[ -n "$venv" ]]; then
+    # 가상환경 활성화 후 nvim 실행
+    source "$venv"
+    command /Users/sgn04088/.local/share/bob/nvim-bin/nvim "$@"
+  else
+    command /Users/sgn04088/.local/share/bob/nvim-bin/nvim "$@"
+  fi
+}
