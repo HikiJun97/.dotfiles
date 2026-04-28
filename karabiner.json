@@ -16,10 +16,6 @@
                       },
                       {
                         "is_keyboard": true,
-                        "product_id": 33
-                      },
-                      {
-                        "is_keyboard": true,
                         "product_id": 615
                       },
                       {
@@ -53,10 +49,6 @@
                       {
                         "is_keyboard": true,
                         "location_id": 165
-                      },
-                      {
-                        "is_keyboard": true,
-                        "product_id": 33
                       },
                       {
                         "is_keyboard": true,
@@ -96,8 +88,10 @@
                   {
                     "identifiers": [
                       {
+                        "_comment": "HHKB",
                         "is_keyboard": true,
-                        "product_id": 33
+                        "product_id": 33,
+                        "vendor_id": 1278
                       }
                     ],
                     "type": "device_unless"
@@ -120,7 +114,8 @@
                     "identifiers": [
                       {
                         "is_keyboard": true,
-                        "product_id": 33
+                        "product_id": 33,
+                        "vendor_id": 1278
                       }
                     ],
                     "type": "device_unless"
@@ -1333,14 +1328,6 @@
         {
           "identifiers": {
             "is_keyboard": true,
-            "product_id": 615,
-            "vendor_id": 1452
-          },
-          "simple_modifications": []
-        },
-        {
-          "identifiers": {
-            "is_keyboard": true,
             "product_id": 33,
             "vendor_id": 1278
           },
@@ -1359,7 +1346,10 @@
         }
       ],
       "name": "Default profile",
-      "selected": true
+      "selected": true,
+      "virtual_hid_keyboard": {
+        "keyboard_type_v2": "ansi"
+      }
     },
     {
       "complex_modifications": {
