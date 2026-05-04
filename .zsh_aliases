@@ -1,7 +1,6 @@
 alias cmakelists='cmake CMakeLists.txt'
 alias vi='nvim'
 # alias nv='nvim'
-alias uuu='brew update && brew upgrade && brew cleanup'
 alias delswp='rm ~/.local/share/nvim/swap/*.swp; rm ~/.local/state/nvim/swap/*.swp;'
 # alias python-ctags="ctags -R --fields=+l --languages=python --python-kinds=-i -f ./tags . $(python -c "import os, sys; print(' '.join('{}'.format(d) for d in sys.path if os.path.isdir(d)))")"
 # alias nvidia-watch='watch -n 0.1 nvidia-smi'
@@ -27,6 +26,21 @@ mkcd (){
 	mkdir -p -- "$1" && cd -P -- "$1"
 }
 
+uuu() {
+  if [[ "$OSTYPE" == "darwin"* ]]; then
+    brew update && brew upgrade && brew cleanup
+  elif command -v apt &>/dev/null; then
+    sudo apt update && sudo apt upgrade -y && sudo apt autoremove -y
+  elif command -v dnf &>/dev/null; then
+    sudo dnf upgrade -y && sudo dnf autoremove -y
+  elif command -v pacman &>/dev/null; then
+    sudo pacman -Syu --noconfirm
+  else
+    echo "uuu: unsupported package manager"
+    return 1
+  fi
+}
+
 nvim() {
   local dir="$PWD"
   local venv=""
@@ -47,4 +61,11 @@ nvim() {
   else
     command /Users/sgn04088/.local/share/bob/nvim-bin/nvim "$@"
   fi
+}
+#
+# fzf로 파일 찾아 nvim으로 열기
+fv() {
+  local file
+  file=$(fzf --preview 'bat --color=always {}' --preview-window=right:60%)
+  [[ -n "$file" ]] && nvim "$file"
 }
