@@ -987,21 +987,6 @@ else
 		end,
 	})
 
-	-- nvim-treesitter highlighting --
-	vim.api.nvim_create_autocmd("FileType", {
-		pattern = filetypes,
-		callback = function()
-			-- syntax highlighting, provided by Neovim
-			vim.treesitter.start()
-			-- folds, provided by Neovim
-			vim.wo.foldexpr = "v:lua.vim.treesitter.foldexpr()"
-			vim.wo.foldmethod = "manual"
-			-- indentation, provided by nvim-treesitter
-			-- vim.bo.indentexpr = "v:lua.require'nvim-treesitter'.indentexpr()"
-		end,
-	})
-
-	---------------------------------------------------------------------------------------
 	--- User Command
 	vim.api.nvim_create_user_command("Q", "q", { nargs = 0 })
 	vim.api.nvim_create_user_command("Nt", "Neotree toggle", {})
@@ -1014,9 +999,8 @@ else
 	vim.api.nvim_create_user_command("CC", "ClaudeCode", { nargs = 0 })
 	vim.api.nvim_create_user_command("LspInfo", ":checkhealth vim.lsp", { nargs = 0 })
 
-	----------------------------------------------------------------------------------------
 	--- LSP
-	--Enable (broadcasting) snippet capability for completion
+	-- Enable (broadcasting) snippet capability for completion
 	-- local capabilities = vim.lsp.protocol.make_client_capabilities()
 	local capabilities = require("cmp_nvim_lsp").default_capabilities()
 	capabilities.textDocument.completion.completionItem.snippetSupport = true
