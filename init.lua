@@ -888,7 +888,7 @@ else
 	local function RunCode()
 		local bufname = vim.api.nvim_buf_get_name(0)
 		if bufname:match("%.py$") then
-			RunSplitExecutor("python", bufname, "")
+			RunSplitExecutor("python3", bufname, "")
 		elseif bufname:match("%.js$") then
 			RunSplitExecutor("node", bufname, "")
 		elseif bufname:match("%.ts$") then
