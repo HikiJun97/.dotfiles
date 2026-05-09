@@ -337,32 +337,22 @@ else
 			"stevearc/conform.nvim",
 			lazy = false,
 			config = function()
+				local js_formatters = function(bufnr)
+					if vim.fs.root(bufnr, { "biome.json", "biome.jsonc" }) then
+						return { "biome" }
+					end
+					return { "prettierd", "prettier", stop_after_first = true }
+				end
 				require("conform").setup({
 					formatters_by_ft = {
 						lua = { "stylua" },
-						-- Conform will run multiple formatters sequentially
 						python = { "ruff_organize_imports", "ruff_fix", "ruff_format" },
-						-- python = function(bufnr)
-						--     if require("conform").get_formatter_info("ruff_format", bufnr).available then
-						--         return { "ruff_format" }
-						--     else
-						--         return { "isort", "black" }
-						--     end
-						-- end,
-						-- Use a sub-list to run only the first available formatter
-						javascript = { "biome", "prettierd", "prettier" },
+						javascript = js_formatters,
+						javascriptreact = js_formatters,
+						typescript = js_formatters,
+						typescriptreact = js_formatters,
+						vue = js_formatters,
 						go = { "goimports", "gofmt" },
-					},
-					formatters = {
-						biome = {
-							meta = { stop_after_first = true },
-						},
-						prettierd = {
-							meta = { stop_after_first = true },
-						},
-						prettier = {
-							meta = { stop_after_first = true },
-						},
 					},
 					format_on_save = {
 						timeout_ms = 500,
@@ -606,41 +596,41 @@ else
 			keys = {
 				{ "<F2>", ":Neotree toggle<CR>", { noremap = true } },
 			},
-		},
-		config = function()
-			require("neo-tree").setup({
-				filesystem = {
-					commands = {
-						avante_add_files = function(state)
-							local node = state.tree:get_node()
-							local filepath = node:get_id()
-							local relative_path = require("avante.utils").relative_path(filepath)
+			config = function()
+				require("neo-tree").setup({
+					filesystem = {
+						commands = {
+							avante_add_files = function(state)
+								local node = state.tree:get_node()
+								local filepath = node:get_id()
+								local relative_path = require("avante.utils").relative_path(filepath)
 
-							local sidebar = require("avante").get()
+								local sidebar = require("avante").get()
 
-							local open = sidebar:is_open()
-							-- ensure avante sidebar is open
-							if not open then
-								require("avante.api").ask()
-								sidebar = require("avante").get()
-							end
+								local open = sidebar:is_open()
+								-- ensure avante sidebar is open
+								if not open then
+									require("avante.api").ask()
+									sidebar = require("avante").get()
+								end
 
-							sidebar.file_selector:add_selected_file(relative_path)
+								sidebar.file_selector:add_selected_file(relative_path)
 
-							-- remove neo tree buffer
-							if not open then
-								sidebar.file_selector:remove_selected_file("neo-tree filesystem [1]")
-							end
-						end,
-					},
-					window = {
-						mappings = {
-							["oa"] = "avante_add_files",
+								-- remove neo tree buffer
+								if not open then
+									sidebar.file_selector:remove_selected_file("neo-tree filesystem [1]")
+								end
+							end,
+						},
+						window = {
+							mappings = {
+								["oa"] = "avante_add_files",
+							},
 						},
 					},
-				},
-			})
-		end,
+				})
+			end,
+		},
 		{
 			"stevearc/oil.nvim",
 			---@module 'oil'
