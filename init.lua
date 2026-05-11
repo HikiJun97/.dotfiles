@@ -906,7 +906,7 @@ else
 	vim.keymap.set("n", "gnv", "<C-w>v<C-w>l<C-]>", { noremap = true })
 	vim.keymap.set("n", "gnh", "<C-w>s<C-]>", { noremap = true })
 
-	vim.keymap.set("n", "gl", vim.diagnostic.open_float, { noremap = true }
+	vim.keymap.set("n", "gl", vim.diagnostic.open_float, { noremap = true })
 	vim.keymap.set("n", "<F5>", RunCode, { noremap = true })
 	vim.keymap.set("", "<C-c>", "<Esc>", { noremap = true, silent = true })
 	vim.keymap.set("n", ":ㅂ<CR>", ":q<CR>", { silent = true })
