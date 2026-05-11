@@ -251,7 +251,7 @@ else
 					"pyright",
 					"tailwindcss",
 					"cssls",
-					"ts_ls",
+					-- "ts_ls",
 					"vtsls",
 					"vue_ls",
 					"lua_ls",
@@ -283,10 +283,16 @@ else
 		{
 			"nvim-treesitter/nvim-treesitter",
 			lazy = false,
-			branch = "main",
 			build = ":TSUpdate",
 			config = function()
-				require("nvim-treesitter").install(languages)
+				require("nvim-treesitter").install({ "all" })
+				vim.api.nvim_create_autocmd("FileType", {
+					pattern = languages,
+					callback = function()
+						pcall(vim.treesitter.start)
+						-- vim.bo.indentexpr = "v:lua.require'nvim-treesitter'.indentexpr()"
+					end,
+				})
 			end,
 		},
 		{
@@ -896,7 +902,11 @@ else
 	vim.keymap.set("n", "gd", "<C-]>", { noremap = true })
 	vim.keymap.set("n", "gb", "<C-o>", { noremap = true })
 	vim.keymap.set("n", "gn", "<C-i>", { noremap = true })
-	vim.keymap.set("n", "gl", vim.diagnostic.open_float, { noremap = true })
+	vim.keymap.set("n", "gnt", "<C-w><C-]><C-w>T", { noremap = true })
+	vim.keymap.set("n", "gnv", "<C-w>v<C-w>l<C-]>", { noremap = true })
+	vim.keymap.set("n", "gnh", "<C-w>s<C-]>", { noremap = true })
+
+	vim.keymap.set("n", "gl", vim.diagnostic.open_float, { noremap = true }
 	vim.keymap.set("n", "<F5>", RunCode, { noremap = true })
 	vim.keymap.set("", "<C-c>", "<Esc>", { noremap = true, silent = true })
 	vim.keymap.set("n", ":ㅂ<CR>", ":q<CR>", { silent = true })
@@ -1040,7 +1050,9 @@ else
 	-- or even
 	-- local vue_language_server_path = vim.fn.stdpath('data') .. "/mason/packages/vue-language-server/node_modules/@vue/language-server"
 	local vue_language_server_path =
-		"~/.local/share/nvim/mason/packages/vue-language-server/node_modules/@vue/language-server"
+		vim.fn.expand("~/.local/share/nvim/mason/packages/vue-language-server/node_modules/@vue/language-server")
+
+	local tsserver_filetypes = { "typescript", "javascript", "javascriptreact", "typescriptreact", "vue" }
 	local vue_plugin = {
 		name = "@vue/typescript-plugin",
 		location = vue_language_server_path,
@@ -1057,8 +1069,10 @@ else
 				},
 			},
 		},
-		filetypes = { "typescript", "javascript", "javascriptreact", "typescriptreact", "vue" },
+		filetypes = tsserver_filetypes,
 	})
+	local vue_ls_config = {}
+	vim.lsp.config("vue_ls", vue_ls_config)
 
 	vim.lsp.enable({
 		"gopls",
