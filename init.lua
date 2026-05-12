@@ -160,6 +160,7 @@ else
 		"sql",
 		"ssh_config",
 		"svelte",
+		"swift",
 		"toml",
 		"tsx",
 		"typescript",
@@ -1160,5 +1161,6 @@ else
 		"dockerls",
 		"docker_compose_language_service",
 		"jdtls",
+		"sourcekit",
 	})
 end
