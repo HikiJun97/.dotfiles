@@ -585,20 +585,20 @@ else
 		},
 		-- Finder --
 		-- {
-		--     "nvim-tree/nvim-tree.lua",
-		--     version = "*",
-		--     lazy = false,
-		--     dependencies = {
-		--         "nvim-tree/nvim-web-devicons",
-		--     },
-		--     config = function()
-		--         require("nvim-tree").setup({})
-		--     end,
+		-- 	"nvim-tree/nvim-tree.lua",
+		-- 	version = "*",
+		-- 	lazy = false,
+		-- 	dependencies = {
+		-- 		"nvim-tree/nvim-web-devicons",
+		-- 	},
+		-- 	config = function()
+		-- 		require("nvim-tree").setup({})
+		-- 	end,
 		-- },
 		{
 			"nvim-neo-tree/neo-tree.nvim",
 			branch = "v3.x",
-			lazy = false,
+			lazy = true,
 			dependencies = {
 				"nvim-lua/plenary.nvim",
 				"MunifTanjim/nui.nvim",
@@ -628,8 +628,38 @@ else
 				{ "<F2>", ":Neotree toggle<CR>", { noremap = true } },
 			},
 			config = function()
+				local function on_rename(old_path, new_path)
+					local clients = vim.lsp.get_clients()
+					for _, client in ipairs(clients) do
+						if client.supports_method("workspace/willRenameFiles") then
+							local resp = client.request_sync("workspace/willRenameFiles", {
+								files = {
+									{ oldUri = vim.uri_from_fname(old_path), newUri = vim.uri_from_fname(new_path) },
+								},
+							}, 1000)
+							if resp and resp.result then
+								vim.lsp.util.apply_workspace_edit(resp.result, "utf-8")
+							end
+						end
+					end
+				end
+
 				require("neo-tree").setup({
-					filesystem = {
+					event_handlers = {
+						{
+							event = "file_moved",
+							handler = function(args)
+								on_rename(args.source, args.destination)
+							end,
+						},
+						{
+							event = "file_renamed",
+							handler = function(args)
+								on_rename(args.source, args.destination)
+							end,
+						},
+					},
+					system = {
 						commands = {
 							avante_add_files = function(state)
 								local node = state.tree:get_node()
@@ -661,6 +691,21 @@ else
 					},
 				})
 			end,
+		},
+		{
+			{
+				"antosha417/nvim-lsp-file-operations",
+				dependencies = {
+					"nvim-lua/plenary.nvim",
+					-- Uncomment whichever supported plugin(s) you use
+					-- "nvim-tree/nvim-tree.lua",
+					"nvim-neo-tree/neo-tree.nvim",
+					-- "simonmclean/triptych.nvim"
+				},
+				config = function()
+					require("lsp-file-operations").setup()
+				end,
+			},
 		},
 		{
 			"stevearc/oil.nvim",
@@ -869,6 +914,7 @@ else
 		"typescript",
 		"ts", -- typescript
 		"vim", -- vim
+		"vue",
 		-- vimdoc는 help 파일용 (별도 설정 불필요)
 		"xml", -- xml
 		"yaml",
@@ -961,6 +1007,20 @@ else
 
 	vim.keymap.set("n", "S", '"+S', { noremap = true })
 	vim.keymap.set("v", "S", '"+S', { noremap = true })
+
+	vim.keymap.set("n", "<leader>df", "<cmd>DiffviewFileHistory<CR>", { desc = "DiffviewFileHistory" })
+	vim.keymap.set("n", "<leader>gb", function()
+		local wins = vim.api.nvim_list_wins()
+		for _, win in ipairs(wins) do
+			local buf = vim.api.nvim_win_get_buf(win)
+			local ft = vim.api.nvim_get_option_value("filetype", { buf = buf })
+			if ft == "gitsigns-blame" then
+				vim.api.nvim_win_close(win, true)
+				return
+			end
+		end
+		require("gitsigns").blame()
+	end)
 
 	---------------------------------------------------------------------------------------
 	--- Autocommand
@@ -1055,6 +1115,8 @@ else
 	end, { nargs = "*" })
 	vim.api.nvim_create_user_command("CC", "ClaudeCode", { nargs = 0 })
 	vim.api.nvim_create_user_command("LspInfo", ":checkhealth vim.lsp", { nargs = 0 })
+	vim.api.nvim_create_user_command("Blame", "Gitsigns blame", { nargs = 0 })
+	vim.api.nvim_create_user_command("BlameLine", "Gitsigns blame_line", { nargs = 0 })
 
 	--- LSP
 	-- Enable (broadcasting) snippet capability for completion
