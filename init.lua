@@ -166,6 +166,7 @@ else
 		"typescript",
 		"vim",
 		"vimdoc",
+		"vue",
 		"xml",
 		"yaml",
 	}
@@ -381,6 +382,7 @@ else
 						typescript = js_formatters,
 						typescriptreact = js_formatters,
 						vue = js_formatters,
+						json = { "prettier", stop_after_first = true },
 						go = { "goimports", "gofmt" },
 					},
 					format_on_save = {
@@ -1020,6 +1022,28 @@ else
 		end,
 	})
 
+	-- Open quickfix list in vsplit
+	vim.api.nvim_create_autocmd("FileType", {
+		pattern = "qf",
+		callback = function()
+			vim.keymap.set("n", "<C-v>", function()
+				local item = vim.fn.getqflist()[vim.fn.line(".")]
+				vim.cmd("wincmd p") -- 이전 창으로 포커스 이동
+				vim.cmd("vsplit")
+				vim.cmd("buffer " .. item.bufnr)
+				vim.api.nvim_win_set_cursor(0, { item.lnum, item.col - 1 })
+			end, { buffer = true })
+		end,
+	})
+
+	-- Close quickfix
+	vim.api.nvim_create_autocmd("FileType", {
+		pattern = "qf",
+		callback = function()
+			vim.keymap.set("n", "q", "<cmd>cclose<cr>", { buffer = true })
+		end,
+	})
+
 	--- User Command
 	vim.api.nvim_create_user_command("Q", "q", { nargs = 0 })
 	vim.api.nvim_create_user_command("Nt", "Neotree toggle", {})
@@ -1072,17 +1096,29 @@ else
 	-- local vue_language_server_path = vim.fn.expand '$MASON/packages' .. '/vue-language-server' .. '/node_modules/@vue/language-server'
 	-- or even
 	-- local vue_language_server_path = vim.fn.stdpath('data') .. "/mason/packages/vue-language-server/node_modules/@vue/language-server"
-	local vue_language_server_path =
-		vim.fn.expand("~/.local/share/nvim/mason/packages/vue-language-server/node_modules/@vue/language-server")
 
+	local vue_language_server_path = vim.fn.expand("$MASON/packages")
+		.. "/vue-language-server"
+		.. "/node_modules/@vue/language-server"
 	local tsserver_filetypes = { "typescript", "javascript", "javascriptreact", "typescriptreact", "vue" }
+
 	local vue_plugin = {
 		name = "@vue/typescript-plugin",
 		location = vue_language_server_path,
 		languages = { "vue" },
 		configNamespace = "typescript",
 	}
-	vim.lsp.config("vtsls", {
+
+	local vtsls_config = {
+		-- vtsls or ts_ls
+		on_attach = function(client)
+			local existing_capabilities = client.server_capabilities
+			if vim.bo.filetype == "vue" then
+				existing_capabilities.semanticTokensProvider.full = false
+			else
+				existing_capabilities.semanticTokensProvider.full = true
+			end
+		end,
 		settings = {
 			vtsls = {
 				tsserver = {
@@ -1093,9 +1129,27 @@ else
 			},
 		},
 		filetypes = tsserver_filetypes,
-	})
-	local vue_ls_config = {}
-	vim.lsp.config("vue_ls", vue_ls_config)
+	}
+	vim.lsp.config("vtsls", vtsls_config)
+
+	local ts_ls_config = {
+		on_attach = function(client)
+			local existing_capabilities = client.server_capabilities
+			if vim.bo.filetype == "vue" then
+				existing_capabilities.semanticTokensProvider.full = false
+			else
+				existing_capabilities.semanticTokensProvider.full = true
+			end
+		end,
+		init_options = {
+			plugins = {
+				vue_plugin,
+			},
+		},
+		filetypes = tsserver_filetypes,
+	}
+	vim.lsp.config("ts_ls", ts_ls_config)
+
 	vim.lsp.config("lua_ls", {
 		on_init = function(client)
 			if client.workspace_folders then
@@ -1147,9 +1201,9 @@ else
 	vim.lsp.enable({
 		"gopls",
 		"pyright",
-		"vtsls",
+		-- "vtsls",
 		"vue_ls",
-		-- "ts_ls",
+		"ts_ls",
 		"lua_ls",
 		"tailwindcss",
 		"cssls",
