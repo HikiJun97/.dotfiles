@@ -61,7 +61,6 @@ else
 	-- }
 
 	-- 필수 설정들만 남김
-	vim.opt.background = "dark"
 	vim.opt.number = true
 	vim.opt.autowrite = true
 	vim.opt.smartcase = true
@@ -170,6 +169,77 @@ else
 		"xml",
 		"yaml",
 	}
+
+	local gh = function(repo)
+		return "https://github.com/" .. repo
+	end
+
+	-- Simple colorschemes (no extra config)
+	vim.pack.add({
+		gh("rktjmp/lush.nvim"),
+		gh("zenbones-theme/zenbones.nvim"),
+		gh("morhetz/gruvbox"),
+		gh("NLKNguyen/papercolor-theme"),
+		gh("sainnhe/sonokai"),
+		gh("sainnhe/gruvbox-material"),
+		gh("rakr/vim-one"),
+		gh("sainnhe/edge"),
+		gh("connorholyday/vim-snazzy"),
+		gh("junegunn/seoul256.vim"),
+		gh("nanotech/jellybeans.vim"),
+		gh("patstockwell/vim-monokai-tasty"),
+		gh("tomasr/molokai"),
+		gh("bluz71/vim-moonfly-colors"),
+		gh("cocopon/iceberg.vim"),
+		gh("ghifarit53/tokyonight-vim"),
+		gh("bluz71/vim-nightfly-guicolors"),
+		gh("mangeshrex/everblush.vim"),
+		gh("tjdevries/colorbuddy.nvim"),
+		gh("bbenzikry/snazzybuddy.nvim"),
+		gh("catppuccin/nvim"),
+		gh("rebelot/kanagawa.nvim"),
+		gh("ayu-theme/ayu-vim"),
+		gh("EdenEast/nightfox.nvim"),
+	})
+
+	-- Colorschemes with extra vim.g config
+	vim.pack.add({ gh("joshdick/onedark.vim") })
+	vim.g.onedark_terminal_italics = 1
+
+	vim.pack.add({ gh("sainnhe/everforest") })
+	vim.g.everforest_background = "soft"
+
+	vim.pack.add({ gh("loctvl842/monokai-pro.nvim") })
+	require("monokai-pro").setup({ transparent_background = true })
+
+	vim.pack.add({ gh("shawilly/ponokai") })
+	vim.g.sonokai_enable_italic = true
+
+	vim.pack.add({ gh("marko-cerovac/material.nvim") })
+	vim.g.material_style = "lighter"
+
+	vim.pack.add({ gh("kaicataldo/material.vim") })
+	vim.g.material_theme_style = "dark-community"
+
+	vim.pack.add({ gh("rose-pine/neovim") })
+
+	vim.pack.add({ gh("drewtempelmeyer/palenight.vim") })
+	vim.g.palenight_terminal_italics = true
+
+	-- sonph/onehalf: rtp 옵션 필요 — vim.pack은 rtp 서브디렉터리 지정 미지원
+	-- 수동으로 rtp에 추가해야 함
+	vim.pack.add({ gh("sonph/onehalf") })
+	vim.opt.rtp:append(vim.fn.stdpath("data") .. "/site/pack/core/opt/onehalf/vim")
+
+	vim.g.gruvbox_contrast_dark = "soft"
+	vim.g.gruvbox_contrast_light = "soft"
+
+	vim.g.gruvbox_material_enable_italic = true
+	vim.g.gruvbox_material_background = "medium"
+	vim.g.gruvbox_material_foreground = "material"
+
+	vim.opt.background = "dark"
+	vim.cmd.colorscheme("gruvbox-material")
 
 	-- Lazy.nvim configuration
 	require("lazy").setup({
@@ -394,6 +464,86 @@ else
 		},
 		{
 			"lewis6991/gitsigns.nvim",
+			opts = {
+				on_attach = function(bufnr)
+					local gitsigns = require("gitsigns")
+
+					local function map(mode, l, r, opts)
+						opts = opts or {}
+						opts.buffer = bufnr
+						vim.keymap.set(mode, l, r, opts)
+					end
+
+					-- Navigation
+					map("n", "]c", function()
+						if vim.wo.diff then
+							vim.cmd.normal({ "]c", bang = true })
+						else
+							gitsigns.nav_hunk("next")
+						end
+					end)
+
+					map("n", "[c", function()
+						if vim.wo.diff then
+							vim.cmd.normal({ "[c", bang = true })
+						else
+							gitsigns.nav_hunk("prev")
+						end
+					end)
+
+					-- Actions
+					map("n", "<leader>hs", gitsigns.stage_hunk)
+					map("n", "<leader>hr", gitsigns.reset_hunk)
+
+					map("v", "<leader>hs", function()
+						gitsigns.stage_hunk({ vim.fn.line("."), vim.fn.line("v") })
+					end)
+
+					map("v", "<leader>hr", function()
+						gitsigns.reset_hunk({ vim.fn.line("."), vim.fn.line("v") })
+					end)
+
+					map("n", "<leader>hS", gitsigns.stage_buffer)
+					map("n", "<leader>hR", gitsigns.reset_buffer)
+					map("n", "<leader>hp", gitsigns.preview_hunk)
+					map("n", "<leader>hi", gitsigns.preview_hunk_inline)
+
+					map("n", "<leader>hb", function()
+						gitsigns.blame_line({ full = true })
+					end)
+
+					map("n", "<leader>hB", function()
+						local wins = vim.api.nvim_list_wins()
+						for _, win in ipairs(wins) do
+							local buf = vim.api.nvim_win_get_buf(win)
+							local ft = vim.api.nvim_get_option_value("filetype", { buf = buf })
+							if ft == "gitsigns-blame" then
+								vim.api.nvim_win_close(win, true)
+								return
+							end
+						end
+						gitsigns.blame()
+					end)
+
+					map("n", "<leader>hd", gitsigns.diffthis)
+
+					map("n", "<leader>hD", function()
+						gitsigns.diffthis("~")
+					end)
+
+					map("n", "<leader>hQ", function()
+						gitsigns.setqflist("all")
+					end)
+					map("n", "<leader>hq", gitsigns.setqflist)
+
+					-- Toggles
+					map("n", "<leader>tb", gitsigns.toggle_current_line_blame)
+					map("n", "<leader>tw", gitsigns.toggle_word_diff)
+
+					-- Text object
+					map({ "o", "x" }, "ih", gitsigns.select_hunk)
+				end,
+			},
 		},
 		{
 			"sindrets/diffview.nvim",
@@ -758,103 +908,117 @@ else
 		},
 
 		-- ################### Colorschemes ###################
-		{ "morhetz/gruvbox" }, -- Provides the Gruvbox color scheme, loaded immediately
-		{ "NLKNguyen/papercolor-theme" }, -- Offers a highly readable color scheme
-		{ "sainnhe/sonokai" }, -- Provides the Sonokai color scheme
-		{
-			"joshdick/onedark.vim",
-			config = function()
-				vim.g.onedark_terminal_italics = 1
-			end,
-		}, -- Offers the One Dark color scheme
-		{ "rakr/vim-one" }, -- Provides the One color scheme from Atom editor
-		{ "sainnhe/edge" }, -- Offers the Edge color scheme
-		{ "connorholyday/vim-snazzy" }, -- Provides the Snazzy color scheme
-		{ "junegunn/seoul256.vim" }, -- Seoul256 color scheme
-		{
-			"nanotech/jellybeans.vim",
-		}, -- Colorful, dark color scheme
-		{
-			"sainnhe/everforest",
-			config = function()
-				vim.g.everforest_background = "soft"
-			end,
-		}, -- Green-based warm color scheme
-		{
-			"loctvl842/monokai-pro.nvim",
-			lazy = false,
-			priority = 1000,
-			opts = {
-				transparent_background = true,
-			},
-			config = function()
-				vim.cmd("colorscheme monokai-pro")
-			end,
-		},
-		{ "patstockwell/vim-monokai-tasty" }, -- Monokai-tasty color scheme
-		{
-			"sonph/onehalf",
-			lazy = { rtp = "vim" },
-		}, -- Light/Dark color scheme based on Atom's One
-		{
-			"tomasr/molokai",
-		}, -- Molokai color scheme
-		{ "bluz71/vim-moonfly-colors" }, -- Dark color scheme with vibrant colors
-		{ "cocopon/iceberg.vim" }, -- Dark blue color scheme
-		{ "ghifarit53/tokyonight-vim" }, -- Tokyo Night color scheme
-		{ "bluz71/vim-nightfly-guicolors" }, -- Dark color scheme with bright accents
-		{ "mangeshrex/everblush.vim" }, -- Soft, dark color scheme with vibrant colors
-		{ "tjdevries/colorbuddy.nvim" }, -- Helper for creating Neovim color schemes
-		{
-			"bbenzikry/snazzybuddy.nvim",
-			--	    name = 'snazzybuddy',
-			--	    lazy = false,
-			--	    priority = 1000,
-			--	    config = snazzybuddy
-		}, -- Clean, vibrant color scheme based on Hyper Snazzy
-		{
-			"catppuccin/nvim",
-			--	    name = "catppuccin",
-			--	    lazy = false,
-			--	    priority = 1000,
-			--	    config = catppuccin_frappe
-		}, -- Smooth and comfy Neovim color scheme
-		{ "rebelot/kanagawa.nvim" },
-		{
-			"shawilly/ponokai",
-			lazy = false,
-			priority = 1000,
-			config = function()
-				vim.g.sonokai_enable_italic = true
-			end,
-		},
-		{
-			"marko-cerovac/material.nvim",
-			config = function()
-				vim.g.material_style = "lighter"
-			end,
-		},
-		{
-			"kaicataldo/material.vim",
-			config = function()
-				vim.g.material_theme_style = "dark-community"
-			end,
-		},
-		{
-			"rose-pine/neovim",
-			name = "rose-pine",
-			-- config = function()
-			-- 	require("rose-pine").setup({
-			-- 	})
-			-- end,
-		},
-		{
-			"drewtempelmeyer/palenight.vim",
-			config = function()
-				vim.g.palenight_terminal_italics = true
-			end,
-		},
-		{ "ayu-theme/ayu-vim" },
+		-- {
+		-- 	"zenbones-theme/zenbones.nvim",
+		-- 	-- Optionally install Lush. Allows for more configuration or extending the colorscheme
+		-- 	-- If you don't want to install lush, make sure to set g:zenbones_compat = 1
+		-- 	-- In Vim, compat mode is turned on as Lush only works in Neovim.
+		-- 	dependencies = "rktjmp/lush.nvim",
+		-- 	lazy = false,
+		-- 	priority = 1000,
+		-- 	-- you can set set configuration options here
+		-- 	-- config = function()
+		-- 	--     vim.g.zenbones_darken_comments = 45
+		-- 	--     vim.cmd.colorscheme('zenbones')
+		-- 	-- end
+		-- },
+		-- { "morhetz/gruvbox" },
+		-- { "NLKNguyen/papercolor-theme" },
+		-- { "sainnhe/sonokai" },
+		-- {
+		-- 	"joshdick/onedark.vim",
+		-- 	config = function()
+		-- 		vim.g.onedark_terminal_italics = 1
+		-- 	end,
+		-- },
+		-- { "rakr/vim-one" },
+		-- { "sainnhe/edge" },
+		-- { "connorholyday/vim-snazzy" },
+		-- { "junegunn/seoul256.vim" },
+		-- {
+		-- 	"nanotech/jellybeans.vim",
+		-- },
+		-- {
+		-- 	"sainnhe/everforest",
+		-- 	config = function()
+		-- 		vim.g.everforest_background = "soft"
+		-- 	end,
+		-- }, -- Green-based warm color scheme
+		-- {
+		-- 	"loctvl842/monokai-pro.nvim",
+		-- 	lazy = false,
+		-- 	priority = 1000,
+		-- 	opts = {
+		-- 		transparent_background = true,
+		-- 	},
+		-- 	-- config = function()
+		-- 	-- 	vim.cmd("colorscheme monokai-pro")
+		-- 	-- end,
+		-- },
+		-- { "patstockwell/vim-monokai-tasty" }, -- Monokai-tasty color scheme
+		-- {
+		-- 	"sonph/onehalf",
+		-- 	lazy = { rtp = "vim" },
+		-- }, -- Light/Dark color scheme based on Atom's One
+		-- {
+		-- 	"tomasr/molokai",
+		-- }, -- Molokai color scheme
+		-- { "bluz71/vim-moonfly-colors" }, -- Dark color scheme with vibrant colors
+		-- { "cocopon/iceberg.vim" }, -- Dark blue color scheme
+		-- { "ghifarit53/tokyonight-vim" }, -- Tokyo Night color scheme
+		-- { "bluz71/vim-nightfly-guicolors" }, -- Dark color scheme with bright accents
+		-- { "mangeshrex/everblush.vim" }, -- Soft, dark color scheme with vibrant colors
+		-- { "tjdevries/colorbuddy.nvim" }, -- Helper for creating Neovim color schemes
+		-- {
+		-- 	"bbenzikry/snazzybuddy.nvim",
+		-- 	--	    name = 'snazzybuddy',
+		-- 	--	    lazy = false,
+		-- 	--	    priority = 1000,
+		-- 	--	    config = snazzybuddy
+		-- }, -- Clean, vibrant color scheme based on Hyper Snazzy
+		-- {
+		-- 	"catppuccin/nvim",
+		-- 	--	    name = "catppuccin",
+		-- 	--	    lazy = false,
+		-- 	--	    priority = 1000,
+		-- 	--	    config = catppuccin_frappe
+		-- }, -- Smooth and comfy Neovim color scheme
+		-- { "rebelot/kanagawa.nvim" },
+		-- {
+		-- 	"shawilly/ponokai",
+		-- 	lazy = false,
+		-- 	priority = 1000,
+		-- 	config = function()
+		-- 		vim.g.sonokai_enable_italic = true
+		-- 	end,
+		-- },
+		-- {
+		-- 	"marko-cerovac/material.nvim",
+		-- 	config = function()
+		-- 		vim.g.material_style = "lighter"
+		-- 	end,
+		-- },
+		-- {
+		-- 	"kaicataldo/material.vim",
+		-- 	config = function()
+		-- 		vim.g.material_theme_style = "dark-community"
+		-- 	end,
+		-- },
+		-- {
+		-- 	"rose-pine/neovim",
+		-- 	name = "rose-pine",
+		-- 	-- config = function()
+		-- 	-- 	require("rose-pine").setup({
+		-- 	-- 	})
+		-- 	-- end,
+		-- },
+		-- {
+		-- 	"drewtempelmeyer/palenight.vim",
+		-- 	config = function()
+		-- 		vim.g.palenight_terminal_italics = true
+		-- 	end,
+		-- },
+		-- { "ayu-theme/ayu-vim" },
 	})
 
 	local filetypes = {
@@ -976,8 +1140,21 @@ else
 	vim.keymap.set("n", "gnt", "<C-w><C-]><C-w>T", { noremap = true })
 	vim.keymap.set("n", "gnv", "<C-w>v<C-w>l<C-]>", { noremap = true })
 	vim.keymap.set("n", "gnh", "<C-w>s<C-]>", { noremap = true })
-
 	vim.keymap.set("n", "gl", vim.diagnostic.open_float, { noremap = true })
+	vim.keymap.set("n", "grR", function()
+		vim.lsp.buf.references(nil, {
+			on_list = function(options)
+				-- 현재 파일만 필터링
+				local current = vim.api.nvim_buf_get_name(0)
+				options.items = vim.tbl_filter(function(item)
+					return item.filename == current
+				end, options.items)
+				vim.fn.setqflist({}, " ", options)
+				vim.cmd("botright copen")
+			end,
+		})
+	end)
+
 	vim.keymap.set("n", "<F5>", RunCode, { noremap = true })
 	vim.keymap.set("", "<C-c>", "<Esc>", { noremap = true, silent = true })
 	vim.keymap.set("n", ":ㅂ<CR>", ":q<CR>", { silent = true })
@@ -1009,18 +1186,7 @@ else
 	vim.keymap.set("v", "S", '"+S', { noremap = true })
 
 	vim.keymap.set("n", "<leader>df", "<cmd>DiffviewFileHistory<CR>", { desc = "DiffviewFileHistory" })
-	vim.keymap.set("n", "<leader>gb", function()
-		local wins = vim.api.nvim_list_wins()
-		for _, win in ipairs(wins) do
-			local buf = vim.api.nvim_win_get_buf(win)
-			local ft = vim.api.nvim_get_option_value("filetype", { buf = buf })
-			if ft == "gitsigns-blame" then
-				vim.api.nvim_win_close(win, true)
-				return
-			end
-		end
-		require("gitsigns").blame()
-	end)
+	vim.keymap.set("n", "<leader>dv", "<cmd>DiffviewOpen<CR>", { desc = "DiffviewOpen" })
 
 	---------------------------------------------------------------------------------------
 	--- Autocommand
