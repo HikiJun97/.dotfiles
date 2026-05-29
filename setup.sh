@@ -83,13 +83,13 @@ install_system_deps() {
 install_zsh() {
   section "zsh"
 
-  if ! command -v zsh &>/dev/null; then
+  local ZSH_PATH
+  if command -v zsh &>/dev/null; then
+    ZSH_PATH="$(command -v zsh)"
+    warn "zsh already installed — skipping package install. ($ZSH_PATH, $(zsh --version))"
+  else
     error "zsh installation failed — 'zsh' not found after system deps."
   fi
-
-  local ZSH_PATH
-  ZSH_PATH="$(command -v zsh)"
-  success "zsh found: $ZSH_PATH ($(zsh --version))"
 
   # Add zsh to /etc/shells if not already listed
   if ! grep -qxF "$ZSH_PATH" /etc/shells; then
@@ -182,7 +182,12 @@ install_uv() {
 install_rust() {
   section "Rust"
   if command -v rustup &>/dev/null; then
-    warn "Rust already installed — skipping."
+    warn "Rust already installed (rustup) — skipping."
+    export PATH="$HOME/.cargo/bin:$PATH"
+    return
+  fi
+  if command -v cargo &>/dev/null; then
+    warn "Rust already installed (cargo found, no rustup) — skipping."
     return
   fi
   curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- -y --no-modify-path
@@ -223,12 +228,17 @@ install_nvm_node() {
   # shellcheck source=/dev/null
   [[ -s "$NVM_DIR/nvm.sh" ]] && source "$NVM_DIR/nvm.sh"
 
-  info "Installing latest LTS Node..."
-  nvm install --lts
-  nvm use --lts
-  nvm alias default "lts/*"
+  # Node LTS가 이미 설치되어 있으면 스킵
+  if node --version &>/dev/null; then
+    warn "Node already installed ($(node --version)) — skipping nvm install --lts."
+  else
+    info "Installing latest LTS Node..."
+    nvm install --lts
+    nvm use --lts
+    nvm alias default "lts/*"
+    success "Node LTS installed: $(node --version)"
+  fi
   set -u
-  success "Node LTS installed: $(node --version)"
 }
 
 # ── Lua (already handled via system deps; ensure luarocks is usable) ──────────
@@ -244,6 +254,9 @@ check_lua() {
 # ── bob (nvim version manager) ────────────────────────────────────────────────
 install_bob() {
   section "bob (Neovim version manager)"
+
+  # cargo install 직후 bob이 PATH에 없을 수 있으므로 먼저 반영
+  export PATH="$HOME/.cargo/bin:$PATH"
 
   if command -v bob &>/dev/null; then
     warn "bob already installed — skipping."
@@ -336,7 +349,10 @@ setup_dotfiles() {
   # nvim config
   if [[ -d "$DOTFILES_DIR/nvim" ]]; then
     mkdir -p "$HOME/.config"
-    if [[ -d "$HOME/.config/nvim" ]]; then
+    if [[ -L "$HOME/.config/nvim" ]]; then
+      warn "~/.config/nvim is a symlink — removing and replacing with a copy."
+      rm "$HOME/.config/nvim"
+    elif [[ -d "$HOME/.config/nvim" ]]; then
       mv "$HOME/.config/nvim" "$HOME/.config/nvim.bak.$(date +%s)"
       warn "Existing nvim config backed up."
     fi
