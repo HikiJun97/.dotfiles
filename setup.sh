@@ -49,7 +49,8 @@ install_system_deps() {
         /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
       fi
       brew update
-      brew install git curl wget unzip cmake ninja gettext lua luarocks zsh
+      # llvm: provides libclang, required by tree-sitter-cli build
+      brew install git curl wget unzip cmake ninja gettext lua luarocks zsh llvm
       ;;
     debian)
       sudo apt-get update -qq
@@ -57,19 +58,22 @@ install_system_deps() {
         git curl wget unzip build-essential cmake ninja-build gettext \
         libssl-dev zlib1g-dev libbz2-dev libreadline-dev libsqlite3-dev \
         libncursesw5-dev xz-utils tk-dev libxml2-dev libxmlsec1-dev \
-        libffi-dev liblzma-dev lua5.4 luarocks ca-certificates zsh
+        libffi-dev liblzma-dev lua5.4 luarocks ca-certificates zsh \
+        libclang-dev clang
       ;;
     fedora)
       sudo dnf install -y \
         git curl wget unzip gcc gcc-c++ cmake ninja-build gettext \
         openssl-devel zlib-devel bzip2-devel readline-devel sqlite-devel \
         ncurses-devel xz-devel tk-devel libxml2-devel libffi-devel \
-        lua lua-devel luarocks zsh
+        lua lua-devel luarocks zsh \
+        clang clang-devel
       ;;
     arch)
       sudo pacman -Sy --noconfirm \
         git curl wget unzip base-devel cmake ninja gettext \
-        lua luarocks zsh
+        lua luarocks zsh \
+        clang
       ;;
   esac
   success "System dependencies installed."
@@ -213,7 +217,9 @@ install_nvm_node() {
   fi
 
   # Source nvm for use in this script session
+  # nvm 내부에서 unbound variable을 사용하므로 -u 옵션을 일시적으로 해제
   export NVM_DIR="$HOME/.nvm"
+  set +u
   # shellcheck source=/dev/null
   [[ -s "$NVM_DIR/nvm.sh" ]] && source "$NVM_DIR/nvm.sh"
 
@@ -221,6 +227,7 @@ install_nvm_node() {
   nvm install --lts
   nvm use --lts
   nvm alias default "lts/*"
+  set -u
   success "Node LTS installed: $(node --version)"
 }
 
@@ -245,8 +252,14 @@ install_bob() {
     success "bob installed."
   fi
 
-  # Install and use the latest stable Neovim
   export PATH="$HOME/.local/share/bob/nvim-bin:$PATH"
+
+  # Neovim이 이미 설치되어 있으면 스킵
+  if command -v nvim &>/dev/null; then
+    warn "Neovim already installed ($(nvim --version | head -1)) — skipping bob install."
+    return
+  fi
+
   bob install stable
   bob use stable
   success "Neovim (stable) installed via bob."
@@ -338,6 +351,10 @@ setup_dotfiles() {
 install_pynvim() {
   section "pynvim (via uv)"
   export PATH="$HOME/.local/bin:$HOME/.cargo/bin:$PATH"
+  if uv tool list 2>/dev/null | grep -q "pynvim"; then
+    warn "pynvim already installed — skipping."
+    return
+  fi
   uv tool install pynvim
   success "pynvim installed."
 }
