@@ -132,7 +132,7 @@ export BUN_INSTALL="$HOME/.bun"
 export PATH="$BUN_INSTALL/bin:$PATH"
 
 # bun completions
-[ -s "/Users/sgn04088/.oh-my-zsh/completions/_bun" ] && source "/Users/sgn04088/.oh-my-zsh/completions/_bun"
+[ -s "$HOME/.oh-my-zsh/completions/_bun" ] && source "$HOME/.oh-my-zsh/completions/_bun"
 
 # bob-nvim
 export PATH="$HOME/.local/share/bob/nvim-bin:$PATH"

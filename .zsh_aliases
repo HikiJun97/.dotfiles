@@ -57,9 +57,9 @@ nvim() {
   if [[ -n "$venv" ]]; then
     # 가상환경 활성화 후 nvim 실행
     source "$venv"
-    command /Users/sgn04088/.local/share/bob/nvim-bin/nvim "$@"
+    command $HOME/.local/share/bob/nvim-bin/nvim "$@"
   else
-    command /Users/sgn04088/.local/share/bob/nvim-bin/nvim "$@"
+    command $HOME/.local/share/bob/nvim-bin/nvim "$@"
   fi
 }
 #
