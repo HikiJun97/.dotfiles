@@ -49,7 +49,7 @@ install_system_deps() {
         /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
       fi
       brew update
-      brew install git curl wget unzip cmake ninja gettext lua luarocks
+      brew install git curl wget unzip cmake ninja gettext lua luarocks zsh
       ;;
     debian)
       sudo apt-get update -qq
@@ -57,22 +57,53 @@ install_system_deps() {
         git curl wget unzip build-essential cmake ninja-build gettext \
         libssl-dev zlib1g-dev libbz2-dev libreadline-dev libsqlite3-dev \
         libncursesw5-dev xz-utils tk-dev libxml2-dev libxmlsec1-dev \
-        libffi-dev liblzma-dev lua5.4 luarocks ca-certificates
+        libffi-dev liblzma-dev lua5.4 luarocks ca-certificates zsh
       ;;
     fedora)
       sudo dnf install -y \
         git curl wget unzip gcc gcc-c++ cmake ninja-build gettext \
         openssl-devel zlib-devel bzip2-devel readline-devel sqlite-devel \
         ncurses-devel xz-devel tk-devel libxml2-devel libffi-devel \
-        lua lua-devel luarocks
+        lua lua-devel luarocks zsh
       ;;
     arch)
       sudo pacman -Sy --noconfirm \
         git curl wget unzip base-devel cmake ninja gettext \
-        lua luarocks
+        lua luarocks zsh
       ;;
   esac
   success "System dependencies installed."
+}
+
+# ── zsh ───────────────────────────────────────────────────────────────────────
+install_zsh() {
+  section "zsh"
+
+  if ! command -v zsh &>/dev/null; then
+    error "zsh installation failed — 'zsh' not found after system deps."
+  fi
+
+  local ZSH_PATH
+  ZSH_PATH="$(command -v zsh)"
+  success "zsh found: $ZSH_PATH ($(zsh --version))"
+
+  # Add zsh to /etc/shells if not already listed
+  if ! grep -qxF "$ZSH_PATH" /etc/shells; then
+    info "Adding $ZSH_PATH to /etc/shells..."
+    echo "$ZSH_PATH" | sudo tee -a /etc/shells > /dev/null
+    success "$ZSH_PATH added to /etc/shells."
+  else
+    warn "$ZSH_PATH already in /etc/shells — skipping."
+  fi
+
+  # Change default shell to zsh
+  if [[ "$SHELL" == "$ZSH_PATH" ]]; then
+    warn "Default shell is already zsh — skipping chsh."
+  else
+    info "Changing default shell to zsh (you may be prompted for your password)..."
+    chsh -s "$ZSH_PATH"
+    success "Default shell changed to zsh. Re-login or run 'exec zsh' to apply."
+  fi
 }
 
 # ── oh-my-zsh ─────────────────────────────────────────────────────────────────
@@ -332,7 +363,7 @@ print_summary() {
   echo "  \$NVM_DIR/nvm.sh         — nvm (sourced in .zshrc)"
   echo ""
   echo -e "${BOLD}Next steps:${RESET}"
-  echo "  1. Restart your shell:  exec zsh"
+  echo "  1. Re-login or run:     exec zsh"
   echo "  2. Open Neovim once so lazy.nvim can bootstrap plugins:  nvim"
   echo "  3. Authenticate GitHub CLI:  gh auth login"
   echo ""
@@ -343,6 +374,7 @@ print_summary() {
 main() {
   detect_os
   install_system_deps
+  install_zsh
   install_oh_my_zsh
   install_zsh_plugins
   install_uv
