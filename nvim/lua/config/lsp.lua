@@ -92,7 +92,7 @@ vim.lsp.config("lua_ls", {
 })
 
 vim.lsp.enable({
-	"gopls",
+--	"gopls",
 	"pyright",
 	"vue_ls",
 	"ts_ls",

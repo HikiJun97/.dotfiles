@@ -17,7 +17,7 @@ return {
 				"vue_ls",
 				"lua_ls",
 				"jsonls",
-				"gopls",
+				-- "gopls",
 				"eslint",
 				-- "biome",
 				-- "prettier",
