@@ -188,6 +188,7 @@ install_rust() {
   fi
   if command -v cargo &>/dev/null; then
     warn "Rust already installed (cargo found, no rustup) — skipping."
+    export PATH="$HOME/.cargo/bin:$PATH"
     return
   fi
   curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- -y --no-modify-path
@@ -199,11 +200,11 @@ install_rust() {
 # ── tree-sitter-cli ───────────────────────────────────────────────────────────
 install_tree_sitter_cli() {
   section "tree-sitter-cli"
+  export PATH="$HOME/.cargo/bin:$PATH"
   if command -v tree-sitter &>/dev/null; then
     warn "tree-sitter-cli already installed — skipping."
     return
   fi
-  # Requires cargo (installed above)
   cargo install tree-sitter-cli
   success "tree-sitter-cli installed."
 }
