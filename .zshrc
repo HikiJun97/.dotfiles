@@ -123,9 +123,18 @@ source $ZSH/oh-my-zsh.sh
 source "$HOME/.zsh_aliases"
 [[ -f ~/.zsh_env ]] && source ~/.zsh_env
 
-# Set Node env
-export NVM_DIR="$([ -z "${XDG_CONFIG_HOME-}" ] && printf %s "${HOME}/.nvm" || printf %s "${XDG_CONFIG_HOME}/nvm")"
-[ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh" # This loads nvm
+# bu# Rust / cargo / bob / tree-sitter
+export PATH="$HOME/.cargo/bin:$PATH"
+
+# bob으로 설치한 nvim
+export PATH="$HOME/.local/share/bob/nvim-bin:$PATH"
+
+# uv / uvx / Claude Code
+export PATH="$HOME/.local/bin:$PATH"
+
+# nvm
+export NVM_DIR="$HOME/.nvm"
+[ -s "$NVM_DIR/nvm.sh" ] && source "$NVM_DIR/nvm.sh"
 
 # bun
 export BUN_INSTALL="$HOME/.bun"
@@ -140,9 +149,7 @@ export PATH="$HOME/.local/share/bob/nvim-bin:$PATH"
 export TERM=xterm-256color
 bindkey -v
 
-source $HOME/pynvim/bin/activate
 fpath+=($HOME/.zsh/pure)
 
 autoload -U promptinit; promptinit
 prompt pure
-
