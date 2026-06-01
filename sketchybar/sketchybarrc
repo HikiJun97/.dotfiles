@@ -1,0 +1,135 @@
+#!/bin/bash
+
+CONFIG_DIR="$HOME/.config/sketchybar"
+
+# ─── Bar appearance ───────────────────────────────────────────────
+sketchybar --bar \
+    height=36 \
+    position=top \
+    padding_left=12 \
+    padding_right=12 \
+    color=0xCC000000 \
+    border_width=1 \
+    border_color=0x18ffffff \
+    shadow=off \
+    sticky=on \
+    notch_width=200 \
+    margin=-1 \
+    y_offset=-1
+
+# ─── Global defaults ──────────────────────────────────────────────
+sketchybar --default \
+    icon.font="SF Pro:Semibold:14.0" \
+    icon.color=0x99ffffff \
+    label.font="SF Pro:Regular:14.0" \
+    label.color=0x99ffffff \
+    padding_left=4 \
+    padding_right=4 \
+    background.corner_radius=6 \
+    background.height=24
+
+# ─── Aerospace workspace event ────────────────────────────────────
+sketchybar --add event aerospace_workspace_change
+
+# ─── Left: workspaces ─────────────────────────────────────────────
+for sid in $(seq 1 9); do
+    sketchybar --add item space.$sid left \
+        --subscribe space.$sid aerospace_workspace_change \
+        --set space.$sid \
+            icon="$sid" \
+            icon.font="SF Pro:Semibold:13.0" \
+            icon.color=0x20ffffff \
+            label.drawing=off \
+            background.drawing=off \
+            background.color=0x50ffffff \
+            background.corner_radius=6 \
+            background.height=24 \
+            width=28 \
+            align=center \
+            click_script="aerospace workspace $sid" \
+            script="$CONFIG_DIR/plugins/aerospace.sh $sid"
+done
+
+# ─── Left: divider ────────────────────────────────────────────────
+sketchybar --add item divider left \
+    --set divider \
+        width=1 \
+        background.color=0x50ffffff \
+        background.drawing=on \
+        background.height=16 \
+        padding_left=10 \
+        padding_right=10 \
+        label.drawing=off \
+        icon.drawing=off
+
+# ─── Left: spacer after divider ──────────────────────────────────
+sketchybar --add item spacer_app left \
+    --set spacer_app \
+        width=20 \
+        icon.drawing=off \
+        label.drawing=off
+
+# ─── Left: current app name ───────────────────────────────────────
+sketchybar --add item app_name left \
+    --subscribe app_name front_app_switched \
+    --set app_name \
+        padding_left = 100 \
+        icon.drawing=off \
+        label.font="SF Pro:Semibold:14.0" \
+        label.color=0xddffffff \
+        script="$CONFIG_DIR/plugins/app_name.sh"
+
+# ─── Right: CPU ───────────────────────────────────────────────────
+sketchybar --add item cpu right \
+    --set cpu \
+        update_freq=5 \
+        icon="" \
+        icon.font="SF Pro:Regular:18.0" \
+        icon.color=0x60ffffff \
+        icon.padding_right=6 \
+        label.color=0x99ffffff \
+        script="$CONFIG_DIR/plugins/cpu.sh"
+
+# ─── Right: Memory ────────────────────────────────────────────────
+sketchybar --add item memory right \
+    --set memory \
+        update_freq=10 \
+        icon="󰍛" \
+        icon.font="SF Pro:Regular:18.0" \
+        icon.color=0x60ffffff \
+        icon.padding_right=6 \
+        label.color=0x99ffffff \
+        script="$CONFIG_DIR/plugins/memory.sh"
+
+# ─── Right: Volume ────────────────────────────────────────────────
+sketchybar --add item volume right \
+    --subscribe volume volume_change \
+    --set volume \
+        icon.font="SF Pro:Regular:18.0" \
+        icon.color=0x60ffffff \
+        icon.padding_right=6 \
+        label.color=0x99ffffff \
+        script="$CONFIG_DIR/plugins/volume.sh"
+
+# ─── Right: Battery ───────────────────────────────────────────────
+sketchybar --add item battery right \
+    --subscribe battery system_woke power_source_change \
+    --set battery \
+        update_freq=120 \
+        icon.font="SF Pro:Regular:18.0" \
+        icon.color=0x60ffffff \
+        icon.padding_right=6 \
+        label.color=0x99ffffff \
+        script="$CONFIG_DIR/plugins/battery.sh"
+
+# ─── Right: Date/Time ─────────────────────────────────────────────
+sketchybar --add item datetime right \
+    --set datetime \
+        update_freq=30 \
+        icon.drawing=off \
+        label.font="SF Pro:Regular:14.0" \
+        label.color=0xddffffff \
+        script="$CONFIG_DIR/plugins/datetime.sh"
+
+# ─── Finalize ─────────────────────────────────────────────────────
+sketchybar --update
