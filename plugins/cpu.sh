@@ -13,5 +13,5 @@ fi
 
 sketchybar --set "$NAME" \
     icon="" \
-    label="${CPU_INT}%" \
+    label="CPU ${CPU_INT}%" \
     label.color=$COLOR

@@ -2,14 +2,41 @@
 
 CONFIG_DIR="$HOME/.config/sketchybar"
 
+add_divider() {
+    local name=$1
+    local pre=${2:-10}
+    local post=${3:-10}
+
+    sketchybar --add item "spacer_pre_${name}" right \
+        --set "spacer_pre_${name}" \
+            width="$pre" \
+            icon.drawing=off \
+            label.drawing=off
+
+    sketchybar --add item "$name" right \
+        --set "$name" \
+            width=1 \
+            background.color=0x50ffffff \
+            background.drawing=on \
+            background.height=16 \
+            label.drawing=off \
+            icon.drawing=off
+
+    sketchybar --add item "spacer_post_${name}" right \
+        --set "spacer_post_${name}" \
+            width="$post" \
+            icon.drawing=off \
+            label.drawing=off
+}
+
 # ─── Bar appearance ───────────────────────────────────────────────
 sketchybar --bar \
-    height=36 \
+    height=34 \
     position=top \
-    padding_left=12 \
-    padding_right=12 \
+    padding_left=10 \
+    padding_right=15 \
     color=0xCC000000 \
-    border_width=1 \
+    border_width=0 \
     border_color=0x18ffffff \
     shadow=off \
     sticky=on \
@@ -23,8 +50,6 @@ sketchybar --default \
     icon.color=0x99ffffff \
     label.font="SF Pro:Regular:14.0" \
     label.color=0x99ffffff \
-    padding_left=4 \
-    padding_right=4 \
     background.corner_radius=6 \
     background.height=24
 
@@ -34,7 +59,7 @@ sketchybar --add event aerospace_workspace_change
 # ─── Left: workspaces ─────────────────────────────────────────────
 for sid in $(seq 1 9); do
     sketchybar --add item space.$sid left \
-        --subscribe space.$sid aerospace_workspace_change \
+        --subscribe space.$sid aeroasdfspace_workspace_change \
         --set space.$sid \
             icon="$sid" \
             icon.font="SF Pro:Semibold:13.0" \
@@ -51,21 +76,24 @@ for sid in $(seq 1 9); do
 done
 
 # ─── Left: divider ────────────────────────────────────────────────
-sketchybar --add item divider left \
-    --set divider \
+sketchybar --add item spacer_pre_divider left \
+    --set spacer_pre_divider \
+        width=10 \
+        icon.drawing=off \
+        label.drawing=off
+
+sketchybar --add item divider_left left \
+    --set divider_left \
         width=1 \
         background.color=0x50ffffff \
         background.drawing=on \
         background.height=16 \
-        padding_left=10 \
-        padding_right=10 \
         label.drawing=off \
         icon.drawing=off
 
-# ─── Left: spacer after divider ──────────────────────────────────
-sketchybar --add item spacer_app left \
-    --set spacer_app \
-        width=20 \
+sketchybar --add item spacer_post_divider left \
+    --set spacer_post_divider \
+        width=18 \
         icon.drawing=off \
         label.drawing=off
 
@@ -73,8 +101,6 @@ sketchybar --add item spacer_app left \
 sketchybar --add item app_name left \
     --subscribe app_name front_app_switched \
     --set app_name \
-        padding_left = 100 \
-        icon.drawing=off \
         label.font="SF Pro:Semibold:14.0" \
         label.color=0xddffffff \
         script="$CONFIG_DIR/plugins/app_name.sh"
@@ -86,20 +112,21 @@ sketchybar --add item cpu right \
         icon="" \
         icon.font="SF Pro:Regular:18.0" \
         icon.color=0x60ffffff \
-        icon.padding_right=6 \
         label.color=0x99ffffff \
         script="$CONFIG_DIR/plugins/cpu.sh"
+
+add_divider divider_4
 
 # ─── Right: Memory ────────────────────────────────────────────────
 sketchybar --add item memory right \
     --set memory \
         update_freq=10 \
-        icon="󰍛" \
         icon.font="SF Pro:Regular:18.0" \
         icon.color=0x60ffffff \
-        icon.padding_right=6 \
         label.color=0x99ffffff \
         script="$CONFIG_DIR/plugins/memory.sh"
+
+add_divider divider_3
 
 # ─── Right: Volume ────────────────────────────────────────────────
 sketchybar --add item volume right \
@@ -108,8 +135,11 @@ sketchybar --add item volume right \
         icon.font="SF Pro:Regular:18.0" \
         icon.color=0x60ffffff \
         icon.padding_right=6 \
+        icon.y_offset=1 \
         label.color=0x99ffffff \
         script="$CONFIG_DIR/plugins/volume.sh"
+
+add_divider divider_2
 
 # ─── Right: Battery ───────────────────────────────────────────────
 sketchybar --add item battery right \
@@ -119,15 +149,18 @@ sketchybar --add item battery right \
         icon.font="SF Pro:Regular:18.0" \
         icon.color=0x60ffffff \
         icon.padding_right=6 \
+        icon.y_offset=1 \
         label.color=0x99ffffff \
         script="$CONFIG_DIR/plugins/battery.sh"
+
+add_divider divider_1
 
 # ─── Right: Date/Time ─────────────────────────────────────────────
 sketchybar --add item datetime right \
     --set datetime \
         update_freq=30 \
         icon.drawing=off \
-        label.font="SF Pro:Regular:14.0" \
+        label.font="SF Pro:Regular:13.0" \
         label.color=0xddffffff \
         script="$CONFIG_DIR/plugins/datetime.sh"
 

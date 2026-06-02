@@ -9,4 +9,4 @@ END {
     printf "%.1f", used
 }')
 
-sketchybar --set "$NAME" label="${MEM_USED}GB"
+sketchybar --set "$NAME" label="RAM ${MEM_USED}GB"
