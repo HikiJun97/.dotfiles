@@ -10,7 +10,7 @@ vim.cmd([[
 
 if vim.g.vscode then
 	vim.notify("Running in VSCode-neovim", vim.log.levels.INFO)
-	require("vscode")
+	require("vscode-nvim")
 else
 	vim.notify("Running in Neovim", vim.log.levels.INFO)
 

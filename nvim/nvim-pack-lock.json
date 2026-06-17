@@ -1,0 +1,136 @@
+{
+  "plugins": {
+    "ayu-vim": {
+      "rev": "01faacb4cb76e8cf72ad9858c581d80876260ab3",
+      "src": "https://github.com/ayu-theme/ayu-vim"
+    },
+    "colorbuddy.nvim": {
+      "rev": "8b968581e5c19d22a861d5f3fe5dbd83394fa681",
+      "src": "https://github.com/tjdevries/colorbuddy.nvim"
+    },
+    "edge": {
+      "rev": "7ec78c21bd8f0b2b0b47043bb1e730c561647c72",
+      "src": "https://github.com/sainnhe/edge"
+    },
+    "everblush.vim": {
+      "rev": "7900e45c24b59ad8b0a0e1b1204f260d6909bc56",
+      "src": "https://github.com/mangeshrex/everblush.vim"
+    },
+    "everforest": {
+      "rev": "aeef62ee97872d2557d25904d160ec93a4a355f8",
+      "src": "https://github.com/sainnhe/everforest"
+    },
+    "gruvbox": {
+      "rev": "697c00291db857ca0af00ec154e5bd514a79191f",
+      "src": "https://github.com/morhetz/gruvbox"
+    },
+    "gruvbox-material": {
+      "rev": "11d779b26a9ab2b3db8c22c6ac9fb6e8ed4fea79",
+      "src": "https://github.com/sainnhe/gruvbox-material"
+    },
+    "iceberg.vim": {
+      "rev": "23835d5ed696436f716cbfdb56a93a7850fe3b18",
+      "src": "https://github.com/cocopon/iceberg.vim"
+    },
+    "jellybeans.vim": {
+      "rev": "ef83bf4dc8b3eacffc97bf5c96ab2581b415c9fa",
+      "src": "https://github.com/nanotech/jellybeans.vim"
+    },
+    "kanagawa.nvim": {
+      "rev": "bb85e4bfc8d89b0e62c8fa53ccdd13d12e2f77b3",
+      "src": "https://github.com/rebelot/kanagawa.nvim"
+    },
+    "lush.nvim": {
+      "rev": "9c60ec2279d62487d942ce095e49006af28eed6e",
+      "src": "https://github.com/rktjmp/lush.nvim"
+    },
+    "material.nvim": {
+      "rev": "92f7366a9315cd386bc4fa4d716fde375dda210f",
+      "src": "https://github.com/marko-cerovac/material.nvim"
+    },
+    "material.vim": {
+      "rev": "32f423c825ee89a37d66e3d8f00e777c7d8a41ab",
+      "src": "https://github.com/kaicataldo/material.vim"
+    },
+    "molokai": {
+      "rev": "c67bdfcdb31415aa0ade7f8c003261700a885476",
+      "src": "https://github.com/tomasr/molokai"
+    },
+    "monokai-pro.nvim": {
+      "rev": "a68e38b8e55d69a215d0f02598900a79c356da9d",
+      "src": "https://github.com/loctvl842/monokai-pro.nvim"
+    },
+    "neovim": {
+      "rev": "ff483051a47e27d84bdef47703538df1ed9f4a47",
+      "src": "https://github.com/rose-pine/neovim"
+    },
+    "nightfox.nvim": {
+      "rev": "26b61b1f856ec37cae3cb64f5690adb955f246a1",
+      "src": "https://github.com/EdenEast/nightfox.nvim"
+    },
+    "nvim": {
+      "rev": "0303a7208dba448c459767486a38a6ec05c4216b",
+      "src": "https://github.com/catppuccin/nvim"
+    },
+    "onedark.vim": {
+      "rev": "47bec7a6196a843dad195d2666c3ac84c6e80c78",
+      "src": "https://github.com/joshdick/onedark.vim"
+    },
+    "onehalf": {
+      "rev": "75eb2e97acd74660779fed8380989ee7891eec56",
+      "src": "https://github.com/sonph/onehalf"
+    },
+    "palenight.vim": {
+      "rev": "5552a6349bcd927df9f17db34f017b77b963e503",
+      "src": "https://github.com/drewtempelmeyer/palenight.vim"
+    },
+    "papercolor-theme": {
+      "rev": "0cfe64ffb24c21a6101b5f994ca342a74c977aef",
+      "src": "https://github.com/NLKNguyen/papercolor-theme"
+    },
+    "ponokai": {
+      "rev": "1a6ce671c2986948935eaea56a023bb8ca48238f",
+      "src": "https://github.com/shawilly/ponokai"
+    },
+    "seoul256.vim": {
+      "rev": "88997adf362f57c3eadedde6b8c1393fe218c02c",
+      "src": "https://github.com/junegunn/seoul256.vim"
+    },
+    "snazzybuddy.nvim": {
+      "rev": "8e2c2c8392cba9200c643e837c56de79b744df34",
+      "src": "https://github.com/bbenzikry/snazzybuddy.nvim"
+    },
+    "sonokai": {
+      "rev": "b023c5280b16fe2366f5e779d8d2756b3e5ee9c3",
+      "src": "https://github.com/sainnhe/sonokai"
+    },
+    "tokyonight-vim": {
+      "rev": "4e82e0f0452a6ce8f387828ec71013015515035a",
+      "src": "https://github.com/ghifarit53/tokyonight-vim"
+    },
+    "vim-monokai-tasty": {
+      "rev": "0b82de318a2dd905f8eb1b12fcef785eb0953ef3",
+      "src": "https://github.com/patstockwell/vim-monokai-tasty"
+    },
+    "vim-moonfly-colors": {
+      "rev": "261664f92ed51cf0c077555b2d4b2530307eac17",
+      "src": "https://github.com/bluz71/vim-moonfly-colors"
+    },
+    "vim-nightfly-guicolors": {
+      "rev": "66050453bf40ac7eddc7a84dd15291db85fefc43",
+      "src": "https://github.com/bluz71/vim-nightfly-guicolors"
+    },
+    "vim-one": {
+      "rev": "187f5c85b682c1933f8780d4d419c55d26a82e24",
+      "src": "https://github.com/rakr/vim-one"
+    },
+    "vim-snazzy": {
+      "rev": "d979964b4dc0d6860f0803696c348c5a912afb9e",
+      "src": "https://github.com/connorholyday/vim-snazzy"
+    },
+    "zenbones.nvim": {
+      "rev": "239bdb9a09c8d38c752c43590d02f654ed0da2b0",
+      "src": "https://github.com/zenbones-theme/zenbones.nvim"
+    }
+  }
+}
