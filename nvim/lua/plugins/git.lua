@@ -101,4 +101,18 @@ return {
 			{ "<leader>gg", "<cmd>Neogit<cr>", desc = "Show Neogit UI" },
 		},
 	},
+	{
+		"ldelossa/gh.nvim",
+		dependencies = {
+			{
+				"ldelossa/litee.nvim",
+				config = function()
+					require("litee.lib").setup()
+				end,
+			},
+		},
+		config = function()
+			require("litee.gh").setup()
+		end,
+	},
 }

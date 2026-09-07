@@ -58,3 +58,5 @@ vim.keymap.set("v", "S", '"+S', { noremap = true })
 -- Diffview
 vim.keymap.set("n", "<leader>df", "<cmd>DiffviewFileHistory<CR>", { desc = "DiffviewFileHistory" })
 vim.keymap.set("n", "<leader>dv", "<cmd>DiffviewOpen<CR>", { desc = "DiffviewOpen" })
+vim.keymap.set("n", "<leader>gb", "<cmd>Gitsigns blame<CR>", { desc = "Gitsigns blame" })
+vim.keymap.set("n", "<leader>bb", "<cmd>Gitsigns blame_line<CR>", { desc = "Gitsigns blame" })
