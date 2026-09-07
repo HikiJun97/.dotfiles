@@ -18,7 +18,6 @@ unbind F
 unbind m
 unbind M
 unbind t
-unbind tn
 bind q hint
 bind Q hint -b
 bind gF hint -qb
@@ -86,6 +85,7 @@ bind J tabprev
 bind K tabnext
 bind gt tabnext_gt
 bind gT tabprev
+bind tg tabprev
 bind g^ tabfirst
 bind g0 tabfirst
 bind g$ tablast
@@ -173,6 +173,7 @@ bind m gobble 1 markadd
 bind ` gobble 1 markjump
 bind <C-6> buffer #
 bind tn fillcmdline tabopen
+bind to fillcmdline tabopen
 bind n findnext --search-from-view
 bind / fillcmdline find
 bind N findnext --search-from-view --reverse
@@ -207,6 +208,7 @@ command ㅁㄱㅊㅁ tabopen https://arca.live
 command chzzk tabopen https://chzzk.naver.com
 command 촠카 tabopen https://chzzk.naver.com
 command hotnow tabopen https://arca.live/b/namuhotnow
+command ㅙ수ㅐㅈ tabopen https://arca.live/b/namuhotnow
 command spreadsheets tabopen https://docs.google.com/spreadsheets
 command endict tabopen https://en.dict.naver.com
 command 두얓ㅅ tabopen https://en.dict.naver.com
